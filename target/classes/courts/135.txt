@@ -1,0 +1,4 @@
+Cases not found 2022-09-05 {article = Уголовная Статья 207.3;}
+Cases not found 2022-09-06 {article = Уголовная Статья 207.3;}
+Inactive court 2022-09-11 {article = Статья КоАП 20.3.3;resultDateFrom = 01.09.2022;}
+Inactive court 2022-09-11 {article = Статья КоАП 20.3.3;resultDateFrom = 01.09.2022;}

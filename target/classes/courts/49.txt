@@ -1,0 +1,8 @@
+No issues 2022-09-05 {article = Уголовная Статья 207.3;resultDateFrom = 24.02.2022;}
+No issues 2022-09-05 {article = Уголовная Статья 207.3;}
+Cases not found 2022-09-05 {article = Уголовная Статья 207.3;}
+Cases not found 2022-09-06 {article = Уголовная Статья 207.3;}
+No issues 2022-09-10 {article = Статья КоАП 20.3.3;resultDateFrom = 01.09.2022;}
+No issues 2022-09-10 {article = Статья КоАП 20.3.3;resultDateFrom = 01.09.2022;}
+No issues 2022-09-11 {article = Статья КоАП 20.3.3;resultDateFrom = 01.09.2022;}
+No issues 2022-09-11 {article = Статья КоАП 20.3.3;resultDateFrom = 01.09.2022;}

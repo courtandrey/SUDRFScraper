@@ -1,0 +1,8 @@
+Cases not found 2022-09-05 {article = Уголовная Статья 207.3;}
+Cases not found 2022-09-06 {article = Уголовная Статья 207.3;}
+Cases not found 2022-09-06 {article = Уголовная Статья 282;}
+Cases not found 2022-09-06 {article = Уголовная Статья 282;}
+Cases not found 2022-09-06 {article = Уголовная Статья 282;}
+Cases not found 2022-09-06 {article = Уголовная Статья 282;}
+Cases not found 2022-09-06 {article = Уголовная Статья 282;}
+Cases not found 2022-09-10 {article = Уголовная Статья 282;}
