@@ -58,7 +58,7 @@ PLANS:
 
 1. Broaden search with region field.
 2. Make possible to continue scraping. For example, if scraping was forcibly ended (some scraping requests can last for days) or you need to scrap the second time to get cases from previously inactive courts.
-3. Make simple scrapping analyzer tool. For common requests like "cases-per-region" or "get number of texts".
+3. Make simple scraping analyzer tool. For common requests like "cases-per-region" or "get number of texts".
 4. Make simple default test, comparing Pravosudie with Scraper.
 5. Make configuration flexible.
 6. Add tests.
