@@ -1,12 +1,12 @@
-package SUDRFScrapper;
+package courtandrey.SUDRFScraper;
 
-import SUDRFScrapper.configuration.courtconfiguration.CourtConfiguration;
-import SUDRFScrapper.configuration.dumpconfiguration.ServerConnectionInfo;
-import SUDRFScrapper.dump.model.Case;
-import SUDRFScrapper.dump.model.Dump;
-import SUDRFScrapper.service.ConfigurationLoader;
-import SUDRFScrapper.service.logger.Message;
-import SUDRFScrapper.service.logger.SimpleLogger;
+import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
+import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;
+import courtandrey.SUDRFScraper.dump.model.Case;
+import courtandrey.SUDRFScraper.dump.model.Dump;
+import courtandrey.SUDRFScraper.service.ConfigurationLoader;
+import courtandrey.SUDRFScraper.service.logger.Message;
+import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
@@ -18,15 +18,15 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public class ScrappingAnalyzer {
+public class ScrapingAnalyzer {
     protected String name;
-    private ScrappingAnalyzer analyzer;
+    private ScrapingAnalyzer analyzer;
 
-    private ScrappingAnalyzer(String name) {
+    private ScrapingAnalyzer(String name) {
         this.name=name;
     }
 
-    public ScrappingAnalyzer(String name, Dump dump){
+    public ScrapingAnalyzer(String name, Dump dump){
         this.analyzer = getAnalyzer(dump,name);
     }
 
@@ -42,22 +42,22 @@ public class ScrappingAnalyzer {
         analyzer.showTextNumber();
     }
 
-    private ScrappingAnalyzer getAnalyzer(Dump dump, String name) {
+    private ScrapingAnalyzer getAnalyzer(Dump dump, String name) {
         switch (dump) {
             case JSON -> {
-                return new JSONScrappingAnalyzer(name);
+                return new JSONScrapingAnalyzer(name);
             }
             case MySQL -> {
-                return new MySQLScrappingAnalyzer(name);
+                return new MySQLScrapingAnalyzer(name);
             }
         }
         throw new UnsupportedOperationException(Message.UNKNOWN_DUMP.toString());
     }
 
-    static class JSONScrappingAnalyzer extends ScrappingAnalyzer {
+    static class JSONScrapingAnalyzer extends ScrapingAnalyzer {
         private final String PATH_TO_DUMP;
 
-        public JSONScrappingAnalyzer(String name) {
+        public JSONScrapingAnalyzer(String name) {
             super(name);
             PATH_TO_DUMP = "./results/" + name + "/" + name + ".json";
         }
@@ -159,8 +159,8 @@ public class ScrappingAnalyzer {
         }
     }
 
-    static class MySQLScrappingAnalyzer extends ScrappingAnalyzer {
-        public MySQLScrappingAnalyzer(String name) {
+    static class MySQLScrapingAnalyzer extends ScrapingAnalyzer {
+        public MySQLScrapingAnalyzer(String name) {
             super(name);
         }
 
@@ -181,7 +181,7 @@ public class ScrappingAnalyzer {
     }
 
     public void setServerConnectionInfo(String DB_URL, String user, String password) {
-        if (!(analyzer instanceof MySQLScrappingAnalyzer)) throw new UnsupportedOperationException(Message.WRONG_DUMP.toString());
+        if (!(analyzer instanceof MySQLScrapingAnalyzer)) throw new UnsupportedOperationException(Message.WRONG_DUMP.toString());
         ServerConnectionInfo.setDbUrl(DB_URL);
         ServerConnectionInfo.setUser(user);
         ServerConnectionInfo.setPassword(password);

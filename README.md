@@ -35,7 +35,7 @@ Scraped cases are only first-instance considered (no appellations).
 Scraped cases are among courts of general jurisdiction excluding Mosgorsud and garrison courts.
 
 You are highly not recommended to use for a search only text-in-decision field. 
-Most of the courts don't support this field so search will be executed among ALL cases with published desicion till this very day.
+Most of the courts don't support this field so search will be executed among ALL cases with published decision till this very day.
 Use this field only in a bundle with others.
 
 You can search only through one type of articles. If it is not set, search executes among criminal articles.
