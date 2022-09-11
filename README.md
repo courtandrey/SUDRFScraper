@@ -29,7 +29,7 @@ Scraper has been tested only in IntelliJ Idea IDE both on Windows and Linux OS.
 Scraper uses FireFox WebDriver, so you should have firefox browser.
 If you see errors about WebDriver in log file, follow the instruction that may help:
 1. Visit "https://github.com/mozilla/geckodriver/releases" and download driver for your OS.
-2. Replace driver in ./src/main/resources/<name-of-your-OS>/.
+2. Replace driver in ./src/main/resources/"name-of-your-OS"/.
 
 Scraped cases are only first-instance considered (no appellations).
 Scraped cases are among courts of general jurisdiction excluding Mosgorsud and garrison courts.
