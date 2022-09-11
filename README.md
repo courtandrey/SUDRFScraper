@@ -2,21 +2,21 @@ SUDRFScraper
 
 DESCRIPTION:
 
-Among russian independent journalists official aggregator bsr.sudrf.ru known as "Pravosudie" is associated with only one emotion - pain.
-It is script-based, it is slow, it is off half of the time. And with all these issues it even often does its primary job bad.
+Among russian independent journalists official aggregator bsr.sudrf.ru known as "Pravosudie" is associated with only one feeling - pain.
+It is script-based, it is slow, it is off half of the time. And with all these issues it even often does its primary job badly.
 
 So solution was as obvious as necessary. Just re-do aggregation from the courts websites instead of using script built on our taxes.
 
 Though there still were no open-code project to do this thing. 
 And it is not much of a surprise: there are no crowds aggregating court cases and the task is not as easy as it seemed to me at the start.
 
-Websites of courts are using different interfaces. Some are using scripts, so I had to use selenium.
-More important for a user: some courts are using CAPTCHA, though implementation as dumb as possible (basically you need to type one captcha for a whole region).
+Websites of courts are using different interfaces. Some are using scripts, so selenium is needed anyway.
+More important for a user: some courts are with CAPTCHA, though implementation as dumb as possible (basically you need to type one captcha for a whole region).
 
 Nevertheless, SUDRFScraper keeps on winning in compression with "Pravosudie".
 It is faster due to its mainly request nature and multi-threading.
 It is more stable: there are always courts which are down, but it is bearable considering that whole "Pravosudie" tends to be down.
-And, what to be honest, surprises me it is more complete. 
+And, what to be honest, surprises me, it is more complete. 
 Every testing shows SUDRFScraper leadership in number of both scraped cases and decision texts.
 
 But this project is my first non-educational project so there is quite a bunch of problems.
@@ -29,27 +29,27 @@ Scraper has been tested only in IntelliJ Idea IDE both on Windows and Linux OS.
 Scraper uses FireFox WebDriver, so you should have firefox browser.
 If you see errors about WebDriver in log file, follow the instruction that may help:
 1. Visit "https://github.com/mozilla/geckodriver/releases" and download driver for your OS.
-2. Replace driver in ./src/main/resources/<name-of-your-OS>/.
+2. Replace driver in ./src/main/resources/"name-of-your-OS"/.
 
 Scraped cases are only first-instance considered (no appellations).
 Scraped cases are among courts of general jurisdiction excluding Mosgorsud and garrison courts.
 
 You are highly not recommended to use for a search only text-in-decision field. 
-Most of the courts don't support this search field so search will be executed among ALL cases with published desicion till this very day.
+Most of the courts don't support this field so search will be executed among ALL cases with published desicion till this very day.
 Use this field only in a bundle with others.
 
-You can search only through one type of articles. If it is not set search executes among Criminal articles.
+You can search only through one type of articles. If it is not set, search executes among criminal articles.
 
 EXECUTION INFO:
 
-There is no flexible configuration yet, so every file produced by Scraper is dumped in ./results/
-
 As for execution you have these search options: 
-1. Result date starting from and till. Result means case is finished though there might not be a published decision. They are only available date params for now. Though I understand how important can be entry date for some cases. Don't use these fields if you want unfinished cases (for some reason).
+1. Result date starting from and till. "Result" means case is finished though there might not be a published decision. They are only available date params for now. Though I understand how important can be entry date for some cases. Don't use these fields if you want unfinished cases (for some reason).
 2. Text-in-Decision field. Obvious. Just don't forget info introduced in previous chapter.
 3. The main option: article. Now SUDRFScraper supports Criminal Articles and Administrative Offense Articles. Just don't forget info introduced in previous chapter (x2).
 
 There are only two dump types supported: MySQL-table and line-by-line JSON document.
+  
+There is no flexible configuration yet, so every file produced by Scraper is dumped in ./results/.
 
 By the end of execution you are given summery info. It is a list of occurred issues, so you may know how many cases you could miss during the scraping. You also can check logs to find issues info.
 If there are many issues that are not include server problems (Inactive court, Connection error) like possible different interfaces I will be glad if you contact me for further improvement of the system.
