@@ -35,10 +35,16 @@ public final class SeleniumHelper {
 
     public static synchronized SeleniumHelper getInstance() {
         if (sh == null) {
-            System.setProperty("webdriver.gecko.driver", "./src/main/resources/geckodriver");
             String os = System.getProperty("os.name");
             String nul = "nul";
-            if (!os.toLowerCase().contains("windows")) nul = "/dev/null";
+            if (os.toLowerCase().contains("linux")) {
+                nul = "/dev/null";
+                System.setProperty("webdriver.gecko.driver", "./src/main/resources/linux/geckodriver");
+            }
+            else if (os.toLowerCase().contains("windows")) {
+                System.setProperty("webdriver.gecko.driver", "./src/main/resources/windows/geckodriver.exe");
+            }
+
             System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, nul);
             FirefoxOptions options = new FirefoxOptions();
             options.setHeadless(true);
