@@ -1,3 +1,0 @@
-Inactive court 2022-09-06 {article = Уголовная Статья 207.3;}
-Inactive court 2022-09-06 {article = Уголовная Статья 207.3;}
-Inactive court 2022-09-06 {article = Уголовная Статья 207.3;}
