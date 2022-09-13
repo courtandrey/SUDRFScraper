@@ -227,6 +227,7 @@ public final class URLCreator {
                     sc.setStringPublishedDateTill(sc.getResultDateTill());
                 }
             }
+
             for (int i = 0; i < endings.length; i++) {
                 try {
                     endings[i] = endings[i].replace("PUBL_DATE2D=",

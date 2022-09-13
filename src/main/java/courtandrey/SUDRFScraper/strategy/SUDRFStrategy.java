@@ -193,7 +193,7 @@ public abstract class SUDRFStrategy extends Thread{
             issue = Issue.URL_ERROR;
         }
 
-        else if (text.contains("Данных по запросу не обнаружено") || text.contains("Данных по запросу не найдено")) {
+        else if (text.contains("Данных по запросу не обнаружено") || text.contains("Данных по запросу не найдено") || text.contains("Ничего не найдено")) {
             finalIssue = Issue.compareAndSetIssue(Issue.NOT_FOUND_CASE, finalIssue);
             issue = Issue.NOT_FOUND_CASE;
         }

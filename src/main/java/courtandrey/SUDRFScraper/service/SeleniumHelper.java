@@ -95,7 +95,7 @@ public final class SeleniumHelper {
 
         wd.get(sourceUrl);
 
-        if (waitTime!=null) {
+        if (waitTime != null) {
             ThreadHelper.sleep(waitTime);
         }
 

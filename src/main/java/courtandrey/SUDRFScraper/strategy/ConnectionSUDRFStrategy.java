@@ -309,19 +309,21 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
             String page = sh.getPage(urls[indexUrl], waitTime);
 
             currentDocument = Jsoup.parse(page);
-        } catch (TimeoutException e) {
-            finalIssue = Issue.compareAndSetIssue(Issue.CONNECTION_ERROR, finalIssue);
-            issue = Issue.CONNECTION_ERROR;
         }
         catch (WebDriverException e) {
-            if (unravel>0) {
+            if (unravel > 0) {
                 ThreadHelper.sleep(5);
                 unravel = unravel - 2;
                 connectSelenium();
             }
             else {
-                finalIssue = Issue.compareAndSetIssue(Issue.URL_ERROR, finalIssue);
-                issue = Issue.URL_ERROR;
+                if (e instanceof TimeoutException) {
+                    finalIssue = Issue.compareAndSetIssue(Issue.CONNECTION_ERROR, finalIssue);
+                    issue = Issue.CONNECTION_ERROR;
+                } else {
+                    finalIssue = Issue.compareAndSetIssue(Issue.URL_ERROR, finalIssue);
+                    issue = Issue.URL_ERROR;
+                }
             }
         }
     }
@@ -334,7 +336,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
                     .timeout(1000 * 60 * 2)
                     .get();
         } catch (SocketException | HttpStatusException | UnknownHostException e) {
-            if (unravel>0) {
+            if (unravel > 0) {
                 ThreadHelper.sleep(5);
                 --unravel;
                 connectJsoup();
@@ -352,6 +354,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
                 issue = Issue.URL_ERROR;
             }
         } catch (IOException e) {
+            unravel = 0;
             finalIssue = Issue.compareAndSetIssue(Issue.CONNECTION_ERROR, finalIssue);
             issue = Issue.CONNECTION_ERROR;
         }
