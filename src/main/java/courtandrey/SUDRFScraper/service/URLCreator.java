@@ -3,10 +3,14 @@ package courtandrey.SUDRFScraper.service;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.SearchPattern;
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.AdminArticle;
+import courtandrey.SUDRFScraper.configuration.searchrequest.article.CASArticle;
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.CriminalArticle;
 import courtandrey.SUDRFScraper.configuration.searchrequest.SearchRequest;
 import courtandrey.SUDRFScraper.service.logger.Message;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 
 public final class URLCreator {
@@ -30,7 +34,7 @@ public final class URLCreator {
         String ending = "";
         switch (sc.getField()) {
             case CRIMINAL -> ending = "/modules.php?name=sud_delo&srv_num=1&name_op=sf&delo_id=1540006";
-            case ADMIN -> ending = "/modules.php?name=sud_delo&srv_num=1&name_op=sf&delo_id=1540005";
+            case ADMIN, CAS -> ending = "/modules.php?name=sud_delo&srv_num=1&name_op=sf&delo_id=1540005";
         }
         return cc.getSearchString() + ending;
     }
@@ -126,7 +130,12 @@ public final class URLCreator {
             articlePart.append("+%F7.").append(article.getPart());
         }
         if (article.getLetter() != 0) {
-            articlePart.append("+%EF.").append(Integer.toHexString(article.getLetter()));
+            Charset neededCharset = Charset.forName("windows-1251");
+            String letter = String.valueOf(article.getLetter());
+            ByteBuffer buffer = neededCharset.encode(CharBuffer.wrap(letter));
+            int ch = buffer.get(0) & 0xff;
+            String hex = Integer.toHexString(ch);
+            articlePart.append("+%EF.").append(hex.toUpperCase());
         }
         return articlePart.toString();
 
@@ -138,7 +147,7 @@ public final class URLCreator {
             articlePart.append(".").append(article.getSubArticle());
         }
         if (article.getPart() != 0) {
-            articlePart.append("+%F7").append(article.getPart());
+            articlePart.append("+%F7.").append(article.getPart());
         } else if (!article.hasNoPart()){
             articlePart.append(" ");
         }
@@ -152,7 +161,29 @@ public final class URLCreator {
         else if (sc.getArticle() instanceof AdminArticle) {
             return getAdminArticlePartForPrimaryPatterns();
         }
+        else if (sc.getArticle() instanceof CASArticle) {
+            return getCASArticleForPrimaryPatterns();
+        }
         throw new UnsupportedOperationException(Message.UNKNOWN_ARTICLE.toString());
+    }
+
+    private String getCASArticleForPrimaryPatterns() {
+        StringBuilder sb = new StringBuilder();
+        String mainPart = sc.getArticle().getMainPart();
+        Charset neededCharset = Charset.forName("windows-1251");
+        for (int i = 0; i < mainPart.length(); i++) {
+            if (Character.isWhitespace(mainPart.charAt(i))) {
+                sb.append("+");
+            }
+            else {
+                String letter = String.valueOf(mainPart.charAt(i));
+                ByteBuffer buffer = neededCharset.encode(CharBuffer.wrap(letter));
+                int ch = buffer.get(0) & 0xff;
+                String hex = Integer.toHexString(ch);
+                sb.append("%").append(hex.toUpperCase());
+            }
+        }
+        return sb.toString();
     }
 
     private void makeSearchConfigurationForPrimaryPatterns() {
@@ -167,6 +198,23 @@ public final class URLCreator {
                     endings[i] = endings[i].replace("LAW_ARTICLESS=".toLowerCase(),
                             "law_articless=" + articlePart);
                 } catch (Exception ignored) {}
+                try {
+                    endings[i] = endings[i].replace("lawbookarticles%5B%5D=",
+                            "lawbookarticles%5B%5D=" + articlePart);
+                } catch (Exception ignored) {}
+
+                if (sc.getArticle() instanceof CASArticle && !checkFields()) {
+                    sc.setEntryDateTill(LocalDate.now());
+                    try {
+                        endings[i] = endings[i].replace("ENTRY_DATE2D=",
+                                "ENTRY_DATE2D=" + sc.getEntryDateTill());
+                    } catch (Exception ignored) {}
+                    try {
+                        endings[i] = endings[i].replace("entry_date2D=",
+                                "entry_date2D=" + sc.getEntryDateTill());
+                    } catch (Exception ignored) {}
+                }
+
             }
         }
 
@@ -185,8 +233,8 @@ public final class URLCreator {
                             "PUBL_DATE2D=" + sc.getPublishedDateTill());
                 } catch (Exception ignored) {}
                 try {
-                    endings[i] = endings[i].replace("PUBL_DATE2D=".toLowerCase(),
-                            "PUBL_DATE2D=".toLowerCase() + sc.getPublishedDateTill());
+                    endings[i] = endings[i].replace("publ_date2D=",
+                            "publ_date2D=" + sc.getPublishedDateTill());
                 } catch (Exception ignored) {}
             }
         }
@@ -198,8 +246,8 @@ public final class URLCreator {
                             "case__RESULT_DATE1D=" + sc.getResultDateFrom());
                 } catch (Exception ignored) {}
                 try {
-                    endings[i] = endings[i].replace("case__RESULT_DATE1D=".toLowerCase(),
-                            "case__RESULT_DATE1D=".toLowerCase() + sc.getResultDateFrom());
+                    endings[i] = endings[i].replace("case__result_date1D=",
+                            "case__result_date1D=" + sc.getResultDateFrom());
                 } catch (Exception ignored) {}
             }
         }
@@ -211,8 +259,8 @@ public final class URLCreator {
                             "case__RESULT_DATE2D=" + sc.getResultDateTill());
                 } catch (Exception ignored) {}
                 try {
-                    endings[i] = endings[i].replace("case__RESULT_DATE2D=".toLowerCase(),
-                            "case__RESULT_DATE2D=".toLowerCase() + sc.getResultDateTill());
+                    endings[i] = endings[i].replace("case__result_date2D=",
+                            "case__result_date2D=" + sc.getResultDateTill());
                 } catch (Exception ignored) {}
             }
         }
@@ -271,7 +319,20 @@ public final class URLCreator {
         else if (sc.getArticle() instanceof AdminArticle) {
             return getAdminArticleForSecondaryPattern();
         }
+        else if (sc.getArticle() instanceof CASArticle) {
+            return getCASArticleForSecondaryPattern();
+        }
         throw new UnsupportedOperationException(Message.UNKNOWN_ARTICLE.toString());
+    }
+
+    private String getCASArticleForSecondaryPattern() {
+        String article = sc.getArticle().getMainPart();
+        String articlePart = String.format("{\\\"name\\\":\\\"g_case_user_category\\\",\\\"operator\\\":\\\"AW\\\",\\\"query\\\":\\\"%s\\\",\\\"fieldName\\\":\\\"g_case_user_category_cat\\\"}", article);
+        articlePart += "],\\\"mode\\\":\\\"AND\\\",\\\"name\\\":\\\"Гражданские и административные дела\\\",\\\"typesMode\\\":\\\"AND\\\"},";
+        if (checkFields()) {
+            articlePart += "{\\\"fieldRequests\\\":[";
+        }
+        return articlePart;
     }
 
     private boolean checkFields() {
@@ -309,6 +370,6 @@ public final class URLCreator {
     }
 
     private boolean isEndingSet() {
-        return sc.getArticle() != null && sc.getArticle() instanceof CriminalArticle && checkFields();
+        return sc.getArticle() != null && !(sc.getArticle() instanceof AdminArticle) && !checkFields();
     }
 }

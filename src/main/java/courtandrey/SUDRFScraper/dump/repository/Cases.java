@@ -49,9 +49,11 @@ public class Cases {
 
     public void close() {
         try {
-            if (connection != null && !connection.isClosed())
+            if (connection != null && !connection.isClosed()) {
                 connection.close();
-        } catch (SQLException e) {
+            }
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }

@@ -35,8 +35,15 @@ public enum SearchPattern {
             case CRIMINAL -> {
                 return getCriminalPattern();
             }
+            case CAS -> {
+                return getCASPattern();
+            }
         }
         return new String[]{};
+    }
+
+    public String[] getCASPattern() {
+        return String.valueOf(getProps(Constants.PATH_TO_CAS_PROPERTIES).getProperty(this.toString())).split("\\$DELIMITER");
     }
 
     public String[] getCriminalPattern() {

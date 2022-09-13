@@ -1,6 +1,6 @@
 package courtandrey.SUDRFScraper.dump;
 
-import courtandrey.SUDRFScraper.SUDRFScraper;
+import courtandrey.SUDRFScraper.Controller;
 import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;
 import courtandrey.SUDRFScraper.dump.model.Case;
 import courtandrey.SUDRFScraper.dump.repository.Cases;
@@ -20,7 +20,7 @@ public class DBUpdater extends Updater {
     protected boolean isScrappingOver = false;
 
     public static class CasesDB{
-        private Cases cases;
+        private final Cases cases;
 
         public static Connection getConnection() throws SQLException {
             return DriverManager.getConnection(ServerConnectionInfo.getDbUrl(),ServerConnectionInfo.getUser(),
@@ -37,7 +37,7 @@ public class DBUpdater extends Updater {
         }
     }
 
-    public DBUpdater(String name, SUDRFScraper controller) {
+    public DBUpdater(String name, Controller controller) {
         super(name, controller);
         try {
             casesDB = new CasesDB(name);

@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class SUDRFScraper {
+public class Controller {
     private SearchRequest searchConfiguration;
     private static ConfigurationHolder configHolder = null;
     private final LocalDateTime startDate = LocalDateTime.now();
@@ -43,17 +43,18 @@ public class SUDRFScraper {
     private int courts;
     private int cases = 0;
     private final View view;
-    private int[] selectedRegion = null;
+    private int[] selectedRegions = null;
 
     /**
      * Select regions which courts you want to scrap. Ignore for scrapping all regions.
      * @param regions regions to scrap.
      */
     public void selectRegions(int... regions) {
-        selectedRegion = regions;
+        selectedRegions = regions;
     }
 
-    public SUDRFScraper(View view) {
+    public Controller(View view) {
+        selectRegions(16);
         this.view = view;
         this.view.setController(this);
         view.showFrame(Frame.SET_DUMP);
@@ -139,12 +140,12 @@ public class SUDRFScraper {
     }
 
     static class StrategyThreadPoolExecutor extends ThreadPoolExecutor {
-        private final SUDRFScraper manager;
+        private final Controller controller;
 
         public StrategyThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime,
-                                          TimeUnit unit, BlockingQueue<Runnable> workQueue, SUDRFScraper manager) {
+                                          TimeUnit unit, BlockingQueue<Runnable> workQueue, Controller controller) {
             super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
-            this.manager = manager;
+            this.controller = controller;
         }
 
         @Override
@@ -152,7 +153,7 @@ public class SUDRFScraper {
 
             SUDRFStrategy strategy = (SUDRFStrategy) r;
 
-            manager.update(strategy.getResultCases());
+            controller.update(strategy.getResultCases());
 
             if (t == null && r instanceof Future<?> future) {
                 try {
@@ -265,9 +266,9 @@ public class SUDRFScraper {
                     || x.getIssue() != Issue.INACTIVE_MODULE).toList();
         }
 
-        if (selectedRegion != null) {
-            mainCCS = mainCCS.stream().filter(x -> Arrays.stream(selectedRegion).anyMatch(r -> r == x.getRegion())).toList();
-            singleCCS = singleCCS.stream().filter(x -> Arrays.stream(selectedRegion).anyMatch(r -> r == x.getRegion())).toList();
+        if (selectedRegions != null) {
+            mainCCS = mainCCS.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
+            singleCCS = singleCCS.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
         }
 
         mainCCS = checkIfNothingToExecute(mainCCS);

@@ -15,6 +15,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriverException;
 
 import java.io.IOException;
@@ -53,7 +54,6 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
         prevSize = resultCases.size();
 
         checkText(text);
-
         if (issue == Issue.SUCCESS) {
             getCases();
             if (checkConditions()) return;
@@ -309,7 +309,11 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
             String page = sh.getPage(urls[indexUrl], waitTime);
 
             currentDocument = Jsoup.parse(page);
-        } catch (WebDriverException e) {
+        } catch (TimeoutException e) {
+            finalIssue = Issue.compareAndSetIssue(Issue.CONNECTION_ERROR, finalIssue);
+            issue = Issue.CONNECTION_ERROR;
+        }
+        catch (WebDriverException e) {
             if (unravel>0) {
                 ThreadHelper.sleep(5);
                 unravel = unravel - 2;
@@ -361,10 +365,10 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
 
     @Override
     protected void logFinalInfo() {
-        if (!scrapper.isTextFound && resultCases.size() != 0 || resultCases.size() >= 25) {
+        if (!scrapper.isTextFound && resultCases.size() != 0 && resultCases.size() >= 25) {
             SimpleLogger.log(LoggingLevel.WARNING, Message.NO_TEXT_FOUND + urls[indexUrl]);
         }
-        if (resultCases.size() % 25 == 0) {
+        if (resultCases.size() % 25 == 0 && resultCases.size() != 0) {
             SimpleLogger.log(LoggingLevel.WARNING, Message.SUSPICIOUS_NUMBER_OF_CASES + urls[indexUrl]);
         }
         super.logFinalInfo();

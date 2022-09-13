@@ -3,8 +3,8 @@ package courtandrey.SUDRFScraper;
 import courtandrey.SUDRFScraper.view.SimpleSwingView;
 
 
-public class Main {
+public class SUDRFScraperApplication {
     public static void main(String[] args)  {
-        new SUDRFScraper(new SimpleSwingView());
+        new Controller(new SimpleSwingView());
     }
 }

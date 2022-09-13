@@ -2,6 +2,7 @@ package courtandrey.SUDRFScraper.configuration.searchrequest;
 
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.AdminArticle;
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.Article;
+import courtandrey.SUDRFScraper.configuration.searchrequest.article.CASArticle;
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.CriminalArticle;
 import courtandrey.SUDRFScraper.exception.SearchRequestException;
 
@@ -14,6 +15,16 @@ public class SearchRequest {
     private String text;
     private Article article;
     private String publishedDateTill;
+    private String entryDateTill;
+
+    public String getEntryDateTill() {
+        return entryDateTill;
+    }
+
+    public void setEntryDateTill(LocalDate entryDateTill) {
+        this.entryDateTill = getDateToString(entryDateTill);
+    }
+
     private courtandrey.SUDRFScraper.configuration.searchrequest.Field field = courtandrey.SUDRFScraper.configuration.searchrequest.Field.CRIMINAL;
 
     private static SearchRequest instance;
@@ -45,6 +56,7 @@ public class SearchRequest {
     public void setArticle(Article article) {
         if (article instanceof CriminalArticle) setField(courtandrey.SUDRFScraper.configuration.searchrequest.Field.CRIMINAL);
         if (article instanceof AdminArticle) setField(courtandrey.SUDRFScraper.configuration.searchrequest.Field.ADMIN);
+        if (article instanceof CASArticle) setField(courtandrey.SUDRFScraper.configuration.searchrequest.Field.CAS);
         this.article = article;
     }
 

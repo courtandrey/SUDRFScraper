@@ -1,6 +1,6 @@
 package courtandrey.SUDRFScraper.dump;
 
-import courtandrey.SUDRFScraper.SUDRFScraper;
+import courtandrey.SUDRFScraper.Controller;
 import courtandrey.SUDRFScraper.configuration.searchrequest.SearchRequest;
 import courtandrey.SUDRFScraper.dump.model.Case;
 import courtandrey.SUDRFScraper.service.ThreadHelper;
@@ -24,7 +24,7 @@ public class JSONUpdater extends Updater{
     private final ObjectMapper mapper = new ObjectMapper();
     private final String fileName;
 
-    public JSONUpdater(String dumpName, SUDRFScraper controller) {
+    public JSONUpdater(String dumpName, Controller controller) {
         super(dumpName, controller);
         fileName = "./results/" + dumpName +"/" + dumpName + ".json";
         try {

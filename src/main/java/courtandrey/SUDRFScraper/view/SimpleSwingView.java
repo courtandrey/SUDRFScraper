@@ -1,6 +1,6 @@
 package courtandrey.SUDRFScraper.view;
 
-import courtandrey.SUDRFScraper.SUDRFScraper;
+import courtandrey.SUDRFScraper.Controller;
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.AdminArticle;
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.CASArticle;
@@ -22,14 +22,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SimpleSwingView implements View {
-    private SUDRFScraper controller;
+    private Controller controller;
     private static boolean alive = true;
     private JFrame info;
     private final static ArrayList<JFrame> frames = new ArrayList<>();
     public SimpleSwingView() {}
 
     @Override
-    public void setController(SUDRFScraper controller) {
+    public void setController(Controller controller) {
         this.controller = controller;
     }
 
@@ -517,7 +517,7 @@ public class SimpleSwingView implements View {
     private void showInfo(String message) {
         info = new JFrame("INFO");
         frames.add(info);
-        info.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        info.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         info.setSize(250,150);
         JLabel label = new JLabel(message);
         info.getContentPane().add(label,BorderLayout.CENTER);

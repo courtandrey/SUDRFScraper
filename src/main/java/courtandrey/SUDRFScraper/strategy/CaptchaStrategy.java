@@ -6,6 +6,7 @@ import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
 import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
 import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
+import org.openqa.selenium.TimeoutException;
 
 public class CaptchaStrategy extends ConnectionSUDRFStrategy {
     private boolean didWellItWorkedOnceUsed = false;
@@ -25,7 +26,7 @@ public class CaptchaStrategy extends ConnectionSUDRFStrategy {
                     issue = null;
                     timeToStopRotatingSrv = false;
 
-                    CaptchaPropertiesConfigurator.configurateCaptcha(cc, didWellItWorkedOnceUsed);
+                    CaptchaPropertiesConfigurator.configureCaptcha(cc, didWellItWorkedOnceUsed);
 
                     didWellItWorkedOnceUsed = true;
                     createUrls();
@@ -42,6 +43,11 @@ public class CaptchaStrategy extends ConnectionSUDRFStrategy {
         }
         catch (InterruptedException e) {
             SimpleLogger.log(LoggingLevel.ERROR, String.format(Message.EXCEPTION_OCCURRED.toString(),e));
+            finalIssue = Issue.ERROR;
+        }
+        catch (TimeoutException e) {
+            SimpleLogger.log(LoggingLevel.ERROR, String.format(Message.EXCEPTION_OCCURRED.toString(),e));
+            finalIssue = Issue.CONNECTION_ERROR;
         }
         finish();
 

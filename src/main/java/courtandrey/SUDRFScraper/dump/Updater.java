@@ -1,6 +1,6 @@
 package courtandrey.SUDRFScraper.dump;
 
-import courtandrey.SUDRFScraper.SUDRFScraper;
+import courtandrey.SUDRFScraper.Controller;
 import courtandrey.SUDRFScraper.dump.model.Case;
 
 import java.io.BufferedReader;
@@ -16,9 +16,9 @@ public abstract class Updater extends Thread{
     protected boolean isScrappingOver;
     protected String dumpName;
     private final String PATH_TO_SUMMERY;
-    protected SUDRFScraper controller;
+    protected Controller controller;
 
-    public Updater(String dumpName, SUDRFScraper controller) {
+    public Updater(String dumpName, Controller controller) {
         this.dumpName = dumpName;
         this.controller = controller;
         PATH_TO_SUMMERY = "./results/" + dumpName + "/" + dumpName + "_summery.txt";

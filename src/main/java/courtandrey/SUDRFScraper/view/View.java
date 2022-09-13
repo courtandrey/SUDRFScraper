@@ -1,10 +1,10 @@
 package courtandrey.SUDRFScraper.view;
 
-import courtandrey.SUDRFScraper.SUDRFScraper;
+import courtandrey.SUDRFScraper.Controller;
 
 public interface View {
     void finish();
     void showFrame(Frame frame);
     void showFrameWithInfo(Frame frame, String message);
-    void setController(SUDRFScraper scrapper);
+    void setController(Controller controller);
 }

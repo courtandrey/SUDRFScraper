@@ -40,12 +40,15 @@ Use this field only in a bundle with others.
 
 You can search only through one type of articles. If it is not set, search executes among criminal articles.
 
+You are highly not recommended to use bold administrative article search.
+Administrative and Civil cases are aggregated simultaneously in many courts, so you need to specify CAS article or filter your results.
+
 EXECUTION INFO:
 
 As for execution you have these search options: 
 1. Result date starting from and till. "Result" means case is finished though there might not be a published decision. They are only available date params for now. Though I understand how important can be entry date for some cases. Don't use these fields if you want unfinished cases (for some reason).
 2. Text-in-Decision field. Obvious. Just don't forget info introduced in previous chapter.
-3. The main option: article. Now SUDRFScraper supports Criminal Articles and Administrative Offense Articles. Just don't forget info introduced in previous chapter (x2).
+3. The main option: article. SUDRFScraper supports Criminal Articles, Administrative Offense Articles and Administrative articles. Just don't forget info introduced in previous chapter (x2).
 
 There are only two dump types supported: MySQL-table and line-by-line JSON document.
   
@@ -62,6 +65,10 @@ PLANS:
 4. Make simple default test, comparing Pravosudie with Scraper.
 5. Make configuration flexible.
 6. Add tests.
+
+UPDATES:
+
+ver.0.1.4 CAS-UPDATE. Feat: implementation of search based on administrative articles. Small bug fixes and refactoring.
 
 CONTACT ME:
 

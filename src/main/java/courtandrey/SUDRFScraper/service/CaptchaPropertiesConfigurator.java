@@ -45,7 +45,7 @@ public class CaptchaPropertiesConfigurator {
         return properties;
     }
 
-    public static void configurateCaptcha(CourtConfiguration cc, boolean didWellItWorkedOnceUsed) throws InterruptedException {
+    public static void configureCaptcha(CourtConfiguration cc, boolean didWellItWorkedOnceUsed) throws InterruptedException {
         CaptchaPropertiesConfigurator cpc = new CaptchaPropertiesConfigurator(cc);
 
         if (cpc.checkProperties(didWellItWorkedOnceUsed)) return;
