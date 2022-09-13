@@ -210,8 +210,8 @@ public final class URLCreator {
                                 "ENTRY_DATE2D=" + sc.getEntryDateTill());
                     } catch (Exception ignored) {}
                     try {
-                        endings[i] = endings[i].replace("entry_date2D=",
-                                "entry_date2D=" + sc.getEntryDateTill());
+                        endings[i] = endings[i].replace("entry_date2d=",
+                                "entry_date2d=" + sc.getEntryDateTill());
                     } catch (Exception ignored) {}
                 }
 
@@ -233,8 +233,8 @@ public final class URLCreator {
                             "PUBL_DATE2D=" + sc.getPublishedDateTill());
                 } catch (Exception ignored) {}
                 try {
-                    endings[i] = endings[i].replace("publ_date2D=",
-                            "publ_date2D=" + sc.getPublishedDateTill());
+                    endings[i] = endings[i].replace("publ_date2d=",
+                            "publ_date2d=" + sc.getPublishedDateTill());
                 } catch (Exception ignored) {}
             }
         }
@@ -246,8 +246,8 @@ public final class URLCreator {
                             "case__RESULT_DATE1D=" + sc.getResultDateFrom());
                 } catch (Exception ignored) {}
                 try {
-                    endings[i] = endings[i].replace("case__result_date1D=",
-                            "case__result_date1D=" + sc.getResultDateFrom());
+                    endings[i] = endings[i].replace("case__result_date1d=",
+                            "case__result_date1d=" + sc.getResultDateFrom());
                 } catch (Exception ignored) {}
             }
         }
@@ -259,8 +259,8 @@ public final class URLCreator {
                             "case__RESULT_DATE2D=" + sc.getResultDateTill());
                 } catch (Exception ignored) {}
                 try {
-                    endings[i] = endings[i].replace("case__result_date2D=",
-                            "case__result_date2D=" + sc.getResultDateTill());
+                    endings[i] = endings[i].replace("case__result_date2d=",
+                            "case__result_date2d=" + sc.getResultDateTill());
                 } catch (Exception ignored) {}
             }
         }
