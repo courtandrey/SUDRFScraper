@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class Controller {
+    private Thread mainThread;
     private SearchRequest searchConfiguration;
     private static ConfigurationHolder configHolder = null;
     private final LocalDateTime startDate = LocalDateTime.now();
@@ -54,7 +55,6 @@ public class Controller {
     }
 
     public Controller(View view) {
-        selectRegions(16);
         this.view = view;
         this.view.setController(this);
         view.showFrame(Frame.SET_DUMP);
@@ -107,6 +107,9 @@ public class Controller {
 
         if (t != null && !t.getName().contains("pool")) {
             view.finish();
+            if (mainThread != null) {
+                mainThread.interrupt();
+            }
         }
     }
 
@@ -194,6 +197,7 @@ public class Controller {
      */
     public void executeScrapping(boolean needToContinue) throws SearchRequestUnsetException {
         view.showFrameWithInfo(Frame.INFO, Message.BEGINNING_OF_EXECUTION.toString());
+        mainThread = Thread.currentThread();
         try {
             checkSearchConfiguration();
             if (!needToContinue) {
@@ -216,8 +220,9 @@ public class Controller {
     }
 
     private void checkSearchConfiguration() throws SearchRequestUnsetException {
-        if (!manageSearchRequest().checkFields())
+        if (!manageSearchRequest().checkFields()) {
             throw new SearchRequestUnsetException(Message.SEARCH_REQUEST_NOT_SET.toString());
+        }
     }
 
     private void sumItUp() {

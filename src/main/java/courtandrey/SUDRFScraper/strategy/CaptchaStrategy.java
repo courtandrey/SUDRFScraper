@@ -46,7 +46,6 @@ public class CaptchaStrategy extends ConnectionSUDRFStrategy {
             finalIssue = Issue.ERROR;
         }
         catch (TimeoutException e) {
-            SimpleLogger.log(LoggingLevel.ERROR, String.format(Message.EXCEPTION_OCCURRED.toString(),e));
             finalIssue = Issue.CONNECTION_ERROR;
         }
         finish();

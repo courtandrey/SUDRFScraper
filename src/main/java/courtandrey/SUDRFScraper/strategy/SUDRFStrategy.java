@@ -228,7 +228,8 @@ public abstract class SUDRFStrategy extends Thread{
             unravel = unravel - 5;
         }
 
-        else if (cc.getConnection() != Connection.SELENIUM){
+        else if (cc.getSearchPattern() != SearchPattern.SECONDARY_PATTERN
+                || cc.getSearchPattern() != SearchPattern.DEPRECATED_SECONDARY_PATTERN){
             finalIssue = Issue.compareAndSetIssue(Issue.UNDEFINED_ISSUE,finalIssue);
             issue = Issue.UNDEFINED_ISSUE;
         }
