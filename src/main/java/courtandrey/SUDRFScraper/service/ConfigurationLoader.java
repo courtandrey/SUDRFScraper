@@ -2,6 +2,7 @@ package courtandrey.SUDRFScraper.service;
 
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.experimental.UtilityClass;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,17 +11,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ConfigurationLoader {
-    private ConfigurationLoader() {
-    }
-
-    public static ArrayList<CourtConfiguration> getCourtConfigurations() throws IOException {
+@UtilityClass
+public class ConfigurationLoader {
+    public ArrayList<CourtConfiguration> getCourtConfigurations() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(Path.of(Constants.PATH_TO_CONFIG).toFile(),
                 mapper.getTypeFactory().constructCollectionType(ArrayList.class, CourtConfiguration.class));
     }
 
-    public static ArrayList<CourtConfiguration> getCourtConfigurations(boolean needToUseBaseConfig) throws IOException {
+    public ArrayList<CourtConfiguration> getCourtConfigurations(boolean needToUseBaseConfig) throws IOException {
         if (needToUseBaseConfig) return getCourtConfigurations();
         else {
             ObjectMapper mapper = new ObjectMapper();
@@ -29,7 +28,7 @@ public final class ConfigurationLoader {
         }
     }
 
-    public static void doBackUp() {
+    public void doBackUp() {
         try {
             Files.deleteIfExists(Path.of(Constants.PATH_TO_CONFIG_BACKUP));
             Files.copy(Path.of(Constants.PATH_TO_CONFIG),Path.of(Constants.PATH_TO_CONFIG_BACKUP));
@@ -38,7 +37,7 @@ public final class ConfigurationLoader {
         }
     }
 
-    public static ArrayList<CourtConfiguration> getCourtConfigurationsFromBackup() {
+    public ArrayList<CourtConfiguration> getCourtConfigurationsFromBackup() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(Path.of(Constants.PATH_TO_CONFIG_BACKUP).toFile(),
@@ -49,7 +48,7 @@ public final class ConfigurationLoader {
         return null;
     }
 
-    public static ArrayList<CourtConfiguration> getCourtConfigurationsFromBase() {
+    public ArrayList<CourtConfiguration> getCourtConfigurationsFromBase() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(Path.of(Constants.PATH_TO_CONFIG_BASE).toFile(),
@@ -60,7 +59,7 @@ public final class ConfigurationLoader {
         return null;
     }
 
-    public synchronized static void refresh(List<CourtConfiguration> ccs) {
+    public synchronized void refresh(List<CourtConfiguration> ccs) {
         try {
             FileWriter writer = new FileWriter(Constants.PATH_TO_CONFIG);
             ObjectMapper mapper = new ObjectMapper();

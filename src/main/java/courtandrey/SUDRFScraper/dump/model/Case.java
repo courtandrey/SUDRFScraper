@@ -1,8 +1,13 @@
 package courtandrey.SUDRFScraper.dump.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Data
+@NoArgsConstructor
 public class Case {
     public static volatile AtomicInteger idInteger = new AtomicInteger(0);
     private int id;
@@ -28,94 +33,5 @@ public class Case {
     @Override
     public int hashCode() {
         return Objects.hash(region, name, caseNumber);
-    }
-
-    public int getRegion() {
-        return region;
-    }
-
-    public void setRegion(int region) {
-        this.region = region;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCaseNumber() {
-        return caseNumber;
-    }
-
-    public void setCaseNumber(String caseNumber) {
-        this.caseNumber = caseNumber;
-    }
-
-    public String getEntryDate() {
-        return entryDate;
-    }
-
-    public void setEntryDate(String entryDate) {
-        this.entryDate = entryDate;
-    }
-
-    public String getNames() {
-        return names;
-    }
-
-    public void setNames(String names) {
-        this.names = names;
-    }
-
-
-    public String getJudge() {
-        return judge;
-    }
-
-    public void setJudge(String judge) {
-        this.judge = judge;
-    }
-
-    public String getResultDate() {
-        return resultDate;
-    }
-
-    public void setResultDate(String resultDate) {
-        this.resultDate = resultDate;
-    }
-
-    public String getDecision() {
-        return decision;
-    }
-
-    public void setDecision(String decision) {
-        this.decision = decision;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 }

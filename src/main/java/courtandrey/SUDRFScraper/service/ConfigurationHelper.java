@@ -8,6 +8,7 @@ import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
 import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
 import courtandrey.SUDRFScraper.strategy.Connection;
+import lombok.experimental.UtilityClass;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -17,12 +18,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class ConfigurationHelper {
-
-    private ConfigurationHelper() {}
-
-    public static void getStrategy(CourtConfiguration cc) {
-        if (configurateExceptions(cc)) return;
+@UtilityClass
+public class ConfigurationHelper {
+    public void getStrategy(CourtConfiguration cc) {
+        if (configureExceptions(cc)) return;
         if (cc.getSearchPattern() == SearchPattern.PATTERN_CAPTCHA) {
             cc.setStrategyName(StrategyName.CAPTCHA_STRATEGY);
         }
@@ -31,22 +30,22 @@ public final class ConfigurationHelper {
         }
     }
 
-    public static void reset(List<CourtConfiguration> ccs) {
+    public void reset(List<CourtConfiguration> ccs) {
         reset(ccs,false);
     }
 
-    public static void reset(List<CourtConfiguration> ccs, boolean deleteWorkingUrl) {
+    public void reset(List<CourtConfiguration> ccs, boolean deleteWorkingUrl) {
         ccs.forEach(x-> resetCC(x,deleteWorkingUrl));
     }
 
-    private static void resetCC(CourtConfiguration cc, boolean deleteWorkingUrl) {
+    private void resetCC(CourtConfiguration cc, boolean deleteWorkingUrl) {
         cc.setIssue(null);
         getStrategy(cc);
         if (deleteWorkingUrl)
             cc.getWorkingUrl().keySet().forEach(x -> cc.putWorkingUrl(x,null));
     }
 
-    public static void findElementAndSetVnkod(CourtConfiguration cc) {
+    public void findElementAndSetVnkod(CourtConfiguration cc) {
         SimpleLogger.println(Message.GO_TO_ANOTHER_PAGE);
         SystemHelper.doBeeps();
         SeleniumHelper sh = SeleniumHelper.getInstance();
@@ -61,7 +60,7 @@ public final class ConfigurationHelper {
         }
     }
 
-    public static synchronized void setVnkodForNonSecondaryPatterns(CourtConfiguration cc, Document document) {
+    public synchronized void setVnkodForNonSecondaryPatterns(CourtConfiguration cc, Document document) {
         Set<String> vnkods = new HashSet<>();
         Elements elements = document.getElementsByAttribute("href");
         List<String> hrefs = new ArrayList<>();
@@ -81,7 +80,7 @@ public final class ConfigurationHelper {
         }
     }
 
-    public static boolean configurateExceptions(CourtConfiguration cc) {
+    public boolean configureExceptions(CourtConfiguration cc) {
         boolean isException = false;
         if (cc.getSearchString().equals("http://omutninsky--kir.sudrf.ru")||cc.getRegion()==21
                 ||cc.getRegion() == 31 || cc.getId() == 257 ||cc.getSearchString().equals("http://oblsud--kir.sudrf.ru")
@@ -105,11 +104,11 @@ public final class ConfigurationHelper {
         return isException;
     }
 
-    public static void analyzeIssues(List<CourtConfiguration> ccs) {
+    public void analyzeIssues(List<CourtConfiguration> ccs) {
         ccs.forEach(ConfigurationHelper::analyzeIssue);
     }
 
-    private static void analyzeIssue(CourtConfiguration cc) {
+    private void analyzeIssue(CourtConfiguration cc) {
         if (cc.getIssue() == null) {
             getStrategy(cc);
         }
@@ -126,7 +125,7 @@ public final class ConfigurationHelper {
     }
 
 
-    public static String wrapIssues(List<CourtConfiguration> ccs) {
+    public String wrapIssues(List<CourtConfiguration> ccs) {
         StringBuilder text = new StringBuilder();
         for (Issue issue:Issue.values()) {
             List<CourtConfiguration> ccsWithIssue = get(issue, ccs);
@@ -140,7 +139,7 @@ public final class ConfigurationHelper {
         return text.toString();
     }
 
-    private static List<CourtConfiguration> get(Issue issue, List<CourtConfiguration> ccs) {
+    private List<CourtConfiguration> get(Issue issue, List<CourtConfiguration> ccs) {
         List<CourtConfiguration> neededCC = new ArrayList<>();
         for (CourtConfiguration cc: ccs) {
             if (cc.getIssue() == issue) {
@@ -150,7 +149,7 @@ public final class ConfigurationHelper {
         return neededCC;
     }
 
-    public static boolean checkVnkods(List<CourtConfiguration> ccs) {
+    public boolean checkVnkods(List<CourtConfiguration> ccs) {
         boolean isVnkodPlaced = true;
         for (CourtConfiguration cc:ccs) {
             if (cc.getVnkod()==null) {

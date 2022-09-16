@@ -3,11 +3,11 @@ package courtandrey.SUDRFScraper.service;
 import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
 import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public final class ThreadHelper {
-    private ThreadHelper() {}
-
-    public static void sleep(double seconds) {
+    public void sleep(double seconds) {
         try {
             Thread.sleep((long)(1000 * seconds));
         } catch (InterruptedException e) {

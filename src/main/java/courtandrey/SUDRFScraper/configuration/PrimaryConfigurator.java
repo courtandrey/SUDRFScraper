@@ -110,7 +110,7 @@ public class PrimaryConfigurator {
 
         cc.setVnkod(getVnkod(cc));
 
-        ConfigurationHelper.configurateExceptions(cc);
+        ConfigurationHelper.configureExceptions(cc);
 
         ++id;
 

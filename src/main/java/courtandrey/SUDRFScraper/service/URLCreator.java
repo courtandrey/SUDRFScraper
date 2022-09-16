@@ -13,7 +13,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 
-public final class URLCreator {
+public class URLCreator {
 
     private String[] urls;
     private String[] endings;
