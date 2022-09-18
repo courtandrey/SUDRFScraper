@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 
-import static courtandrey.SUDRFScraper.service.Constants.PATH_TO_SUMMERY_INFO;
+import courtandrey.SUDRFScraper.service.Constants;
 
 public abstract class Updater extends Thread{
     protected boolean isScrappingOver;
@@ -52,7 +52,7 @@ public abstract class Updater extends Thread{
 
     public String getSummeryInfo() throws IOException {
         StringBuilder returnString = new StringBuilder();
-        try (BufferedReader reader = Files.newBufferedReader(Path.of(PATH_TO_SUMMERY_INFO))) {
+        try (BufferedReader reader = Files.newBufferedReader(Path.of(Constants.PATH_TO_SUMMERY_INFO))) {
             while (reader.ready()) {
                 returnString.append(reader.readLine());
                 returnString.append("\n");

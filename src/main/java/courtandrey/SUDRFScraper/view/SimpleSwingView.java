@@ -156,7 +156,7 @@ public class SimpleSwingView implements View {
         JMenuItem i3 = new JMenuItem("Criminal article");
         JPanel panel5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel5.add(new JLabel(" Article: "));
-        JTextField criminalArticle = new JTextField(2);
+        JTextField criminalArticle = new JTextField(3);
         panel5.add(criminalArticle);
         panel5.add((new JLabel(" SubArticle: ")));
         JTextField criminalSubArticle = new JTextField(2);
@@ -454,7 +454,8 @@ public class SimpleSwingView implements View {
         }
     }
 
-    public static String showCaptcha(BufferedImage image) throws InterruptedException {
+    @Override
+    public String showCaptcha(BufferedImage image) throws InterruptedException {
         if (!alive) return null;
 
         JFrame captchaFrame = new JFrame("CAPTCHA");

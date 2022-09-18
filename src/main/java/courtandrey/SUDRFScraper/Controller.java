@@ -13,6 +13,7 @@ import courtandrey.SUDRFScraper.dump.model.Case;
 import courtandrey.SUDRFScraper.dump.model.Dump;
 import courtandrey.SUDRFScraper.exception.SearchRequestUnsetException;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
+import courtandrey.SUDRFScraper.service.CaptchaPropertiesConfigurator;
 import courtandrey.SUDRFScraper.service.ConfigurationHelper;
 import courtandrey.SUDRFScraper.service.ConfigurationLoader;
 import courtandrey.SUDRFScraper.service.SeleniumHelper;
@@ -58,6 +59,10 @@ public class Controller {
     public Controller(View view) {
         this.view = view;
         this.view.setController(this);
+        CaptchaPropertiesConfigurator.setView(view);
+    }
+
+    public void initExecution() {
         view.showFrame(Frame.SET_DUMP);
     }
 

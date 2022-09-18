@@ -3,7 +3,7 @@ package courtandrey.SUDRFScraper.service;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.Level;
 import courtandrey.SUDRFScraper.exception.CaptchaException;
-import courtandrey.SUDRFScraper.view.SimpleSwingView;
+import courtandrey.SUDRFScraper.view.View;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -20,8 +20,14 @@ import java.util.Properties;
 public class CaptchaPropertiesConfigurator {
     private static SeleniumHelper sh;
     private final CourtConfiguration cc;
+
+    private static View view;
     private final Properties props;
     protected static String wellItWorkedOnce;
+
+    public static void setView(View view) {
+        CaptchaPropertiesConfigurator.view = view;
+    }
 
     public CaptchaPropertiesConfigurator(CourtConfiguration cc) {
         this.cc = cc;
@@ -72,7 +78,7 @@ public class CaptchaPropertiesConfigurator {
                     String dataUrl = e.findElement(By.tagName("img")).getAttribute("src");
                     byte[] dataBytes = Base64.getDecoder().decode(dataUrl.replaceFirst("data:.+,",""));
                     BufferedImage image = ImageIO.read(new ByteArrayInputStream(dataBytes));
-                    captcha = SimpleSwingView.showCaptcha(image);
+                    captcha = view.showCaptcha(image);
                     break;
                 } catch (NoSuchElementException ignored) {}
             }
