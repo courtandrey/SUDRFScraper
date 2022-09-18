@@ -69,6 +69,7 @@ PLANS:
 UPDATES:
 
 ver.0.1.4 CAS-UPDATE. Feat: implementation of search based on administrative articles. Small bug fixes and refactoring.
+
 ver 0.1.5 configuration-update. You can change results dump directory modifying application.properties.
 
 CONTACT ME:
