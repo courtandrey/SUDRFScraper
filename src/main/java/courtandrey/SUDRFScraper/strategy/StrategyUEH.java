@@ -8,7 +8,7 @@ import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
 import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
 
 public class StrategyUEH {
-    public void handle(Thread t, Throwable e) {
+    public void handle(Runnable t, Throwable e) {
         SUDRFStrategy strategy = (SUDRFStrategy) t;
         if (e instanceof VnkodNotFoundException) {
             strategy.finalIssue = Issue.compareAndSetIssue(Issue.CONFIGURATION_ERROR, strategy.finalIssue);

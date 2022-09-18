@@ -2,7 +2,6 @@ package courtandrey.SUDRFScraper.service.logger;
 
 public enum Message {
     FILL_IN_CAPTCHA("YOU SHOULD FILL IN THE CAPTCHA FORM"),
-    CAPTCHA_RECEIVED("CAPTCHA RECEIVED"),
     RESULT("%d/%d courts done. %d cases matching request found"),
     STRATEGY_NOT_CHOSEN("Strategy could not be chosen"),
     DUMP("Dumping cases..."),
@@ -10,7 +9,6 @@ public enum Message {
     EXECUTION_TIME("Execution time: %d minutes"),
     WRONG_DUMP("Wrong dump type"),
     NO_TEXT_FOUND("No text was found in court: "),
-    CASES_NOT_FOUND("Cases not found in court: "),
     VNKOD_NOT_FOUND("Couldn't set vnkod for court: "),
     EXECUTION_EXCEPTION_OCCURRED("%s occurred during execution of "),
     EXCEPTION_OCCURRED_WHILE_PARSING("%s occurred during parsing of "),

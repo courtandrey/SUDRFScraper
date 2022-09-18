@@ -50,6 +50,7 @@ public class Controller {
      * Select regions which courts you want to scrap. Ignore for scrapping all regions.
      * @param regions regions to scrap.
      */
+    @SuppressWarnings("unused")
     public void selectRegions(int... regions) {
         selectedRegions = regions;
     }
@@ -165,10 +166,10 @@ public class Controller {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
-                    (new StrategyUEH()).handle((Thread) r, e.getCause());
+                    (new StrategyUEH()).handle(r, e.getCause());
                 }
             } else if (t != null) {
-                (new StrategyUEH()).handle((Thread) r, t);
+                (new StrategyUEH()).handle(r, t);
             }
         }
     }

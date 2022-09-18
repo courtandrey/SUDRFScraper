@@ -1,17 +1,19 @@
 package courtandrey.SUDRFScraper.configuration.searchrequest.article;
 
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
+import lombok.Getter;
 
+@Getter
 public class AdminArticle implements Article {
-    private int chapter;
-    private int article;
+    private final int chapter;
+    private final int article;
     private int subArticle;
     private boolean isSubArticlePresent = false;
     private int part;
     private int subPart;
     private boolean hasNoPart = false;
 
-
+    @SuppressWarnings("unused")
     public void setHasNoPart(boolean hasNoPart) {
         this.hasNoPart = hasNoPart;
     }
@@ -43,55 +45,9 @@ public class AdminArticle implements Article {
         return returnString;
     }
 
-    public int getChapter() {
-        return chapter;
-    }
-
-    public void setChapter(int chapter) {
-        this.chapter = chapter;
-    }
-
-    public int getArticle() {
-        return article;
-    }
-
-    public void setArticle(int article) {
-        this.article = article;
-    }
-
-    public int getSubArticle() {
-        return subArticle;
-    }
-
-    public void setSubArticle(int subArticle) {
-        this.subArticle = subArticle;
-    }
-
-    public boolean isSubArticlePresent() {
-        return isSubArticlePresent;
-    }
-
-    public void setSubArticlePresent(boolean subArticlePresent) {
-        isSubArticlePresent = subArticlePresent;
-    }
-
-    public int getPart() {
-        return part;
-    }
-
-    public void setPart(int part) {
-        this.part = part;
-    }
-
     public AdminArticle(int chapter, int article) {
         this.chapter = chapter;
         this.article = article;
-    }
-
-    public AdminArticle(int chapter, int article, int subArticle) {
-        this.chapter = chapter;
-        this.article = article;
-        this.subArticle = subArticle;
     }
 
     public AdminArticle(int chapter, int article, int partOrSubArticle, boolean isSubArticlePresent) {
@@ -105,14 +61,6 @@ public class AdminArticle implements Article {
             this.part = partOrSubArticle;
         }
     }
-
-    public AdminArticle(int chapter, int article, int subArticle, int part) {
-        this.chapter = chapter;
-        this.article = article;
-        this.subArticle = subArticle;
-        this.part = part;
-    }
-
     @Override
     public boolean hasNoPart() {
         return hasNoPart;

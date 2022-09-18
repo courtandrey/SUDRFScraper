@@ -1,16 +1,15 @@
 package courtandrey.SUDRFScraper.configuration.searchrequest.article;
 
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
+import lombok.Getter;
 
+@Getter
+@SuppressWarnings("all")
 public class CASArticle implements Article{
     private final String partOfCas;
 
     public CASArticle(String partOfCas) {
         this.partOfCas = partOfCas;
-    }
-
-    public String getPartOfCas() {
-        return partOfCas;
     }
 
     @Override

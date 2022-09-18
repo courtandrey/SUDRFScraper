@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ScrapingAnalyzer {
     protected String name;
     private ScrapingAnalyzer analyzer;
@@ -81,32 +82,45 @@ public class ScrapingAnalyzer {
 
             checkMap.keySet()
                     .stream()
-                    .sorted(Comparator.comparing(checkMap::get).reversed()).toList()
+                    .sorted(Comparator.comparing(x -> checkMap.get((Integer) x)).reversed()).toList()
                     .forEach(x -> SimpleLogger.println(String.format(Message.CASES_PER_REGION.toString(), x, checkMap.get(x))));
 
             reader.close();
         }
 
+        private int countStringsFromDump() throws IOException {
+            int stringCount = 0;
+            Path dumpPath = Path.of(PATH_TO_DUMP);
+            BufferedReader reader = Files.newBufferedReader(dumpPath);
+            while (reader.ready()) {
+                reader.readLine();
+                stringCount = stringCount + 1;
+            }
+            reader.close();
+            return stringCount;
+        }
+
         @Override
         public void showRandomText() throws IOException {
-            int stringCount = 0;
+            int stringCount;
 
-            if (Files.notExists(Path.of(PATH_TO_DUMP))) {
-                BufferedReader reader = Files.newBufferedReader(Path.of(PATH_TO_DUMP));
-                while (reader.ready()) {
-                    reader.readLine();
-                    stringCount = stringCount + 1;
-                }
-                reader.close();
+            Path dumpPath = Path.of(PATH_TO_DUMP);
+            if (Files.notExists(dumpPath)) {
+                stringCount = countStringsFromDump();
             }
 
             else {
                 HashMap<String, String> meta = getMeta();
-                stringCount = Integer.parseInt(meta.get("string_count"));
+                if (meta == null) {
+                    stringCount = countStringsFromDump();
+                }
+                else {
+                    stringCount = Integer.parseInt(meta.get("string_count"));
+                }
             }
 
             int caseNumber = (int) (Math.random() * stringCount);
-            BufferedReader reader = Files.newBufferedReader(Path.of(PATH_TO_DUMP));
+            BufferedReader reader = Files.newBufferedReader(dumpPath);
             ObjectMapper mapper = new ObjectMapper();
 
             for (int i = 0; i < stringCount; i++) {
@@ -127,7 +141,7 @@ public class ScrapingAnalyzer {
             while (_case.getText() == null) {
                 if (!reader.ready()) {
                     reader.close();
-                    reader = Files.newBufferedReader(Path.of(PATH_TO_DUMP));
+                    reader = Files.newBufferedReader(dumpPath);
                 }
                 _case = mapper.readValue(reader.readLine(), Case.class);
             }
@@ -153,9 +167,14 @@ public class ScrapingAnalyzer {
             SimpleLogger.println(String.format(Message.CASES_WITH_TEXTS.toString(), stringNum, textNum));
         }
 
-        private HashMap<String,String> getMeta() throws IOException {
+        @SuppressWarnings("unchecked")
+        private HashMap<String,String> getMeta() {
             ObjectMapper mapper = new ObjectMapper();
-            return (HashMap<String, String>) mapper.readValue(new FileReader("./results/"+name+"_meta.json"),HashMap.class);
+            try {
+                return (HashMap<String, String>) mapper.readValue(new FileReader("./results/"+name+"_meta.json"),HashMap.class);
+            } catch (Exception e) {
+                return  null;
+            }
         }
     }
 

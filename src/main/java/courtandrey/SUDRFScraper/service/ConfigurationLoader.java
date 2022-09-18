@@ -30,22 +30,12 @@ public class ConfigurationLoader {
 
     public void doBackUp() {
         try {
-            Files.deleteIfExists(Path.of(Constants.PATH_TO_CONFIG_BACKUP));
-            Files.copy(Path.of(Constants.PATH_TO_CONFIG),Path.of(Constants.PATH_TO_CONFIG_BACKUP));
+            Path configBackUp = Path.of(Constants.PATH_TO_CONFIG_BACKUP);
+            Files.deleteIfExists(configBackUp);
+            Files.copy(Path.of(Constants.PATH_TO_CONFIG), configBackUp);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public ArrayList<CourtConfiguration> getCourtConfigurationsFromBackup() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(Path.of(Constants.PATH_TO_CONFIG_BACKUP).toFile(),
-                    mapper.getTypeFactory().constructCollectionType(ArrayList.class, CourtConfiguration.class));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public ArrayList<CourtConfiguration> getCourtConfigurationsFromBase() {

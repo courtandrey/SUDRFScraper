@@ -2,6 +2,7 @@ package courtandrey.SUDRFScraper.configuration.searchrequest.article;
 
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
 
+
 public class CriminalArticle implements Article{
     private int article;
     private int part = 0;
@@ -13,6 +14,7 @@ public class CriminalArticle implements Article{
         return subArticle;
     }
 
+    @SuppressWarnings("unused")
     public void setHasNoPart(boolean hasNoPart) {
         this.hasNoPart = hasNoPart;
     }

@@ -15,7 +15,7 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.*;
 
-public abstract class SUDRFStrategy extends Thread{
+public abstract class SUDRFStrategy implements Runnable{
     protected int srv_num = 1;
     protected int page_num = 1;
     protected Document currentDocument = null;
@@ -46,8 +46,6 @@ public abstract class SUDRFStrategy extends Thread{
 
     public SUDRFStrategy(CourtConfiguration cc) {
         this.cc = cc;
-        
-        this.setName(cc.getStrategyName().name());
 
         setPage_num();
 
@@ -299,7 +297,7 @@ public abstract class SUDRFStrategy extends Thread{
         }
     }
 
-     protected void checkIfWorkingUrlDoesntWork() {
+     protected void checkIfWorkingUrlNotWorking() {
         if ((finalIssue != Issue.SUCCESS && finalIssue != Issue.NOT_FOUND_CASE
                 && finalIssue != Issue.NOT_SUPPORTED_REQUEST && finalIssue != Issue.CONNECTION_ERROR)
                 && cc.getWorkingUrl().get(request.getField()) != null) {
@@ -310,7 +308,7 @@ public abstract class SUDRFStrategy extends Thread{
     protected void setFinalInfo() {
         cc.setIssue(Objects.requireNonNullElseGet(finalIssue, () -> Objects.requireNonNullElse(issue, Issue.ERROR)));
 
-        checkIfWorkingUrlDoesntWork();
+        checkIfWorkingUrlNotWorking();
 
         putWorkingUrl();
     }

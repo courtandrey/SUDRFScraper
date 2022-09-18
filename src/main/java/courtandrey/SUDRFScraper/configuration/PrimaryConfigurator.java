@@ -24,13 +24,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class PrimaryConfigurator {
 
     private static int id=0;
 
     private static final List<CourtConfiguration> baseCCS = ConfigurationLoader.getCourtConfigurationsFromBase();
 
-    public static void configurateCourts() throws IOException {
+    public static void configureCourts() throws IOException {
         try (BufferedReader configReader = Files.newBufferedReader(Path.of(Constants.PATH_TO_PRECONFIG));
              FileWriter writer=new FileWriter(Constants.PATH_TO_CONFIG)){
 

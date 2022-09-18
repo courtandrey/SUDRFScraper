@@ -1,13 +1,11 @@
 package courtandrey.SUDRFScraper.dump.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
-@NoArgsConstructor
 public class Case {
     public static volatile AtomicInteger idInteger = new AtomicInteger(0);
     private int id;

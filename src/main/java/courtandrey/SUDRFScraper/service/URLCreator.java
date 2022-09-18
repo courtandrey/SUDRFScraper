@@ -327,7 +327,8 @@ public class URLCreator {
     }
 
     private String getCASArticleForSecondaryPattern() {
-        String article = sc.getArticle().getMainPart();
+        CASArticle cas = (CASArticle) sc.getArticle();
+        String article = cas.getPartOfCas();
         String articlePart = String.format("{\\\"name\\\":\\\"g_case_user_category\\\",\\\"operator\\\":\\\"AW\\\",\\\"query\\\":\\\"%s\\\",\\\"fieldName\\\":\\\"g_case_user_category_cat\\\"}", article);
         articlePart += "],\\\"mode\\\":\\\"AND\\\",\\\"name\\\":\\\"Гражданские и административные дела\\\",\\\"typesMode\\\":\\\"AND\\\"},";
         if (checkFields()) {
