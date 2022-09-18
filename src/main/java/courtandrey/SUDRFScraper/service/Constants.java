@@ -11,7 +11,7 @@ public class Constants {
     public final String PATH_TO_RESULT_DIRECTORY = PATH_TO_RESULTS_DIRECTORY + "%s/";
     public final String PATH_TO_RESULT_JSON = PATH_TO_RESULT_DIRECTORY + "%s.json";
     public final String PATH_TO_RESULT_META = PATH_TO_RESULT_DIRECTORY +"%s_meta.json";
-    public final String PATH_TO_SUMMERY = BASIC_RESULT_PATH + "./results/%s/%s_summery.txt";
+    public final String PATH_TO_SUMMERY = PATH_TO_RESULT_DIRECTORY + "%s_summery.txt";
     public final String UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36";
     public final String PATH_TO_CONFIG = "./src/main/resources/config/config_sudrf.json";
     public final String PATH_TO_CONFIG_BACKUP = "./src/main/resources/config/config_sudrf_backup.json";

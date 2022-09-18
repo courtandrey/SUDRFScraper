@@ -260,6 +260,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
 
                 for (Element el:content.getElementsByTag("p")) {
                     text.append(el.text());
+                    text.append("\n");
                 }
                 return text.toString();
             }

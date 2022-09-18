@@ -15,17 +15,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class ScrapingAnalyzer {
-    protected String name;
+    private static String name;
     private ScrapingAnalyzer analyzer;
 
     private ScrapingAnalyzer(String name) {
-        this.name=name;
+        ScrapingAnalyzer.name =name;
     }
 
     public ScrapingAnalyzer(String name, Dump dump){
@@ -61,7 +62,7 @@ public class ScrapingAnalyzer {
 
         public JSONScrapingAnalyzer(String name) {
             super(name);
-            PATH_TO_DUMP = "./results/" + name + "/" + name + ".json";
+            PATH_TO_DUMP = String.format(Constants.PATH_TO_RESULT_JSON, name, name);
         }
         @Override
         public void showCasesPerRegion() throws IOException {
@@ -120,34 +121,26 @@ public class ScrapingAnalyzer {
                 }
             }
 
-            int caseNumber = (int) (Math.random() * stringCount);
+            List<Case> cases = new ArrayList<>();
+
             BufferedReader reader = Files.newBufferedReader(dumpPath);
             ObjectMapper mapper = new ObjectMapper();
 
             for (int i = 0; i < stringCount; i++) {
                 Case _case = mapper.readValue(reader.readLine(),Case.class);
-                if (_case.getText() != null) break;
-                if (i == stringCount - 1) {
+                if (_case.getText() != null) {
+                    cases.add(_case);
+                }
+                if (i == stringCount - 1 && cases.size() == 0) {
                     SimpleLogger.println(Message.NO_DECISION_TEXT);
                     return;
                 }
             }
 
-            for (int i = 0; i < caseNumber; i++) {
-                reader.readLine();
-            }
+            reader.close();
 
-            Case _case = mapper.readValue(reader.readLine(),Case.class);
-
-            while (_case.getText() == null) {
-                if (!reader.ready()) {
-                    reader.close();
-                    reader = Files.newBufferedReader(dumpPath);
-                }
-                _case = mapper.readValue(reader.readLine(), Case.class);
-            }
-
-            SimpleLogger.println(_case.getText());
+            int textNum = (int) (Math.random() * cases.size());
+            SimpleLogger.println(cases.get(textNum).getText());
         }
 
         @Override
