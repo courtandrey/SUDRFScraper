@@ -2,14 +2,34 @@ package courtandrey.SUDRFScraper.service;
 
 import lombok.experimental.UtilityClass;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
+
 @UtilityClass
 public class Constants {
+    private final Properties properties = new Properties();
+    public final String PATH_TO_APP_PROPERTIES = "./src/main/resources/application.properties";
+
+    static {
+        try {
+            properties.load(new FileReader(PATH_TO_APP_PROPERTIES));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public final String BASIC_RESULT_PATH = properties.getProperty("basic.result.path");
+    public final String PATH_TO_RESULTS_DIRECTORY = BASIC_RESULT_PATH + "results/";
+    public final String PATH_TO_RESULT_DIRECTORY = PATH_TO_RESULTS_DIRECTORY + "%s/";
+    public final String PATH_TO_RESULT_JSON = PATH_TO_RESULT_DIRECTORY + "%s.json";
+    public final String PATH_TO_SUMMERY = BASIC_RESULT_PATH + "./results/%s/%s_summery.txt";
     public final String UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36";
     public final String PATH_TO_CONFIG = "./src/main/resources/config/config_sudrf.json";
     public final String PATH_TO_CONFIG_BACKUP = "./src/main/resources/config/config_sudrf_backup.json";
     public final String PATH_TO_CONFIG_BASE = "./src/main/resources/config/config_sudrf_base.json";
     public final String PATH_TO_CAPTCHA = "./src/main/resources/captcha/captcha%d.properties";
-    public final String PATH_TO_LOGS = "./results/%s/%s_logs.log";
+    public final String PATH_TO_LOGS = PATH_TO_RESULT_DIRECTORY + "%s_logs.log";
     public final String PATH_TO_COURT_HISTORY = "./src/main/resources/courts/%d.txt";
     public final String PATH_TO_SUMMERY_INFO = "./src/main/resources/info/summery_info.txt";
     public final String DB_Driver = "com.mysql.cj.jdbc.Driver";

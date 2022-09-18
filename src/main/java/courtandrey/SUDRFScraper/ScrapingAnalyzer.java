@@ -169,9 +169,9 @@ public class ScrapingAnalyzer {
 
         @SuppressWarnings("unchecked")
         private HashMap<String,String> getMeta() {
-            ObjectMapper mapper = new ObjectMapper();
             try {
-                return (HashMap<String, String>) mapper.readValue(new FileReader("./results/"+name+"_meta.json"),HashMap.class);
+                return (HashMap<String, String>) (new ObjectMapper()).readValue(new FileReader("./results/"+name+"_meta.json"),
+                        HashMap.class);
             } catch (Exception e) {
                 return  null;
             }

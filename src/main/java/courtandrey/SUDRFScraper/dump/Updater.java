@@ -21,11 +21,11 @@ public abstract class Updater extends Thread{
     public Updater(String dumpName, Controller controller) {
         this.dumpName = dumpName;
         this.controller = controller;
-        PATH_TO_SUMMERY = "./results/" + dumpName + "/" + dumpName + "_summery.txt";
+        PATH_TO_SUMMERY = String.format(Constants.PATH_TO_SUMMERY, dumpName, dumpName);
         try {
-            Path results = Path.of("./results/");
+            Path results = Path.of(Constants.PATH_TO_RESULTS_DIRECTORY);
             if (Files.notExists(results)) Files.createDirectory(results);
-            Path dump = Path.of("./results/" + dumpName + "/");
+            Path dump = Path.of(String.format(Constants.PATH_TO_RESULT_DIRECTORY, dumpName));
             if (Files.notExists(dump)) {
                 Files.createDirectory(dump);
             }

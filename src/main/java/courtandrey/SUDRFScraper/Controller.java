@@ -68,7 +68,7 @@ public class Controller {
 
     public void prepareScrapper(String dumpName, Dump dump) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            if (!t.getName().contains("pool")) view.showFrameWithInfo(Frame.INFO, String.format(Message.EXCEPTION_OCCURRED.toString(),e));
+            if (!t.getName().contains("pool")) view.showFrameWithInfo(Frame.ERROR, String.format(Message.EXCEPTION_OCCURRED.toString(),e));
         });
 
         SimpleLogger.initLogger(dumpName);
@@ -90,7 +90,7 @@ public class Controller {
                 view.showFrame(Frame.SET_REQUEST);
             }
             else {
-                view.showFrameWithInfo(Frame.ERROR,Message.UNKNOWN_DUMP.toString());
+                view.showFrameWithInfo(Frame.ERROR, Message.UNKNOWN_DUMP.toString());
             }
         } catch (IOException e) {
             view.showFrameWithInfo(Frame.ERROR, String.format(Message.IOEXCEPTION_OCCURRED.toString(), e));

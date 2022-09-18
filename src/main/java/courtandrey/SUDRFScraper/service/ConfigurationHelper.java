@@ -152,8 +152,8 @@ public class ConfigurationHelper {
     public boolean checkVnkods(List<CourtConfiguration> ccs) {
         boolean isVnkodPlaced = true;
         for (CourtConfiguration cc:ccs) {
-            if (cc.getVnkod()==null) {
-                SimpleLogger.println(Message.VNKOD_MISSING+cc.getVnkod());
+            if (cc.getVnkod() == null) {
+                SimpleLogger.println(Message.VNKOD_MISSING + cc.getVnkod());
                 isVnkodPlaced = false;
             }
         }

@@ -52,7 +52,7 @@ As for execution you have these search options:
 
 There are only two dump types supported: MySQL-table and line-by-line JSON document.
   
-There is no flexible configuration yet, so every file produced by Scraper is dumped in ./results/.
+To configure path of dump go to "/src/main/resources/application.properties" and change "basic.result.path" value. Default way: "./results/".
 
 By the end of execution you are given summery info. It is a list of occurred issues, so you may know how many cases you could miss during the scraping. You also can check logs to find issues info.
 If there are many issues that are not include server problems (Inactive court, Connection error) like possible different interfaces I will be glad if you contact me for further improvement of the system.

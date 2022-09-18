@@ -3,6 +3,7 @@ package courtandrey.SUDRFScraper.dump;
 import courtandrey.SUDRFScraper.Controller;
 import courtandrey.SUDRFScraper.configuration.searchrequest.SearchRequest;
 import courtandrey.SUDRFScraper.dump.model.Case;
+import courtandrey.SUDRFScraper.service.Constants;
 import courtandrey.SUDRFScraper.service.ThreadHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -26,7 +27,7 @@ public class JSONUpdater extends Updater{
 
     public JSONUpdater(String dumpName, Controller controller) {
         super(dumpName, controller);
-        fileName = "./results/" + dumpName +"/" + dumpName + ".json";
+        fileName = String.format(Constants.PATH_TO_RESULT_JSON, dumpName, dumpName);
         try {
             renew();
             if (Files.size(Path.of(fileName)) > 0) {
