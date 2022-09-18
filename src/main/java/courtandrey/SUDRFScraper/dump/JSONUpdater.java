@@ -47,7 +47,7 @@ public class JSONUpdater extends Updater{
         reader.close();
         if (!stringCase.equals("")) {
             Case _case = mapper.readValue(stringCase, Case.class);
-            return _case.getId();
+            return _case.getId() + 1;
         }
         return 0;
 

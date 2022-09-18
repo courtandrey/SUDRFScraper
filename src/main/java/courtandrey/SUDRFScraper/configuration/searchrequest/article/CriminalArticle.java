@@ -9,12 +9,6 @@ public class CriminalArticle implements Article{
     private int part = 0;
     private char letter = 0;
     private int subArticle = 0;
-    private boolean hasNoPart = false;
-
-    @SuppressWarnings("unused")
-    public void setHasNoPart(boolean hasNoPart) {
-        this.hasNoPart = hasNoPart;
-    }
 
     public CriminalArticle(int article, int partOrSubArticle, boolean isSubArticlePresent) {
         this.article = article;
@@ -56,11 +50,6 @@ public class CriminalArticle implements Article{
     @Override
     public String getMainPart() {
         return subArticle == 0 ? String.valueOf(article) : article + "." + subArticle;
-    }
-
-    @Override
-    public boolean hasNoPart() {
-        return hasNoPart;
     }
 
     @Override

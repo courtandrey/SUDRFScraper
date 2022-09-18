@@ -14,8 +14,6 @@ public class CaptchaStrategy extends ConnectionSUDRFStrategy {
         super(cc);
     }
 
-
-
     @Override
     public void run() {
         try {

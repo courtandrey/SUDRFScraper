@@ -13,11 +13,6 @@ public class CASArticle implements Article{
     }
 
     @Override
-    public boolean hasNoPart() {
-        return true;
-    }
-
-    @Override
     public Field getField() {
         return Field.CAS;
     }

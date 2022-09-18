@@ -6,7 +6,7 @@ import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public final class ThreadHelper {
+public class ThreadHelper {
     public void sleep(double seconds) {
         try {
             Thread.sleep((long)(1000 * seconds));

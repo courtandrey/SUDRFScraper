@@ -7,7 +7,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import java.time.Duration;
 import java.util.List;
 
-public final class SeleniumHelper {
+public class SeleniumHelper {
 
     private static WebDriver wd;
     private static SeleniumHelper sh;

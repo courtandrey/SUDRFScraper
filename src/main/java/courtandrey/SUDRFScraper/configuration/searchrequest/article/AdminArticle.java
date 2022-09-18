@@ -11,12 +11,6 @@ public class AdminArticle implements Article {
     private boolean isSubArticlePresent = false;
     private int part;
     private int subPart;
-    private boolean hasNoPart = false;
-
-    @SuppressWarnings("unused")
-    public void setHasNoPart(boolean hasNoPart) {
-        this.hasNoPart = hasNoPart;
-    }
 
     public AdminArticle(int chapter, int article, int subArticle, int part, int subPart) {
         this.chapter = chapter;
@@ -60,10 +54,6 @@ public class AdminArticle implements Article {
         else {
             this.part = partOrSubArticle;
         }
-    }
-    @Override
-    public boolean hasNoPart() {
-        return hasNoPart;
     }
 
     @Override

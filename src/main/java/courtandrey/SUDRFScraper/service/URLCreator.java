@@ -148,8 +148,6 @@ public class URLCreator {
         }
         if (article.getPart() != 0) {
             articlePart.append("+%F7.").append(article.getPart());
-        } else if (!article.hasNoPart()){
-            articlePart.append(" ");
         }
         return articlePart.toString();
     }
