@@ -13,10 +13,16 @@ public enum Issue {
     NOT_SUPPORTED_REQUEST("Court does not support request", 3),
     UNDEFINED_ISSUE("Issue cannot be defined", 5);
 
-
     final String description;
     final int issueLevel;
 
+    public static boolean isBadIssue(Issue issue) {
+        return issue == UNDEFINED_ISSUE || issue == ERROR || issue == CONFIGURATION_ERROR;
+    }
+
+    public static boolean isGoodIssue(Issue issue) {
+        return issue == SUCCESS || issue == NOT_FOUND_CASE;
+    }
     public static Issue compareAndSetIssue(Issue thisIssue, Issue thatIssue) {
         if (thatIssue == null && thisIssue == null) return null;
         if (thatIssue == null) return thisIssue;

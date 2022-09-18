@@ -286,8 +286,11 @@ public abstract class SUDRFStrategy implements Runnable{
     }
 
     protected void logFinalInfo() {
-        if (cc.getIssue() != Issue.SUCCESS && cc.getIssue() != Issue.NOT_FOUND_CASE) {
+        if (Issue.isGoodIssue(cc.getIssue()) && Issue.isBadIssue(cc.getIssue())) {
             SimpleLogger.log(LoggingLevel.DEBUG,cc.getIssue() + " " + urls[indexUrl]);
+        }
+        else if (Issue.isBadIssue(cc.getIssue())) {
+            SimpleLogger.log(LoggingLevel.WARNING, cc.getIssue() + " " + urls[indexUrl]);
         }
 
         try {
@@ -314,7 +317,7 @@ public abstract class SUDRFStrategy implements Runnable{
     }
 
     private void putWorkingUrl() {
-        if (finalIssue == Issue.SUCCESS && cc.getWorkingUrl().get(request.getField()) == null) {
+        if (Issue.isGoodIssue(finalIssue) && cc.getWorkingUrl().get(request.getField()) == null) {
             cc.putWorkingUrl(request.getField(),urlCreator.returnEnding(indexUrl));
         }
     }
