@@ -1,18 +1,15 @@
 package courtandrey.SUDRFScraper.configuration.searchrequest.article;
 
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
+import lombok.Getter;
 
-
+@Getter
 public class CriminalArticle implements Article{
-    private int article;
+    private final int article;
     private int part = 0;
     private char letter = 0;
     private int subArticle = 0;
     private boolean hasNoPart = false;
-
-    public int getSubArticle() {
-        return subArticle;
-    }
 
     @SuppressWarnings("unused")
     public void setHasNoPart(boolean hasNoPart) {
@@ -54,22 +51,6 @@ public class CriminalArticle implements Article{
     public CriminalArticle(int article, int part) {
         this.article = article;
         this.part = part;
-    }
-
-    public int getArticle() {
-        return article;
-    }
-
-    public void setArticle(int article) {
-        this.article = article;
-    }
-
-    public int getPart() {
-        return part;
-    }
-
-    public char getLetter() {
-        return letter;
     }
 
     @Override
