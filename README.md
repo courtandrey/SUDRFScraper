@@ -82,7 +82,7 @@ ver.0.1.4 CAS-UPDATE. Feat: implementation of search based on administrative art
 ver 0.1.5 configuration-update. You can change results dump directory modifying application.properties. Small bug fixes and refactoring.
 
 ver.0.1.6 configuration-update. Modified configuration with use.court.history param. Now user won't be trashed with thousands of files. Added some tests.
-Big refactoring.
+Massive refactoring.
 
 CONTACT ME:
 
