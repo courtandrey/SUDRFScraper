@@ -1,6 +1,6 @@
 package courtandrey.SUDRFScraper.dump.repository;
 
-import courtandrey.SUDRFScraper.dump.DBUpdater;
+import courtandrey.SUDRFScraper.dump.DBUpdaterService;
 import courtandrey.SUDRFScraper.dump.model.Case;
 
 import java.sql.Connection;
@@ -67,7 +67,7 @@ public class Cases {
 
     private void reopenConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            connection = DBUpdater.CasesDB.getConnection();
+            connection = DBUpdaterService.CasesDB.getConnection();
         }
     }
 }

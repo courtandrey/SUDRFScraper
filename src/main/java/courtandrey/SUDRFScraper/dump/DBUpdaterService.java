@@ -1,20 +1,20 @@
 package courtandrey.SUDRFScraper.dump;
 
-import courtandrey.SUDRFScraper.Controller;
 import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;
+import courtandrey.SUDRFScraper.controller.ErrorHandler;
 import courtandrey.SUDRFScraper.dump.model.Case;
 import courtandrey.SUDRFScraper.dump.repository.Cases;
 import courtandrey.SUDRFScraper.service.ThreadHelper;
 import courtandrey.SUDRFScraper.service.Constants;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.Queue;
 
-public class DBUpdater extends Updater {
+public class DBUpdaterService extends UpdaterService {
     private CasesDB casesDB;
     private final Queue<Case> cases = new ArrayDeque<>();
     protected boolean isScrappingOver = false;
@@ -33,17 +33,22 @@ public class DBUpdater extends Updater {
         }
 
         protected void update(Case _case) throws SQLException {
-            if (_case!=null) cases.addCase(_case);
+            if (_case != null) cases.addCase(_case);
         }
     }
 
-    public DBUpdater(String name, Controller controller) {
-        super(name, controller);
+    public DBUpdaterService(String name, ErrorHandler handler) {
+        super(name, handler);
         try {
             casesDB = new CasesDB(name);
         } catch (ClassNotFoundException | SQLException e) {
-            controller.errorOccurred(e, null);
+            handler.errorOccurred(e, null);
         }
+    }
+
+    @Override
+    public void addMeta() throws IOException {
+        writeMeta(getBasicProperties());
     }
 
     @Override
@@ -67,13 +72,11 @@ public class DBUpdater extends Updater {
             }
         }
         catch (SQLException e) {
-            controller.errorOccurred(e, this);
+            handler.errorOccurred(e, this);
         }
-    }
-
-    @Override
-    public synchronized void update(Collection<Case> casesList) {
-        cases.addAll(casesList);
+        finally {
+            afterExecute();
+        }
     }
 
     public void close() {

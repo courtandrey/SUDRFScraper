@@ -1,4 +1,4 @@
-package courtandrey.SUDRFScraper;
+package courtandrey.SUDRFScraper.controller;
 
 import courtandrey.SUDRFScraper.configuration.ConfigurationHolder;
 import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;
@@ -6,8 +6,8 @@ import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfigurat
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
 import courtandrey.SUDRFScraper.configuration.searchrequest.SearchRequest;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.StrategyName;
-import courtandrey.SUDRFScraper.dump.DBUpdater;
-import courtandrey.SUDRFScraper.dump.JSONUpdater;
+import courtandrey.SUDRFScraper.dump.DBUpdaterService;
+import courtandrey.SUDRFScraper.dump.JSONUpdaterService;
 import courtandrey.SUDRFScraper.dump.Updater;
 import courtandrey.SUDRFScraper.dump.model.Case;
 import courtandrey.SUDRFScraper.dump.model.Dump;
@@ -21,7 +21,7 @@ import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
 import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
 import courtandrey.SUDRFScraper.strategy.*;
-import courtandrey.SUDRFScraper.view.Frame;
+import courtandrey.SUDRFScraper.view.ViewFrame;
 import courtandrey.SUDRFScraper.view.View;
 
 import java.io.IOException;
@@ -39,14 +39,14 @@ public class Controller {
     private SearchRequest searchConfiguration;
     private static ConfigurationHolder configHolder = null;
     private final LocalDateTime startDate = LocalDateTime.now();
-    private static Updater updater;
+    private static Updater updaterService;
     private CountDownLatch countDownLatch;
     private Dump dump;
     private int courts;
     private int cases = 0;
     private final View view;
+    private final SUDRFErrorHandler handler;
     private int[] selectedRegions = null;
-
     /**
      * Select regions which courts you want to scrap. Ignore for scrapping all regions.
      * @param regions regions to scrap.
@@ -56,19 +56,47 @@ public class Controller {
         selectedRegions = regions;
     }
 
+    class SUDRFErrorHandler implements ErrorHandler {
+        public synchronized void errorOccurred(Throwable e, Thread t) {
+            if (e instanceof IOException) {
+                view.showFrameWithInfo(ViewFrame.ERROR, String.format(Message.IOEXCEPTION_OCCURRED.toString(), e));
+            }
+            else if (e instanceof ClassNotFoundException) {
+                view.showFrameWithInfo(ViewFrame.ERROR, Message.DRIVER_NOT_FOUND.toString());
+            }
+            else if (e instanceof SQLException) {
+                view.showFrameWithInfo(ViewFrame.ERROR, String.format(Message.SQL_EXCEPTION_OCCURRED.toString(), e));
+            }
+            else if (e instanceof SearchRequestUnsetException && e.getMessage().equals(Message.UNKNOWN_DUMP.toString())) {
+                view.showFrameWithInfo(ViewFrame.ERROR, String.format(e.getMessage()));
+            }
+            else {
+                view.showFrameWithInfo(ViewFrame.ERROR, String.format(Message.EXCEPTION_OCCURRED.toString(),e));
+            }
+
+            if (t == null || !t.getName().contains("pool")) {
+                view.finish();
+                if (mainThread != null) {
+                    mainThread.interrupt();
+                }
+            }
+        }
+    }
+
     public Controller(View view) {
         this.view = view;
         this.view.setController(this);
         CaptchaPropertiesConfigurator.setView(view);
+        handler = new SUDRFErrorHandler();
     }
 
     public void initExecution() {
-        view.showFrame(Frame.SET_DUMP);
+        view.showFrame(ViewFrame.SET_DUMP);
     }
 
     public void prepareScrapper(String dumpName, Dump dump) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            if (!t.getName().contains("pool")) view.showFrameWithInfo(Frame.ERROR, String.format(Message.EXCEPTION_OCCURRED.toString(),e));
+            if (!t.getName().contains("pool")) handler.errorOccurred(new Error(), null);
         });
 
         SimpleLogger.initLogger(dumpName);
@@ -82,40 +110,18 @@ public class Controller {
             prepareModel();
 
             if (dump == Dump.MySQL) {
-                view.showFrame(Frame.SET_CONNECTION_INFO);
-                updater = new DBUpdater(dumpName, this);
+                view.showFrame(ViewFrame.SET_CONNECTION_INFO);
+                updaterService = new DBUpdaterService(dumpName, new SUDRFErrorHandler());
             }
             else if (dump == Dump.JSON) {
-                updater = new JSONUpdater(dumpName, this);
-                view.showFrame(Frame.SET_REQUEST);
+                updaterService = new JSONUpdaterService(dumpName, new SUDRFErrorHandler());
+                view.showFrame(ViewFrame.SET_REQUEST);
             }
             else {
-                view.showFrameWithInfo(Frame.ERROR, Message.UNKNOWN_DUMP.toString());
+                handler.errorOccurred(new SearchRequestUnsetException(Message.UNKNOWN_DUMP.toString()), null);
             }
         } catch (IOException e) {
-            view.showFrameWithInfo(Frame.ERROR, String.format(Message.IOEXCEPTION_OCCURRED.toString(), e));
-        }
-    }
-
-    public void errorOccurred(Throwable e, Thread t) {
-        if (e instanceof IOException) {
-            view.showFrameWithInfo(Frame.ERROR, String.format(Message.IOEXCEPTION_OCCURRED.toString(), e));
-        }
-        else if (e instanceof ClassNotFoundException) {
-            view.showFrameWithInfo(Frame.ERROR, Message.DRIVER_NOT_FOUND.toString());
-        }
-        else if (e instanceof SQLException) {
-            view.showFrameWithInfo(Frame.ERROR, String.format(Message.SQL_EXCEPTION_OCCURRED.toString(), e));
-        }
-        else {
-            view.showFrameWithInfo(Frame.ERROR, String.format(Message.EXCEPTION_OCCURRED.toString(),e));
-        }
-
-        if (t != null && !t.getName().contains("pool")) {
-            view.finish();
-            if (mainThread != null) {
-                mainThread.interrupt();
-            }
+            handler.errorOccurred(e, null);
         }
     }
 
@@ -202,7 +208,7 @@ public class Controller {
      * @throws SearchRequestUnsetException if none of search request parameters was set.
      */
     public void executeScrapping(boolean needToContinue) throws SearchRequestUnsetException {
-        view.showFrameWithInfo(Frame.INFO, Message.BEGINNING_OF_EXECUTION.toString());
+        view.showFrameWithInfo(ViewFrame.INFO, Message.BEGINNING_OF_EXECUTION.toString());
         mainThread = Thread.currentThread();
         try {
             checkSearchConfiguration();
@@ -213,13 +219,13 @@ public class Controller {
                 ConfigurationHelper.analyzeIssues(configHolder.getCCs());
             }
 
-            updater.start();
+            updaterService.startService();
 
             scrap();
 
-            updater.join();
+            updaterService.joinService();
         } catch (InterruptedException e) {
-            errorOccurred(e, null);
+            handler.errorOccurred(e, null);
         } finally {
             end();
         }
@@ -236,7 +242,7 @@ public class Controller {
         long executionTime = ChronoUnit.MINUTES.between(startDate,endDate);
         SimpleLogger.log(LoggingLevel.INFO,String.format(Message.EXECUTION_TIME.toString(),executionTime));
 
-        updater.writeSummery(ConfigurationHelper.wrapIssues(configHolder.getCCs()));
+        updaterService.writeSummery(ConfigurationHelper.wrapIssues(configHolder.getCCs()));
     }
 
     private void end() {
@@ -257,8 +263,7 @@ public class Controller {
     private void scrap() {
         execute(false);
         continueScrapping();
-        updater.registerEnding();
-        view.showFrameWithInfo(Frame.INFO, Message.DUMP.toString());
+        view.showFrameWithInfo(ViewFrame.INFO, Message.DUMP.toString());
     }
 
     private void execute(Boolean ignoreInactive) {
@@ -317,13 +322,13 @@ public class Controller {
 
         this.cases += cases.size();
 
-        view.showFrameWithInfo(Frame.INFO, String.format(Message.RESULT.toString(),
+        view.showFrameWithInfo(ViewFrame.INFO, String.format(Message.RESULT.toString(),
                 courts - countDownLatch.getCount(), courts, this.cases));
 
         refresh();
 
         if (cases.size() != 0) {
-            updater.update(cases);
+            updaterService.update(cases);
         }
     }
 

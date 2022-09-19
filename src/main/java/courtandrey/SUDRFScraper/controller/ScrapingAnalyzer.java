@@ -1,4 +1,4 @@
-package courtandrey.SUDRFScraper;
+package courtandrey.SUDRFScraper.controller;
 
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;

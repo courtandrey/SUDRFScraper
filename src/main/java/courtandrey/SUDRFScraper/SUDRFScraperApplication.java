@@ -1,5 +1,6 @@
 package courtandrey.SUDRFScraper;
 
+import courtandrey.SUDRFScraper.controller.Controller;
 import courtandrey.SUDRFScraper.view.SimpleSwingView;
 
 public class SUDRFScraperApplication {

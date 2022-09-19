@@ -1,6 +1,6 @@
 package courtandrey.SUDRFScraper.view;
 
-import courtandrey.SUDRFScraper.Controller;
+import courtandrey.SUDRFScraper.controller.Controller;
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.AdminArticle;
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.CASArticle;
@@ -34,8 +34,8 @@ public class SimpleSwingView implements View {
     }
 
     @Override
-    public void showFrame(courtandrey.SUDRFScraper.view.Frame frame) {
-        switch (frame) {
+    public void showFrame(ViewFrame viewFrame) {
+        switch (viewFrame) {
             case SET_DUMP -> showDumpFrame();
             case SET_REQUEST -> showRequestFrame();
             case SET_CONNECTION_INFO -> showSetConnectionInfo();
@@ -44,8 +44,8 @@ public class SimpleSwingView implements View {
     }
 
     @Override
-    public synchronized void showFrameWithInfo(courtandrey.SUDRFScraper.view.Frame frame, String message) {
-        switch (frame) {
+    public synchronized void showFrameWithInfo(ViewFrame viewFrame, String message) {
+        switch (viewFrame) {
             case INFO -> update(message);
             case ERROR -> showError(null, message);
             default -> throw new UnsupportedOperationException("Unknown frame type");
@@ -527,7 +527,7 @@ public class SimpleSwingView implements View {
         info.setVisible(true);
     }
 
-    public void showError(JFrame frame, String message) {
+    private void showError(JFrame frame, String message) {
         JFrame errorFrame = new JFrame("ERROR");
         frames.add(errorFrame);
         errorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -583,7 +583,7 @@ public class SimpleSwingView implements View {
                 controller.setServerConnectionInfo(field1.getText(), field2.getText(), field3.getText());
                 frames.remove(frame);
                 frame.dispose();
-                showFrame(Frame.SET_REQUEST);
+                showFrame(ViewFrame.SET_REQUEST);
             } else {
                 showError(frame, Message.CONNECTION_INFO_NOT_SET.toString());
             }

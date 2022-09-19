@@ -1,7 +1,6 @@
 package courtandrey.SUDRFScraper.dump;
 
-import courtandrey.SUDRFScraper.Controller;
-import courtandrey.SUDRFScraper.configuration.searchrequest.SearchRequest;
+import courtandrey.SUDRFScraper.controller.ErrorHandler;
 import courtandrey.SUDRFScraper.dump.model.Case;
 import courtandrey.SUDRFScraper.service.Constants;
 import courtandrey.SUDRFScraper.service.ThreadHelper;
@@ -13,20 +12,16 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class JSONUpdater extends Updater{
-    private final Queue<Case> cases = new ArrayDeque<>();
+public class JSONUpdaterService extends UpdaterService {
     private FileWriter fileWriter;
     private final ObjectMapper mapper = new ObjectMapper();
     private final String fileName;
 
-    public JSONUpdater(String dumpName, Controller controller) {
-        super(dumpName, controller);
+    public JSONUpdaterService(String dumpName, ErrorHandler handler) {
+        super(dumpName, handler);
         fileName = String.format(Constants.PATH_TO_RESULT_JSON, dumpName, dumpName);
         try {
             renew();
@@ -35,7 +30,7 @@ public class JSONUpdater extends Updater{
                 Case.idInteger = new AtomicInteger(getCaseId());
             }
         } catch (IOException e) {
-            controller.errorOccurred(e, null);
+            handler.errorOccurred(e, null);
         }
     }
 
@@ -52,11 +47,6 @@ public class JSONUpdater extends Updater{
         }
         return 0;
 
-    }
-
-    @Override
-    public synchronized void update(Collection<Case> casesList) {
-        cases.addAll(casesList);
     }
 
     private synchronized Case poll() {
@@ -79,17 +69,17 @@ public class JSONUpdater extends Updater{
                 Case _case = cases.poll();
                 update(_case);
             }
-        } finally {
-            close();
-            try {
-                addMeta();
-            } catch (IOException e) {
-                controller.errorOccurred(e, this);
-            }
+        }
+        catch (IOException e) {
+            handler.errorOccurred(e, this);
+        }
+        finally {
+            afterExecute();
         }
     }
 
-    private void addMeta() throws IOException {
+    @Override
+    public void addMeta() throws IOException {
         HashMap<String,String> properties = new HashMap<>();
         BufferedReader reader = Files.newBufferedReader(Path.of(fileName));
         int stringCount = 0;
@@ -99,44 +89,23 @@ public class JSONUpdater extends Updater{
         }
         reader.close();
         properties.put("string_count",String.valueOf(stringCount));
-        SearchRequest sc = SearchRequest.getInstance();
-        if (sc.getArticle() != null) {
-            properties.put("article",sc.getArticle().toString());
-        } else {
-            properties.put("field",sc.getField().toString());
-        }
-        if (sc.getResultDateFrom() != null) {
-            properties.put("result_date_from",sc.getResultDateFrom());
-        }
-        if (sc.getResultDateTill() != null) {
-            properties.put("result_date_till",sc.getResultDateTill());
-        }
-        if (sc.getText() != null) {
-            properties.put("text",sc.getText());
-        }
-        FileWriter writer = new FileWriter(fileName.split("\\.json")[0] +"_meta.json", false);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(writer,properties);
+        properties.putAll(getBasicProperties());
+        writeMeta(properties);
     }
 
     private void renew() throws IOException {
         fileWriter = new FileWriter(fileName, StandardCharsets.UTF_8,true);
     }
 
-    private void update(Case _case) {
-        try {
-            _case.setId(Case.idInteger.getAndIncrement());
-            mapper.writeValue(fileWriter,_case);
-            renew();
-            fileWriter.write("\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    private void update(Case _case) throws IOException {
+        _case.setId(Case.idInteger.getAndIncrement());
+        mapper.writeValue(fileWriter,_case);
+        renew();
+        fileWriter.write("\n");
     }
 
     @Override
-    public void close() {
+    protected void close() {
         try {
             fileWriter.flush();
             fileWriter.close();
