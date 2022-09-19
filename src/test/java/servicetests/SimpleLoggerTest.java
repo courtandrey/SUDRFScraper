@@ -16,12 +16,14 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 
 public class SimpleLoggerTest {
+    static {
+        ApplicationConfiguration.setProperty("log.court.history", "true");
+    }
     @Test
     public void successAddToCourtHistoryTest() throws IOException {
         CourtConfiguration cc = new CourtConfiguration();
-        cc.setId(1);
+        cc.setId(-1);
         cc.setIssue(Issue.NOT_FOUND_CASE);
-        ApplicationConfiguration.setProperty("log.court.history", "true");
         SearchRequest.getInstance().setArticle(new CriminalArticle(228));
 
         SimpleLogger.addToCourtHistory(cc);
@@ -38,5 +40,7 @@ public class SimpleLoggerTest {
         reader.close();
 
         assert lastLine.equals("Cases not found " + LocalDate.now() + " " + "{article = Уголовная Статья 228;}");
+
+        Files.deleteIfExists(courtPath);
     }
 }

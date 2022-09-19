@@ -1,5 +1,6 @@
 package servicetests;
 
+import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.dump.JSONUpdaterService;
 import courtandrey.SUDRFScraper.dump.Updater;
 import courtandrey.SUDRFScraper.dump.model.Case;
@@ -13,10 +14,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class UpdaterTest {
+    static {
+        ApplicationConfiguration.setProperty("basic.result.path", "./");
+    }
     @Test
     public void successJSONUpdaterTest() throws IOException, InterruptedException {
         String dumpName = "dumpName";
         Updater updater = new JSONUpdaterService(dumpName, (e, t) -> e.printStackTrace());
+
         updater.startService();
         Collection<Case> cases = new ArrayList<>();
         cases.add(new Case());

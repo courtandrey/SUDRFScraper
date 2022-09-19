@@ -34,7 +34,7 @@ public abstract class UpdaterService extends Thread implements Updater{
         this.handler = handler;
         PATH_TO_SUMMERY = String.format(Constants.PATH_TO_SUMMERY, dumpName, dumpName);
         Path dumpDirectory = Path.of(String.format(Constants.BASIC_RESULT_PATH));
-        if (Files.exists(dumpDirectory)) {
+        if (Files.notExists(dumpDirectory)) {
             Files.createDirectory(dumpDirectory);
         }
         Path dump = Path.of(String.format(Constants.PATH_TO_RESULT_DIRECTORY, dumpName));
