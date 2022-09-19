@@ -15,7 +15,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class DBUpdaterService extends UpdaterService {
-    private CasesDB casesDB;
+    private final CasesDB casesDB;
     private final Queue<Case> cases = new ArrayDeque<>();
     protected boolean isScrappingOver = false;
 
@@ -37,13 +37,9 @@ public class DBUpdaterService extends UpdaterService {
         }
     }
 
-    public DBUpdaterService(String name, ErrorHandler handler) {
+    public DBUpdaterService(String name, ErrorHandler handler) throws IOException, ClassNotFoundException, SQLException {
         super(name, handler);
-        try {
-            casesDB = new CasesDB(name);
-        } catch (ClassNotFoundException | SQLException e) {
-            handler.errorOccurred(e, null);
-        }
+        casesDB = new CasesDB(name);
     }
 
     @Override

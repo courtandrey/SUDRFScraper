@@ -120,7 +120,7 @@ public class Controller {
             else {
                 handler.errorOccurred(new SearchRequestUnsetException(Message.UNKNOWN_DUMP.toString()), null);
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException | ClassNotFoundException e) {
             handler.errorOccurred(e, null);
         }
     }

@@ -29,21 +29,17 @@ public abstract class UpdaterService extends Thread implements Updater{
         this.start();
     }
 
-    public UpdaterService(String dumpName, ErrorHandler handler) {
+    public UpdaterService(String dumpName, ErrorHandler handler) throws IOException{
         this.dumpName = dumpName;
         this.handler = handler;
         PATH_TO_SUMMERY = String.format(Constants.PATH_TO_SUMMERY, dumpName, dumpName);
-        try {
-            Path dumpDirectory = Path.of(String.format(Constants.BASIC_RESULT_PATH));
-            if (Files.exists(dumpDirectory)) {
-                Files.createDirectory(dumpDirectory);
-            }
-            Path dump = Path.of(String.format(Constants.PATH_TO_RESULT_DIRECTORY, dumpName));
-            if (Files.notExists(dump)) {
-                Files.createDirectory(dump);
-            }
-        } catch (IOException e) {
-            handler.errorOccurred(e, null);
+        Path dumpDirectory = Path.of(String.format(Constants.BASIC_RESULT_PATH));
+        if (Files.exists(dumpDirectory)) {
+            Files.createDirectory(dumpDirectory);
+        }
+        Path dump = Path.of(String.format(Constants.PATH_TO_RESULT_DIRECTORY, dumpName));
+        if (Files.notExists(dump)) {
+            Files.createDirectory(dump);
         }
     }
 

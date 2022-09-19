@@ -20,7 +20,7 @@ public class JSONUpdaterService extends UpdaterService {
     private final ObjectMapper mapper = new ObjectMapper();
     private final String fileName;
 
-    public JSONUpdaterService(String dumpName, ErrorHandler handler) {
+    public JSONUpdaterService(String dumpName, ErrorHandler handler) throws IOException {
         super(dumpName, handler);
         fileName = String.format(Constants.PATH_TO_RESULT_JSON, dumpName, dumpName);
         try {
