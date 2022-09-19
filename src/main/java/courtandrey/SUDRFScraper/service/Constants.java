@@ -6,9 +6,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Constants {
     public final String PATH_TO_APP_PROPERTIES = "./src/main/resources/application.properties";
-    public final String BASIC_RESULT_PATH = (String) ApplicationConfiguration.getProperty("basic.result.path");
-    public final String PATH_TO_RESULTS_DIRECTORY = BASIC_RESULT_PATH + "results/";
-    public final String PATH_TO_RESULT_DIRECTORY = PATH_TO_RESULTS_DIRECTORY + "%s/";
+    public final String BASIC_RESULT_PATH = ApplicationConfiguration.getProperty("basic.result.path");
+    public final String PATH_TO_RESULT_DIRECTORY = BASIC_RESULT_PATH + "%s/";
     public final String PATH_TO_RESULT_JSON = PATH_TO_RESULT_DIRECTORY + "%s.json";
     public final String PATH_TO_RESULT_META = PATH_TO_RESULT_DIRECTORY +"%s_meta.json";
     public final String PATH_TO_SUMMERY = PATH_TO_RESULT_DIRECTORY + "%s_summery.txt";

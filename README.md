@@ -51,11 +51,20 @@ As for execution you have these search options:
 3. The main option: article. SUDRFScraper supports Criminal Articles, Administrative Offense Articles and Administrative articles. Just don't forget info introduced in previous chapter (x2).
 
 There are only two dump types supported: MySQL-table and line-by-line JSON document.
-  
-To configure path of dump go to "/src/main/resources/application.properties" and change "basic.result.path" value. Default way: "./results/".
 
 By the end of execution you are given summery info. It is a list of occurred issues, so you may know how many cases you could miss during the scraping. You also can check logs to find issues info.
 If there are many issues that are not include server problems (Inactive court, Connection error) like possible different interfaces I will be glad if you contact me for further improvement of the system.
+
+APPLICATION CONFIGURATION:
+
+You can find configuration properties file by path "/src/main/resources/application.properties".
+Things you can configure include:
+
+Directory of dump basic.result.path: change  value if default way doesn't satisfy you.
+
+Logging of court history use.court.history.
+Don't change this param if you want your File System to be clean.
+It logs court issues, time of execution and search request. It can be of any use only for developer.
 
 PLANS:
 
@@ -64,13 +73,16 @@ PLANS:
 3. Make simple scraping analyzer tool. For common requests like "cases-per-region" or "get number of texts".
 4. Make simple default test, comparing Pravosudie with Scraper.
 5. Make configuration flexible.
-6. Add tests.
+6. Add more tests.
 
 UPDATES:
 
 ver.0.1.4 CAS-UPDATE. Feat: implementation of search based on administrative articles. Small bug fixes and refactoring.
 
-ver 0.1.5 configuration-update. You can change results dump directory modifying application.properties.
+ver 0.1.5 configuration-update. You can change results dump directory modifying application.properties. Small bug fixes and refactoring.
+
+ver.0.1.6 configuration-update. Modified configuration with use.court.history param. Now user won't be trashed with thousands of files. Added some tests.
+Big refactoring.
 
 CONTACT ME:
 

@@ -17,7 +17,10 @@ public class ApplicationConfiguration {
             throw new RuntimeException(e);
         }
     }
-    public synchronized Object getProperty(String key) {
+    public synchronized String getProperty(String key) {
         return props.getProperty(key);
+    }
+    public synchronized void setProperty(String key, String value) {
+        props.setProperty(key, value);
     }
 }

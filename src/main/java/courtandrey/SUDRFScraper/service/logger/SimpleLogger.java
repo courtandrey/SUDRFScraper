@@ -1,5 +1,6 @@
 package courtandrey.SUDRFScraper.service.logger;
 
+import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
 import courtandrey.SUDRFScraper.configuration.searchrequest.SearchRequest;
@@ -17,6 +18,7 @@ public final class SimpleLogger {
     private static FileWriter logWriter;
     private static final DateTimeFormatter  dt = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
     private static String name = "default";
+    private static final Boolean useCourtHistory = Boolean.parseBoolean(ApplicationConfiguration.getProperty("log.court.history"));
 
     private SimpleLogger() {}
 
@@ -35,6 +37,7 @@ public final class SimpleLogger {
     }
 
     public synchronized static void addToCourtHistory(CourtConfiguration cc) throws IOException {
+        if (!useCourtHistory) return;
         Path courtHistory = Path.of("./src/main/resources/courts/");
         if (Files.notExists(courtHistory)) Files.createDirectory(courtHistory);
         try (FileWriter writer = new FileWriter(String.format(Constants.PATH_TO_COURT_HISTORY, cc.getId()), true)) {
