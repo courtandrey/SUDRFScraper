@@ -23,6 +23,7 @@ public abstract class UpdaterService extends Thread implements Updater{
     protected Queue<Case> cases = new ArrayDeque<>();
     private final String PATH_TO_SUMMERY;
     protected ErrorHandler handler;
+    protected boolean isMetaNeeded = false;
 
     @Override
     public void startService() {
@@ -47,6 +48,13 @@ public abstract class UpdaterService extends Thread implements Updater{
     public void registerEnding() {
         isScrappingOver = true;
     }
+
+    @Override
+    public void addMeta() {
+        isMetaNeeded = true;
+    }
+
+    protected abstract void createMeta() throws IOException;
 
     @Override
     public void joinService() throws InterruptedException {
@@ -79,8 +87,12 @@ public abstract class UpdaterService extends Thread implements Updater{
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(writer, meta);
     }
-    protected void afterExecute() {
+    protected void afterExecute() throws IOException {
         close();
+
+        if (isMetaNeeded) {
+            createMeta();
+        }
     }
     protected abstract void close();
 

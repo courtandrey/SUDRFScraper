@@ -43,7 +43,7 @@ public class DBUpdaterService extends UpdaterService {
     }
 
     @Override
-    public void addMeta() throws IOException {
+    public void createMeta() throws IOException {
         writeMeta(getBasicProperties());
     }
 
@@ -71,7 +71,11 @@ public class DBUpdaterService extends UpdaterService {
             handler.errorOccurred(e, this);
         }
         finally {
-            afterExecute();
+            try {
+                afterExecute();
+            } catch (IOException e) {
+                handler.errorOccurred(e, this);
+            }
         }
     }
 

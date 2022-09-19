@@ -224,9 +224,11 @@ public class Controller {
             scrap();
 
             updaterService.joinService();
+
+            updaterService.addMeta();
         } catch (InterruptedException e) {
             handler.errorOccurred(e, null);
-        } finally {
+        }  finally {
             end();
         }
     }

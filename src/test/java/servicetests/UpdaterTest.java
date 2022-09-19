@@ -32,8 +32,8 @@ public class UpdaterTest {
         cases.add(new Case());
         updater.update(cases);
         updater.writeSummery("Updated by JSONUpdaterService");
-        updater.joinService();
         updater.addMeta();
+        updater.joinService();
 
         Path resultPath = Path.of(String.format(Constants.PATH_TO_RESULT_JSON, dumpName, dumpName));
         Path summeryPath = Path.of(String.format(Constants.PATH_TO_SUMMERY, dumpName, dumpName));

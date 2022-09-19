@@ -74,12 +74,16 @@ public class JSONUpdaterService extends UpdaterService {
             handler.errorOccurred(e, this);
         }
         finally {
-            afterExecute();
+            try {
+                afterExecute();
+            } catch (IOException e) {
+                handler.errorOccurred(e, this);
+            }
         }
     }
 
     @Override
-    public void addMeta() throws IOException {
+    public void createMeta() throws IOException {
         HashMap<String,String> properties = new HashMap<>();
         BufferedReader reader = Files.newBufferedReader(Path.of(fileName));
         int stringCount = 0;
