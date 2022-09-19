@@ -7,3 +7,4 @@
 /target/
 /src/main/resources/config/config_sudrf_backup.json
 /src/main/resources/myapplication.properties
+/src/main/resources/default_apllication.properties
