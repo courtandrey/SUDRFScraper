@@ -23,7 +23,9 @@ public class SimpleLoggerTest {
         cc.setIssue(Issue.NOT_FOUND_CASE);
         ApplicationConfiguration.setProperty("log.court.history", "true");
         SearchRequest.getInstance().setArticle(new CriminalArticle(228));
+
         SimpleLogger.addToCourtHistory(cc);
+
         Path courtPath = Path.of(String.format(Constants.PATH_TO_COURT_HISTORY, cc.getId()));
 
         assert Files.exists(courtPath) && Files.size(courtPath) > 0;
@@ -34,6 +36,7 @@ public class SimpleLoggerTest {
             lastLine = reader.readLine();
         }
         reader.close();
+
         assert lastLine.equals("Cases not found " + LocalDate.now() + " " + "{article = Уголовная Статья 228;}");
     }
 }
