@@ -60,11 +60,14 @@ APPLICATION CONFIGURATION:
 You can find configuration properties file by path "/src/main/resources/application.properties".
 Things you can configure include:
 
-Directory of dump basic.result.path: change  value if default way doesn't satisfy you.
+Directory of dump "basic.result.path": change  value if default way doesn't satisfy you.
 
-Logging of court history use.court.history.
+Logging of court history "use.court.history".
 Don't change this param if you want your File System to be clean.
 It logs court issues, time of execution and search request. It can be of any use only for developer.
+
+MySQL Server Connection Info. Fields "sql.usr", "sql.db_url", "sql.password" for user, jdbc database url, password.
+You don't have to fill in these fields. You can fill in it while in execution. 
 
 PLANS:
 
@@ -81,7 +84,7 @@ ver.0.1.4 CAS-UPDATE. Feat: implementation of search based on administrative art
 
 ver 0.1.5 configuration-update. You can change results dump directory modifying application.properties. Small bug fixes and refactoring.
 
-ver.0.1.6 configuration-update. Modified configuration with use.court.history param. Now user won't be trashed with thousands of files. Added some tests.
+ver.0.1.6 configuration-update. Modified configuration with "use.court.history" configuration param. Now user won't be trashed with thousands of files. Added some tests.
 Massive refactoring.
 
 CONTACT ME:
