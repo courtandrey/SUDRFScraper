@@ -30,7 +30,8 @@ public enum Message {
     EXCEPTION_OCCURRED("Exception occurred: %s"),
     WRONG_DATE_FORMAT("Format of date is wrong.\nExample of correct format: 2022 2 24"),
     WRONG_ARTICLE_FORMAT("Format of article is wrong"),
-    SUSPICIOUS_NUMBER_OF_CASES("Suspicious number of cases: ")
+    SUSPICIOUS_NUMBER_OF_CASES("Suspicious number of cases: "),
+    SQL_CONNECTION_ERROR("SQL connection wasn't established. Check your connection info.")
     ;
 
     Message(String message) {

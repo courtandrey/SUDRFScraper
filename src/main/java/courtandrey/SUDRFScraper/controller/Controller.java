@@ -75,7 +75,6 @@ public class Controller {
             }
 
             if (t == null || !t.getName().contains("pool")) {
-                view.finish();
                 if (mainThread != null) {
                     mainThread.interrupt();
                 }
@@ -125,11 +124,12 @@ public class Controller {
         }
     }
 
-    public void setServerConnectionInfo(String DB_URL, String user, String password) {
+    public void setServerConnectionInfo(String DB_URL, String user, String password) throws SQLException {
         if (dump != Dump.MySQL) throw new UnsupportedOperationException(Message.WRONG_DUMP.toString());
         ServerConnectionInfo.setDbUrl(DB_URL);
         ServerConnectionInfo.setUser(user);
         ServerConnectionInfo.setPassword(password);
+        ServerConnectionInfo.testConnection();
     }
 
     private void reset(SearchRequest request) {

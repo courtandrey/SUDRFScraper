@@ -1,5 +1,9 @@
 package courtandrey.SUDRFScraper.configuration.dumpconfiguration;
 
+import courtandrey.SUDRFScraper.dump.DBUpdaterService;
+
+import java.sql.SQLException;
+
 public final class ServerConnectionInfo {
     private static String DB_URL = "";
     private static String user = "";
@@ -27,5 +31,14 @@ public final class ServerConnectionInfo {
 
     public static void setPassword(String password) {
         ServerConnectionInfo.password = password;
+    }
+
+    public static void testConnection() throws SQLException {
+        if (!DB_URL.equals("") && !user.equals("") && !password.equals("")) {
+            DBUpdaterService.CasesDB.getConnection();
+        }
+        else {
+            throw new SQLException();
+        }
     }
 }

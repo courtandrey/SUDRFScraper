@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -579,13 +580,18 @@ public class SimpleSwingView implements View {
         JButton button = new JButton("Confirm");
 
         button.addActionListener(e -> {
-            if (field1.getText().length() > 0 && field2.getText().length() > 0 && field3.getText().length() > 0) {
-                controller.setServerConnectionInfo(field1.getText(), field2.getText(), field3.getText());
-                frames.remove(frame);
-                frame.dispose();
-                showFrame(ViewFrame.SET_REQUEST);
-            } else {
-                showError(frame, Message.CONNECTION_INFO_NOT_SET.toString());
+            try {
+                if (field1.getText().length() > 0 && field2.getText().length() > 0 && field3.getText().length() > 0) {
+                    controller.setServerConnectionInfo(field1.getText(), field2.getText(), field3.getText());
+                    frames.remove(frame);
+                    frame.dispose();
+                    showFrame(ViewFrame.SET_REQUEST);
+                } else {
+                    showError(frame, Message.CONNECTION_INFO_NOT_SET.toString());
+                }
+            }
+            catch (SQLException ex) {
+                showError(frame, Message.SQL_CONNECTION_ERROR.toString());
             }
         });
 
