@@ -20,14 +20,14 @@ public class ConstantsGetter {
         }
     }
 
-    public static String getMessage(Message message) {
+    public synchronized static String getMessage(Message message) {
         if (messagesProperties.size() == 0) {
             init();
         }
         return messagesProperties.getProperty(message.name());
     }
 
-    public static String getStringConstant(Constant constant) {
+    public synchronized static String getStringConstant(Constant constant) {
         if (constantsProperties.size() == 0) {
             init();
         }
