@@ -24,6 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import static courtandrey.SUDRFScraper.service.Constant.*;
+
 @SuppressWarnings("unused")
 public class PrimaryConfigurator {
 
@@ -32,8 +34,8 @@ public class PrimaryConfigurator {
     private static final List<CourtConfiguration> baseCCS = ConfigurationLoader.getCourtConfigurationsFromBase();
 
     public static void configureCourts() throws IOException {
-        try (BufferedReader configReader = Files.newBufferedReader(Path.of(Constants.PATH_TO_PRECONFIG));
-             FileWriter writer=new FileWriter(Constants.PATH_TO_CONFIG)){
+        try (BufferedReader configReader = Files.newBufferedReader(Path.of(PATH_TO_PRECONFIG.toString()));
+             FileWriter writer = new FileWriter(PATH_TO_CONFIG.toString())){
 
             List<CourtConfiguration> courtConfigurations = new ArrayList<>();
 
@@ -41,7 +43,7 @@ public class PrimaryConfigurator {
                 courtConfigurations.addAll(getCourtConfigurations(configReader.readLine()));
             }
 
-            ObjectMapper mapper=new ObjectMapper();
+            ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(writer,courtConfigurations);
 
             SimpleLogger.close();
@@ -55,7 +57,7 @@ public class PrimaryConfigurator {
         String sourceURL=splits[2].replace("$NAME",splits[0]);
         int regionCode=Integer.parseInt(splits[1]);
 
-        courtConfigurations.add(getCourtConfiguration(sourceURL.replace(Constants.PRECONFIG_URL_ENDING,""),
+        courtConfigurations.add(getCourtConfiguration(sourceURL.replace(PRECONFIG_URL_ENDING.toString(), ""),
                 regionCode));
 
         HashSet<String> urls = getURLs(sourceURL);
@@ -130,8 +132,8 @@ public class PrimaryConfigurator {
             try {
                 Document soup = Jsoup
                         .connect(sourceURL)
-                        .userAgent(Constants.UA)
-                        .referrer(sourceURL.replace(Constants.PRECONFIG_URL_ENDING, "/"))
+                        .userAgent(UA.toString())
+                        .referrer(sourceURL.replace(PRECONFIG_URL_ENDING.toString(), "/"))
                         .timeout(60 * 1000 * 2)
                         .get();
                 urls = findURLs(soup, sourceURL);

@@ -434,18 +434,26 @@ public class SimpleSwingView implements View {
 
         JButton button = new JButton("Confirm");
         button.addActionListener(e -> {
-            if (dump.get() != null && textPane.getText().length() > 0) {
+            if (dump.get() != null && textPane.getText().length() > 0 && checkName(dump.get(), textPane.getText())) {
                 frame.dispose();
                 frames.remove(frame);
                 controller.prepareScrapper(textPane.getText(), dump.get());
             } else {
-                showError(frame, Message.OUTPUT_NOT_SET.toString());
+                showError(frame, Message.INVALID_OUTPUT.toString());
             }
         });
         frame.getContentPane().add(button, BorderLayout.PAGE_END);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private boolean checkName(Dump dump, String name) {
+        if (dump == Dump.MySQL) {
+            if (Character.isDigit(name.charAt(0)))
+                return false;
+        }
+        return !name.contains(".") && !name.contains("/");
     }
 
     @Override
@@ -555,11 +563,13 @@ public class SimpleSwingView implements View {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600,300);
 
+        ServerConnectionInfo info = ServerConnectionInfo.getInstance();
+
         JPanel panel1 = new JPanel();
         panel1.setLayout(new BoxLayout(panel1,BoxLayout.Y_AXIS));
         frame.add(panel1,BorderLayout.WEST);
         JTextField field1 = new JTextField(15);
-        field1.setText(ServerConnectionInfo.getDbUrl());
+        field1.setText(info.getDbUrl());
         JLabel label1 = new JLabel("Type DB URL: ");
         panel1.add(label1);
         panel1.add(field1);
@@ -568,7 +578,7 @@ public class SimpleSwingView implements View {
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
         frame.add(panel2,BorderLayout.CENTER);
         JTextField field2 = new JTextField(15);
-        field2.setText(ServerConnectionInfo.getUser());
+        field2.setText(info.getUser());
         JLabel label2 = new JLabel("Type username: ");
         panel2.add(label2);
         panel2.add(field2);
@@ -577,7 +587,7 @@ public class SimpleSwingView implements View {
         panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
         frame.add(panel3,BorderLayout.EAST);
         JTextField field3 = new JTextField(15);
-        field3.setText(ServerConnectionInfo.getPassword());
+        field3.setText(info.getPassword());
         JLabel label3 = new JLabel("Type password: ");
         panel3.add(label3);
         panel3.add(field3);

@@ -5,7 +5,6 @@ import courtandrey.SUDRFScraper.controller.ErrorHandler;
 import courtandrey.SUDRFScraper.dump.model.Case;
 import courtandrey.SUDRFScraper.dump.repository.Cases;
 import courtandrey.SUDRFScraper.service.ThreadHelper;
-import courtandrey.SUDRFScraper.service.Constants;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,6 +12,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Queue;
+
+import static courtandrey.SUDRFScraper.service.Constant.DB_Driver;
 
 public class DBUpdaterService extends UpdaterService {
     private final CasesDB casesDB;
@@ -23,12 +24,13 @@ public class DBUpdaterService extends UpdaterService {
         private final Cases cases;
 
         public static Connection getConnection() throws SQLException {
-            return DriverManager.getConnection(ServerConnectionInfo.getDbUrl(),ServerConnectionInfo.getUser(),
-                    ServerConnectionInfo.getPassword());
+            ServerConnectionInfo connectionInfo = ServerConnectionInfo.getInstance();
+            return DriverManager.getConnection(connectionInfo.getDbUrl(),connectionInfo.getUser(),
+                    connectionInfo.getPassword());
         }
 
         public CasesDB(String name) throws ClassNotFoundException, SQLException {
-            Class.forName(Constants.DB_Driver);
+            Class.forName(DB_Driver.toString());
             cases = new Cases(name);
         }
 

@@ -5,36 +5,53 @@ import courtandrey.SUDRFScraper.dump.DBUpdaterService;
 
 import java.sql.SQLException;
 
-public final class ServerConnectionInfo {
-    private static String DB_URL = ApplicationConfiguration.getProperty("sql.url");
-    private static String user = ApplicationConfiguration.getProperty("sql.usr");
-    private static String password = ApplicationConfiguration.getProperty("sql.password");
+public class ServerConnectionInfo {
 
-    public static String getDbUrl() {
+    private ServerConnectionInfo() {
+        ApplicationConfiguration configuration = ApplicationConfiguration.getInstance();
+        this.DB_URL = configuration.getProperty("sql.url");
+        this.user = configuration.getProperty("sql.usr");
+        this.password = configuration.getProperty("sql.password");
+    }
+
+    private static ServerConnectionInfo instance;
+
+    public static ServerConnectionInfo getInstance() {
+        if (instance == null) {
+            instance = new ServerConnectionInfo();
+        }
+        return instance;
+    }
+
+    private String DB_URL;
+    private String user;
+    private String password;
+
+    public String getDbUrl() {
         return DB_URL;
     }
 
-    public static void setDbUrl(String dbUrl) {
-        DB_URL = dbUrl;
+    public void setDbUrl(String dbUrl) {
+        this.DB_URL = dbUrl;
     }
 
-    public static String getUser() {
+    public String getUser() {
         return user;
     }
 
-    public static void setUser(String user) {
-        ServerConnectionInfo.user = user;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public static String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public static void setPassword(String password) {
-        ServerConnectionInfo.password = password;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public static void testConnection() throws SQLException {
+    public void testConnection() throws SQLException {
         if (!DB_URL.equals("") && !user.equals("") && !password.equals("")) {
             DBUpdaterService.CasesDB.getConnection();
         }

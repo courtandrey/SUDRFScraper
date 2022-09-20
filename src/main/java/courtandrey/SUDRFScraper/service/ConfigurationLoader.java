@@ -11,11 +11,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static courtandrey.SUDRFScraper.service.Constant.*;
+
 @UtilityClass
 public class ConfigurationLoader {
     public ArrayList<CourtConfiguration> getCourtConfigurations() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(Path.of(Constants.PATH_TO_CONFIG).toFile(),
+        return mapper.readValue(Path.of(PATH_TO_CONFIG.toString()).toFile(),
                 mapper.getTypeFactory().constructCollectionType(ArrayList.class, CourtConfiguration.class));
     }
 
@@ -23,16 +25,16 @@ public class ConfigurationLoader {
         if (needToUseBaseConfig) return getCourtConfigurations();
         else {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(Path.of(Constants.PATH_TO_CONFIG_BASE).toFile(),
+            return mapper.readValue(Path.of(PATH_TO_CONFIG_BASE.toString()).toFile(),
                     mapper.getTypeFactory().constructCollectionType(ArrayList.class, CourtConfiguration.class));
         }
     }
 
     public void doBackUp() {
         try {
-            Path configBackUp = Path.of(Constants.PATH_TO_CONFIG_BACKUP);
+            Path configBackUp = Path.of(PATH_TO_CONFIG_BACKUP.toString());
             Files.deleteIfExists(configBackUp);
-            Files.copy(Path.of(Constants.PATH_TO_CONFIG), configBackUp);
+            Files.copy(Path.of(PATH_TO_CONFIG.toString()), configBackUp);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,7 +43,7 @@ public class ConfigurationLoader {
     public ArrayList<CourtConfiguration> getCourtConfigurationsFromBase() {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(Path.of(Constants.PATH_TO_CONFIG_BASE).toFile(),
+            return mapper.readValue(Path.of(PATH_TO_CONFIG_BASE.toString()).toFile(),
                     mapper.getTypeFactory().constructCollectionType(ArrayList.class, CourtConfiguration.class));
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,7 +53,7 @@ public class ConfigurationLoader {
 
     public synchronized void refresh(List<CourtConfiguration> ccs) {
         try {
-            FileWriter writer = new FileWriter(Constants.PATH_TO_CONFIG);
+            FileWriter writer = new FileWriter(PATH_TO_CONFIG.toString());
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(writer,ccs);
         } catch (IOException e) {

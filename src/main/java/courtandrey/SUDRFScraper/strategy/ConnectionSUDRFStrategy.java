@@ -4,7 +4,6 @@ import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfigurat
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.SearchPattern;
 import courtandrey.SUDRFScraper.dump.model.Case;
-import courtandrey.SUDRFScraper.service.Constants;
 import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
 import courtandrey.SUDRFScraper.service.SeleniumHelper;
@@ -25,6 +24,8 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import static courtandrey.SUDRFScraper.service.Constant.UA;
 
 public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
 
@@ -283,7 +284,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
 
         private String getJsoupText(String url) throws IOException {
             Document decision = Jsoup.connect(url)
-                    .userAgent(Constants.UA)
+                    .userAgent(UA.toString())
                     .timeout(1000 * 60 * 2)
                     .get();
             return parseText(decision);
@@ -333,7 +334,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
         try {
             currentDocument = Jsoup
                     .connect(urls[indexUrl])
-                    .userAgent(Constants.UA)
+                    .userAgent(UA.toString())
                     .timeout(1000 * 60 * 2)
                     .get();
         } catch (SocketException | HttpStatusException | UnknownHostException e) {

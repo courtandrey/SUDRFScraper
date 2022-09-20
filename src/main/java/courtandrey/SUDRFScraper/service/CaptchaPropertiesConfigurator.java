@@ -17,6 +17,8 @@ import java.nio.file.Path;
 import java.util.Base64;
 import java.util.Properties;
 
+import static courtandrey.SUDRFScraper.service.Constant.PATH_TO_CAPTCHA;
+
 public class CaptchaPropertiesConfigurator {
     private static SeleniumHelper sh;
     private final CourtConfiguration cc;
@@ -41,10 +43,10 @@ public class CaptchaPropertiesConfigurator {
     private Properties getProps() {
         Properties properties = new Properties();
         try {
-            if (Files.notExists(Path.of(String.format(Constants.PATH_TO_CAPTCHA,cc.getRegion())))) {
-                Files.createFile(Path.of(String.format(Constants.PATH_TO_CAPTCHA,cc.getRegion())));
+            if (Files.notExists(Path.of(String.format(PATH_TO_CAPTCHA.toString(), cc.getRegion())))) {
+                Files.createFile(Path.of(String.format(PATH_TO_CAPTCHA.toString(), cc.getRegion())));
             }
-            properties.load(new FileReader(String.format(Constants.PATH_TO_CAPTCHA,cc.getRegion())));
+            properties.load(new FileReader(String.format(PATH_TO_CAPTCHA.toString(), cc.getRegion())));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -106,7 +108,7 @@ public class CaptchaPropertiesConfigurator {
 
     private void refresh() {
         try {
-            props.store(new FileWriter(String.format(Constants.PATH_TO_CAPTCHA,cc.getRegion())),"");
+            props.store(new FileWriter(String.format(PATH_TO_CAPTCHA.toString(), cc.getRegion())),"");
         } catch (IOException e) {
             e.printStackTrace();
         }

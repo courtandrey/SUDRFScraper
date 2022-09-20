@@ -1,11 +1,12 @@
 package courtandrey.SUDRFScraper.configuration.courtconfiguration;
 
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
-import courtandrey.SUDRFScraper.service.Constants;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
+
+import static courtandrey.SUDRFScraper.service.Constant.*;
 
 public enum SearchPattern {
     DEPRECATED_PRIMARY_PATTERN,
@@ -43,15 +44,15 @@ public enum SearchPattern {
     }
 
     public String[] getCASPattern() {
-        return String.valueOf(getProps(Constants.PATH_TO_CAS_PROPERTIES).getProperty(this.toString())).split("\\$DELIMITER");
+        return String.valueOf(getProps(PATH_TO_CAS_PROPERTIES.toString()).getProperty(this.toString())).split("\\$DELIMITER");
     }
 
     public String[] getCriminalPattern() {
-        return String.valueOf(getProps(Constants.PATH_TO_CRIMINAL_PROPERTIES).getProperty(this.toString())).split("\\$DELIMITER");
+        return String.valueOf(getProps(PATH_TO_CRIMINAL_PROPERTIES.toString()).getProperty(this.toString())).split("\\$DELIMITER");
     }
 
     public String[] getAdminPattern() {
-        return String.valueOf(getProps(Constants.PATH_TO_ADMIN_PROPERTIES).getProperty(this.toString())).split("\\$DELIMITER");
+        return String.valueOf(getProps(PATH_TO_ADMIN_PROPERTIES.toString()).getProperty(this.toString())).split("\\$DELIMITER");
     }
 }
 

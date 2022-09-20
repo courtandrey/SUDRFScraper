@@ -2,7 +2,6 @@ package courtandrey.SUDRFScraper.dump;
 
 import courtandrey.SUDRFScraper.controller.ErrorHandler;
 import courtandrey.SUDRFScraper.dump.model.Case;
-import courtandrey.SUDRFScraper.service.Constants;
 import courtandrey.SUDRFScraper.service.ThreadHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -15,6 +14,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static courtandrey.SUDRFScraper.service.Constant.PATH_TO_RESULT_JSON;
+
 public class JSONUpdaterService extends UpdaterService {
     private FileWriter fileWriter;
     private final ObjectMapper mapper = new ObjectMapper();
@@ -22,7 +23,7 @@ public class JSONUpdaterService extends UpdaterService {
 
     public JSONUpdaterService(String dumpName, ErrorHandler handler) throws IOException {
         super(dumpName, handler);
-        fileName = String.format(Constants.PATH_TO_RESULT_JSON, dumpName, dumpName);
+        fileName = String.format(PATH_TO_RESULT_JSON.toString(), dumpName, dumpName);
         try {
             renew();
             if (Files.size(Path.of(fileName)) > 0) {

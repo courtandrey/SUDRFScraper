@@ -5,7 +5,6 @@ import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.dump.JSONUpdaterService;
 import courtandrey.SUDRFScraper.dump.Updater;
 import courtandrey.SUDRFScraper.dump.model.Case;
-import courtandrey.SUDRFScraper.service.Constants;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -15,14 +14,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class UpdaterTest {
-    static {
-        ApplicationConfiguration.setProperty("basic.result.path", "./");
-    }
+import static courtandrey.SUDRFScraper.service.Constant.*;
 
+public class UpdaterTest {
     @SuppressWarnings("unchecked")
     @Test
     public void successJSONUpdaterTest() throws IOException, InterruptedException {
+        ApplicationConfiguration.getInstance().setProperty("basic.result.path", "./");
         String dumpName = "dumpName";
         Updater updater = new JSONUpdaterService(dumpName, (e, t) -> e.printStackTrace());
 
@@ -35,9 +33,9 @@ public class UpdaterTest {
         updater.addMeta();
         updater.joinService();
 
-        Path resultPath = Path.of(String.format(Constants.PATH_TO_RESULT_JSON, dumpName, dumpName));
-        Path summeryPath = Path.of(String.format(Constants.PATH_TO_SUMMERY, dumpName, dumpName));
-        Path metaPath = Path.of(String.format(Constants.PATH_TO_RESULT_META, dumpName, dumpName));
+        Path resultPath = Path.of(String.format(PATH_TO_RESULT_JSON.toString(), dumpName, dumpName));
+        Path summeryPath = Path.of(String.format(PATH_TO_SUMMERY.toString(), dumpName, dumpName));
+        Path metaPath = Path.of(String.format(PATH_TO_RESULT_META.toString(), dumpName, dumpName));
 
         assert Files.exists(resultPath) && Files.size(resultPath) > 0;
         assert Files.exists(summeryPath) && Files.size(summeryPath) > 0;
@@ -50,6 +48,6 @@ public class UpdaterTest {
         Files.deleteIfExists(resultPath);
         Files.deleteIfExists(summeryPath);
         Files.deleteIfExists(metaPath);
-        Files.deleteIfExists(Path.of(String.format(Constants.PATH_TO_RESULT_DIRECTORY, dumpName)));
+        Files.deleteIfExists(Path.of(String.format(PATH_TO_RESULT_DIRECTORY.toString(), dumpName)));
     }
 }

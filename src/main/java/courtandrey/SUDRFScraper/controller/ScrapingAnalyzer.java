@@ -5,7 +5,6 @@ import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnection
 import courtandrey.SUDRFScraper.dump.model.Case;
 import courtandrey.SUDRFScraper.dump.model.Dump;
 import courtandrey.SUDRFScraper.service.ConfigurationLoader;
-import courtandrey.SUDRFScraper.service.Constants;
 import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+
+import static courtandrey.SUDRFScraper.service.Constant.PATH_TO_RESULT_JSON;
+import static courtandrey.SUDRFScraper.service.Constant.PATH_TO_RESULT_META;
 
 @SuppressWarnings("unused")
 public class ScrapingAnalyzer {
@@ -62,7 +64,7 @@ public class ScrapingAnalyzer {
 
         public JSONScrapingAnalyzer(String name) {
             super(name);
-            PATH_TO_DUMP = String.format(Constants.PATH_TO_RESULT_JSON, name, name);
+            PATH_TO_DUMP = String.format(PATH_TO_RESULT_JSON.toString(), name, name);
         }
         @Override
         public void showCasesPerRegion() throws IOException {
@@ -164,7 +166,8 @@ public class ScrapingAnalyzer {
         @SuppressWarnings("unchecked")
         private HashMap<String,String> getMeta() {
             try {
-                return (HashMap<String, String>) (new ObjectMapper()).readValue(new FileReader(String.format(Constants.PATH_TO_RESULT_META, name, name)),
+                return (HashMap<String, String>) (new ObjectMapper()).readValue(new FileReader(
+                        String.format(PATH_TO_RESULT_META.toString(), name, name)),
                         HashMap.class);
             } catch (Exception e) {
                 return  null;
@@ -195,8 +198,9 @@ public class ScrapingAnalyzer {
 
     public void setServerConnectionInfo(String DB_URL, String user, String password) {
         if (!(analyzer instanceof MySQLScrapingAnalyzer)) throw new UnsupportedOperationException(Message.WRONG_DUMP.toString());
-        ServerConnectionInfo.setDbUrl(DB_URL);
-        ServerConnectionInfo.setUser(user);
-        ServerConnectionInfo.setPassword(password);
+        ServerConnectionInfo info = ServerConnectionInfo.getInstance();
+        info.setDbUrl(DB_URL);
+        info.setUser(user);
+        info.setPassword(password);
     }
 }

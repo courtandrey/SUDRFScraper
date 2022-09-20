@@ -1,22 +1,31 @@
 package courtandrey.SUDRFScraper.configuration;
 
-import courtandrey.SUDRFScraper.service.Constants;
-import lombok.experimental.UtilityClass;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-@UtilityClass
+import static courtandrey.SUDRFScraper.service.Constant.PATH_TO_APP_PROPERTIES;
+
 public class ApplicationConfiguration {
-    public final Properties props = new Properties();
-    static {
+    public static final Properties props = new Properties();
+
+    private ApplicationConfiguration() {
         try {
-            props.load(new FileReader(Constants.PATH_TO_APP_PROPERTIES));
+            props.load(new FileReader(PATH_TO_APP_PROPERTIES.toString()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private static ApplicationConfiguration configuration;
+
+    public static ApplicationConfiguration getInstance() {
+        if (configuration == null) {
+            configuration = new ApplicationConfiguration();
+        }
+        return configuration;
+    }
+
     public synchronized String getProperty(String key) {
         return props.getProperty(key);
     }

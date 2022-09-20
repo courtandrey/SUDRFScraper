@@ -1,5 +1,5 @@
 ///
-Scrapped by SUDRFScraper v.0.1.6
+Scrapped by SUDRFScraper v.0.1.7
 Note: scrapping proceeds only within courts of general jurisdiction excluding Mosgorsud. Cases are first-instance considered only.
 Feedback: sudarkinandrew@gmail.com
 ///

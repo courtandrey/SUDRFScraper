@@ -127,10 +127,11 @@ public class Controller {
 
     public void setServerConnectionInfo(String DB_URL, String user, String password) throws SQLException {
         if (dump != Dump.MySQL) throw new UnsupportedOperationException(Message.WRONG_DUMP.toString());
-        ServerConnectionInfo.setDbUrl(DB_URL);
-        ServerConnectionInfo.setUser(user);
-        ServerConnectionInfo.setPassword(password);
-        ServerConnectionInfo.testConnection();
+        ServerConnectionInfo info = ServerConnectionInfo.getInstance();
+        info.setDbUrl(DB_URL);
+        info.setUser(user);
+        info.setPassword(password);
+        info.testConnection();
     }
 
     private void reset(SearchRequest request) {
@@ -258,18 +259,18 @@ public class Controller {
         SimpleLogger.close();
     }
 
-    private void continueScrapping() {
+    private void continueScrapping() throws InterruptedException {
         ConfigurationHelper.analyzeIssues(configHolder.getCCs());
         execute(true);
     }
 
-    private void scrap() {
+    private void scrap() throws InterruptedException {
         execute(false);
         continueScrapping();
         view.showFrameWithInfo(ViewFrame.INFO, Message.DUMP.toString());
     }
 
-    private void execute(Boolean ignoreInactive) {
+    private void execute(Boolean ignoreInactive) throws InterruptedException {
         List<CourtConfiguration> mainCCS = new ArrayList<>(configHolder.getCCs().stream().filter(x -> !x.isSingleStrategy() &&
                 x.getStrategyName() != StrategyName.END_STRATEGY).toList());
 
@@ -310,11 +311,7 @@ public class Controller {
             seleniumExecutor.execute(this.selectStrategy(cc));
         }
 
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        countDownLatch.await();
 
         mainExecutor.shutdown();
         seleniumExecutor.shutdown();

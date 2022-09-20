@@ -4,7 +4,6 @@ import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
 import courtandrey.SUDRFScraper.configuration.searchrequest.SearchRequest;
-import courtandrey.SUDRFScraper.service.Constants;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,16 +13,28 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static courtandrey.SUDRFScraper.service.Constant.PATH_TO_COURT_HISTORY;
+import static courtandrey.SUDRFScraper.service.Constant.PATH_TO_LOGS;
+
 public final class SimpleLogger {
     private static FileWriter logWriter;
     private static final DateTimeFormatter  dt = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
     private static String name = "default";
-    private static final Boolean useCourtHistory = Boolean.parseBoolean(ApplicationConfiguration.getProperty("log.court.history"));
+    private static Boolean useCourtHistory;
+    private static boolean isInited = false;
 
     private SimpleLogger() {}
 
     public static void initLogger(String name) {
         SimpleLogger.name = name;
+        useCourtHistory = Boolean.parseBoolean(ApplicationConfiguration.getInstance().getProperty("log.court.history"));
+    }
+
+    private static void initLogger() {
+        if (!isInited) {
+            initLogger(name);
+            isInited = true;
+        }
     }
 
     public synchronized static void log(LoggingLevel level, Object message) {
@@ -37,10 +48,11 @@ public final class SimpleLogger {
     }
 
     public synchronized static void addToCourtHistory(CourtConfiguration cc) throws IOException {
+        initLogger();
         if (!useCourtHistory) return;
         Path courtHistory = Path.of("./src/main/resources/courts/");
         if (Files.notExists(courtHistory)) Files.createDirectory(courtHistory);
-        try (FileWriter writer = new FileWriter(String.format(Constants.PATH_TO_COURT_HISTORY, cc.getId()), true)) {
+        try (FileWriter writer = new FileWriter(String.format(PATH_TO_COURT_HISTORY.toString(), cc.getId()), true)) {
             if (cc.getIssue() == null)  {
                 cc.setIssue(Issue.ERROR);
             }
@@ -58,7 +70,7 @@ public final class SimpleLogger {
     private static FileWriter getLogWriter()  {
         if (logWriter == null) {
             try {
-                logWriter = new FileWriter(String.format(Constants.PATH_TO_LOGS, name, name),true);
+                logWriter = new FileWriter(String.format(PATH_TO_LOGS.toString(), name, name),true);
                 logWriter.write(Message.BEGINNING_OF_EXECUTION + "\n");
             } catch (IOException e) {
                 e.printStackTrace();

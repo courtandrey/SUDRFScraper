@@ -87,6 +87,8 @@ ver 0.1.5 configuration-update. You can change results dump directory modifying 
 ver.0.1.6 configuration-update. Modified configuration with "use.court.history" configuration param. Now user won't be trashed with thousands of files. Added some tests.
 Massive refactoring.
 
+ver.0.1.7 configuration-update. Modified configuration with default sql connection parameters. Massive refactoring.
+
 CONTACT ME:
 
 Email: sudarkinandrew@gmail.com

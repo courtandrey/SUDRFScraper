@@ -15,13 +15,13 @@ import java.util.HashMap;
 import java.util.Queue;
 
 import courtandrey.SUDRFScraper.dump.model.Case;
-import courtandrey.SUDRFScraper.service.Constants;
+import static courtandrey.SUDRFScraper.service.Constant.*;
 
 public abstract class UpdaterService extends Thread implements Updater{
     protected boolean isScrappingOver;
     protected String dumpName;
     protected Queue<Case> cases = new ArrayDeque<>();
-    private final String PATH_TO_SUMMERY;
+    private final String SUMMERY;
     protected ErrorHandler handler;
     protected boolean isMetaNeeded = false;
 
@@ -33,12 +33,12 @@ public abstract class UpdaterService extends Thread implements Updater{
     public UpdaterService(String dumpName, ErrorHandler handler) throws IOException{
         this.dumpName = dumpName;
         this.handler = handler;
-        PATH_TO_SUMMERY = String.format(Constants.PATH_TO_SUMMERY, dumpName, dumpName);
-        Path dumpDirectory = Path.of(String.format(Constants.BASIC_RESULT_PATH));
+        SUMMERY = String.format(PATH_TO_SUMMERY.toString(), dumpName, dumpName);
+        Path dumpDirectory = Path.of(BASIC_RESULT_PATH.toString());
         if (Files.notExists(dumpDirectory)) {
             Files.createDirectory(dumpDirectory);
         }
-        Path dump = Path.of(String.format(Constants.PATH_TO_RESULT_DIRECTORY, dumpName));
+        Path dump = Path.of(String.format(PATH_TO_RESULT_DIRECTORY.toString(), dumpName));
         if (Files.notExists(dump)) {
             Files.createDirectory(dump);
         }
@@ -83,7 +83,7 @@ public abstract class UpdaterService extends Thread implements Updater{
     }
 
     protected void writeMeta(HashMap<String,String> meta) throws IOException {
-        FileWriter writer = new FileWriter(String.format(Constants.PATH_TO_RESULT_META, dumpName, dumpName), false);
+        FileWriter writer = new FileWriter(String.format(PATH_TO_RESULT_META.toString(), dumpName, dumpName), false);
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(writer, meta);
     }
@@ -103,7 +103,7 @@ public abstract class UpdaterService extends Thread implements Updater{
 
     @Override
     public void writeSummery(String text){
-        try (FileWriter w = new FileWriter(PATH_TO_SUMMERY)) {
+        try (FileWriter w = new FileWriter(SUMMERY)) {
             w.write(text);
             w.write(getSummeryInfo());
         } catch (IOException e) {
@@ -113,7 +113,7 @@ public abstract class UpdaterService extends Thread implements Updater{
 
     private String getSummeryInfo() throws IOException {
         StringBuilder returnString = new StringBuilder();
-        try (BufferedReader reader = Files.newBufferedReader(Path.of(Constants.PATH_TO_SUMMERY_INFO))) {
+        try (BufferedReader reader = Files.newBufferedReader(Path.of(PATH_TO_SUMMERY_INFO.toString()))) {
             while (reader.ready()) {
                 returnString.append(reader.readLine());
                 returnString.append("\n");
