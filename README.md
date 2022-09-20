@@ -67,7 +67,7 @@ Don't change this param if you want your File System to be clean.
 It logs court issues, time of execution and search request. It can be of any use only for developer.
 
 MySQL Server Connection Info. Fields "sql.usr", "sql.db_url", "sql.password" for user, jdbc database url, password.
-You don't have to fill in these fields. You can fill in it while in execution. 
+You don't have to fill in these fields. You can fill this information while in execution. 
 
 PLANS:
 
