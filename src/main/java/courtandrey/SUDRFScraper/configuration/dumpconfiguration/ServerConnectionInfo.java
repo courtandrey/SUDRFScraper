@@ -1,13 +1,14 @@
 package courtandrey.SUDRFScraper.configuration.dumpconfiguration;
 
+import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.dump.DBUpdaterService;
 
 import java.sql.SQLException;
 
 public final class ServerConnectionInfo {
-    private static String DB_URL = "";
-    private static String user = "";
-    private static String password = "";
+    private static String DB_URL = ApplicationConfiguration.getProperty("sql.url");
+    private static String user = ApplicationConfiguration.getProperty("sql.usr");
+    private static String password = ApplicationConfiguration.getProperty("sql.password");
 
     public static String getDbUrl() {
         return DB_URL;

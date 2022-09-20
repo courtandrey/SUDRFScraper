@@ -1,5 +1,6 @@
 package courtandrey.SUDRFScraper.view;
 
+import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;
 import courtandrey.SUDRFScraper.controller.Controller;
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.AdminArticle;
@@ -530,15 +531,16 @@ public class SimpleSwingView implements View {
 
     private void showError(JFrame frame, String message) {
         JFrame errorFrame = new JFrame("ERROR");
-        frames.add(errorFrame);
-        errorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        errorFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         errorFrame.setSize(250,150);
         JLabel label = new JLabel(message);
         errorFrame.getContentPane().add(label,BorderLayout.CENTER);
         JButton button = new JButton("OK");
         button.addActionListener(e -> {
             errorFrame.dispose();
-            frames.remove(errorFrame);
+            if (frame == null) {
+                System.exit(0);
+            }
         });
         errorFrame.getContentPane().add(button, BorderLayout.PAGE_END);
         errorFrame.pack();
@@ -557,6 +559,7 @@ public class SimpleSwingView implements View {
         panel1.setLayout(new BoxLayout(panel1,BoxLayout.Y_AXIS));
         frame.add(panel1,BorderLayout.WEST);
         JTextField field1 = new JTextField(15);
+        field1.setText(ServerConnectionInfo.getDbUrl());
         JLabel label1 = new JLabel("Type DB URL: ");
         panel1.add(label1);
         panel1.add(field1);
@@ -565,6 +568,7 @@ public class SimpleSwingView implements View {
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
         frame.add(panel2,BorderLayout.CENTER);
         JTextField field2 = new JTextField(15);
+        field2.setText(ServerConnectionInfo.getUser());
         JLabel label2 = new JLabel("Type username: ");
         panel2.add(label2);
         panel2.add(field2);
@@ -573,6 +577,7 @@ public class SimpleSwingView implements View {
         panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
         frame.add(panel3,BorderLayout.EAST);
         JTextField field3 = new JTextField(15);
+        field3.setText(ServerConnectionInfo.getPassword());
         JLabel label3 = new JLabel("Type password: ");
         panel3.add(label3);
         panel3.add(field3);

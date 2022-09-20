@@ -75,6 +75,7 @@ public class Controller {
             }
 
             if (t == null || !t.getName().contains("pool")) {
+                view.finish();
                 if (mainThread != null) {
                     mainThread.interrupt();
                 }
