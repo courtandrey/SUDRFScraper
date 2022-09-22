@@ -10,14 +10,11 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 import static courtandrey.SUDRFScraper.service.Constant.DB_Driver;
 
 public class DBUpdaterService extends UpdaterService {
     private final CasesDB casesDB;
-    private final Queue<Case> cases = new ArrayDeque<>();
     protected boolean isScrappingOver = false;
 
     public static class CasesDB{

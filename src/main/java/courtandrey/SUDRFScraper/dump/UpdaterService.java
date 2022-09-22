@@ -20,7 +20,7 @@ import static courtandrey.SUDRFScraper.service.Constant.*;
 public abstract class UpdaterService extends Thread implements Updater{
     protected boolean isScrappingOver;
     protected String dumpName;
-    protected Queue<Case> cases = new ArrayDeque<>();
+    protected volatile Queue<Case> cases = new ArrayDeque<>();
     private final String SUMMERY;
     protected ErrorHandler handler;
     protected boolean isMetaNeeded = false;

@@ -274,7 +274,7 @@ public class SimpleSwingView implements View {
             }
             try {
                 if (adminArticle.getText().strip().length() > 0) {
-                    controller.manageSearchRequest().setArticle(new CASArticle(adminArticle.getText().strip()));
+                    controller.manageSearchRequest().setArticle(new CASArticle(adminArticle.getText().trim().replaceAll(" +", " ")));
                     requestPart++;
                 } else if (adminOffenseChapter.getText().strip().length() > 0
                         && adminOffenseArticle.getText().strip().length() > 0) {

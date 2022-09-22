@@ -265,7 +265,7 @@ public abstract class SUDRFStrategy implements Runnable{
             Set<Case> cases = new HashSet<>();
             for (Case _case:resultCases) {
                 String mainPart = request.getArticle().getMainPart();
-                if (_case.getNames() != null && _case.getNames().matches("(.*)"+mainPart+"[^\\d.](.*)")) {
+                if (_case.getNames() != null && _case.getNames().matches("(.*)" + prepareForRegex(mainPart) + "[^\\d.](.*)")) {
                     cases.add(_case);
                 }
                 resultCases = cases;
@@ -275,6 +275,13 @@ public abstract class SUDRFStrategy implements Runnable{
                 }
             }
         }
+    }
+
+    private String prepareForRegex(String src) {
+        src = src.replaceAll("\\(","\\\\(");
+        src = src.replaceAll("\\)", "\\\\)");
+        src = src.replaceAll("\\.", "\\\\.");
+        return src;
     }
 
     protected void finish() {

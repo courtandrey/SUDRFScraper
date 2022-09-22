@@ -317,7 +317,7 @@ public class Controller {
         seleniumExecutor.shutdown();
     }
 
-    protected synchronized void update(Collection<Case> cases) {
+    private synchronized void update(Collection<Case> cases) {
         countDownLatch.countDown();
 
         this.cases += cases.size();
