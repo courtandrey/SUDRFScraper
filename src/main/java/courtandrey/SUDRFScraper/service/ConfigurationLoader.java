@@ -2,6 +2,7 @@ package courtandrey.SUDRFScraper.service;
 
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import courtandrey.SUDRFScraper.exception.InitializationException;
 import lombok.experimental.UtilityClass;
 
 import java.io.FileWriter;
@@ -36,7 +37,7 @@ public class ConfigurationLoader {
             Files.deleteIfExists(configBackUp);
             Files.copy(Path.of(PATH_TO_CONFIG.toString()), configBackUp);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new InitializationException(e);
         }
     }
 

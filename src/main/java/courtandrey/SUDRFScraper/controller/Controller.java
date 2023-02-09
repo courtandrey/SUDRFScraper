@@ -210,6 +210,7 @@ public class Controller {
      * @throws SearchRequestUnsetException if none of search request parameters was set.
      */
     public void executeScrapping(boolean needToContinue) throws SearchRequestUnsetException {
+        Runtime.getRuntime().addShutdownHook(new Thread(this::end));
         view.showFrameWithInfo(ViewFrame.INFO, Message.BEGINNING_OF_EXECUTION.toString());
         mainThread = Thread.currentThread();
         try {
@@ -224,14 +225,8 @@ public class Controller {
             updaterService.startService();
 
             scrap();
-
-            updaterService.joinService();
-
-            updaterService.addMeta();
         } catch (InterruptedException e) {
             handler.errorOccurred(e, null);
-        }  finally {
-            end();
         }
     }
 
@@ -250,13 +245,25 @@ public class Controller {
     }
 
     private void end() {
+        try {
+            updaterService.joinService();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        updaterService.addMeta();
+
         sumItUp();
 
         view.finish();
 
         SeleniumHelper.endSession();
 
-        SimpleLogger.close();
+        try {
+            SimpleLogger.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void continueScrapping() throws InterruptedException {

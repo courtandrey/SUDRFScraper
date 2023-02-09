@@ -80,7 +80,7 @@ public class URLCreator {
 
     private void replaceVnkod() {
         switch (pattern) {
-            case SECONDARY_PATTERN -> replaceVnkodForSecondaryPattern();
+            case SECONDARY_PATTERN, DEPRECATED_SECONDARY_PATTERN -> replaceVnkodForSecondaryPattern();
             case PRIMARY_PATTERN, VNKOD_PATTERN, PATTERN_CAPTCHA -> replaceVnkodForPrimaryPatterns();
             default -> {}
         }

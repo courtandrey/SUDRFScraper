@@ -31,6 +31,7 @@ public class ConstantsGetter {
         if (constantsProperties.size() == 0) {
             init();
         }
+
         if (constant == Constant.BASIC_RESULT_PATH) {
             return ApplicationConfiguration.getInstance().getProperty("basic.result.path");
         }

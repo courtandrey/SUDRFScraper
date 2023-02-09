@@ -1,5 +1,7 @@
 package courtandrey.SUDRFScraper.configuration;
 
+import courtandrey.SUDRFScraper.exception.InitializationException;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
@@ -13,7 +15,7 @@ public class ApplicationConfiguration {
         try {
             props.load(new FileReader(PATH_TO_APP_PROPERTIES.toString()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new InitializationException(e);
         }
     }
 

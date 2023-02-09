@@ -1,5 +1,6 @@
 package courtandrey.SUDRFScraper.view;
 
+import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;
 import courtandrey.SUDRFScraper.controller.Controller;
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
@@ -379,7 +380,8 @@ public class SimpleSwingView implements View {
                 showError(mainFrame, Message.SEARCH_REQUEST_NOT_SET.toString());
             } else {
                 mainFrame.dispose();
-                (new Thread(() -> controller.executeScrapping(false))).start();
+                (new Thread(() -> controller.executeScrapping(Boolean.parseBoolean(ApplicationConfiguration.
+                        getInstance().getProperty("basic.continue"))))).start();
             }
         });
 

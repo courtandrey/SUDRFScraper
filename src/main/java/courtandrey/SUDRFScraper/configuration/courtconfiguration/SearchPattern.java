@@ -1,6 +1,7 @@
 package courtandrey.SUDRFScraper.configuration.courtconfiguration;
 
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
+import courtandrey.SUDRFScraper.exception.InitializationException;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public enum SearchPattern {
         try {
             properties.load(new FileReader(path));
         } catch (IOException e) {
-            e.printStackTrace();
+           throw new InitializationException(e);
         }
         return properties;
     }

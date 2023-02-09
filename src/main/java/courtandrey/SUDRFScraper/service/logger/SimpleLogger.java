@@ -40,7 +40,8 @@ public final class SimpleLogger {
     public synchronized static void log(LoggingLevel level, Object message) {
         try {
             LocalDateTime ldt = LocalDateTime.now();
-            getLogWriter().write(level.toString()+" "+ldt.format(dt)+" "+message+"\n");
+            getLogWriter().write(level.toString() + " " + ldt.format(dt) + " " + message + "\n");
+            getLogWriter().flush();
         } catch (IOException e) {
             reopen();
             log(level, message);
@@ -67,14 +68,10 @@ public final class SimpleLogger {
         logWriter = null;
     }
 
-    private static FileWriter getLogWriter()  {
+    private static FileWriter getLogWriter() throws IOException {
         if (logWriter == null) {
-            try {
-                logWriter = new FileWriter(String.format(PATH_TO_LOGS.toString(), name, name),true);
-                logWriter.write(Message.BEGINNING_OF_EXECUTION + "\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            logWriter = new FileWriter(String.format(PATH_TO_LOGS.toString(), name, name),true);
+            log(LoggingLevel.INFO, Message.BEGINNING_OF_EXECUTION + "\n");
         }
         return logWriter;
     }
@@ -83,14 +80,10 @@ public final class SimpleLogger {
         System.out.println(message);
     }
 
-    public static void close() {
+    public static void close() throws IOException{
         if (logWriter != null) {
-            try {
-                logWriter.flush();
-                logWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            logWriter.flush();
+            logWriter.close();
         }
     }
 }
