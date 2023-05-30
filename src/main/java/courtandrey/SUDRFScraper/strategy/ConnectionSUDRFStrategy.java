@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,7 +46,6 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
     }
     private void doCircle() {
         connect();
-
         if (checkPreventable()) {
             timeToStopRotatingSrv = true;
             return;
@@ -53,7 +54,6 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
         String text = currentDocument.text();
 
         prevSize = resultCases.size();
-
         checkText(text);
         if (issue == Issue.SUCCESS) {
             getCases();

@@ -1,5 +1,6 @@
 package courtandrey.SUDRFScraper.strategy;
 
+import courtandrey.SUDRFScraper.exception.CaptchaException;
 import courtandrey.SUDRFScraper.service.CaptchaPropertiesConfigurator;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
@@ -45,6 +46,9 @@ public class CaptchaStrategy extends ConnectionSUDRFStrategy {
         }
         catch (TimeoutException e) {
             finalIssue = Issue.CONNECTION_ERROR;
+        }
+        catch (CaptchaException e) {
+            finalIssue = Issue.CAPTCHA_NOT_CONFIGURABLE;
         }
         finish();
 

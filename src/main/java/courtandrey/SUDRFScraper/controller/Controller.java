@@ -1,6 +1,7 @@
 package courtandrey.SUDRFScraper.controller;
 
 import courtandrey.SUDRFScraper.configuration.ConfigurationHolder;
+import courtandrey.SUDRFScraper.configuration.courtconfiguration.SearchPattern;
 import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
@@ -28,10 +29,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class Controller {
@@ -155,7 +153,6 @@ public class Controller {
         reset(searchConfiguration);
         this.searchConfiguration = searchConfiguration;
     }
-
     static class StrategyThreadPoolExecutor extends ThreadPoolExecutor {
         private final Controller controller;
 
@@ -283,14 +280,15 @@ public class Controller {
 
         List<CourtConfiguration> singleCCS = new ArrayList<>(configHolder.getCCs().stream().filter(x -> x.getStrategyName()
                 == StrategyName.CAPTCHA_STRATEGY).toList());
+
         singleCCS.addAll(configHolder.getCCs().stream()
                 .filter(x -> x.isSingleStrategy() && x.getStrategyName() != StrategyName.CAPTCHA_STRATEGY).toList());
 
         if (ignoreInactive) {
             mainCCS = mainCCS.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
-                    || x.getIssue() != Issue.INACTIVE_MODULE).toList();
+                    && x.getIssue() != Issue.INACTIVE_MODULE).toList();
             singleCCS = singleCCS.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
-                    || x.getIssue() != Issue.INACTIVE_MODULE).toList();
+                    && x.getIssue() != Issue.INACTIVE_MODULE).toList();
         }
 
         if (selectedRegions != null) {

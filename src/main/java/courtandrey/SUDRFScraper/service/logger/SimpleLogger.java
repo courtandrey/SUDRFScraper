@@ -40,8 +40,10 @@ public final class SimpleLogger {
     public synchronized static void log(LoggingLevel level, Object message) {
         try {
             LocalDateTime ldt = LocalDateTime.now();
-            getLogWriter().write(level.toString() + " " + ldt.format(dt) + " " + message + "\n");
+            String string = level.toString() + " " + ldt.format(dt) + " " + message + "\n";
+            getLogWriter().write(string);
             getLogWriter().flush();
+            System.out.println(string);
         } catch (IOException e) {
             reopen();
             log(level, message);
@@ -49,8 +51,8 @@ public final class SimpleLogger {
     }
 
     public synchronized static void addToCourtHistory(CourtConfiguration cc) throws IOException {
-        initLogger();
         if (!useCourtHistory) return;
+        initLogger();
         Path courtHistory = Path.of("./src/main/resources/courts/");
         if (Files.notExists(courtHistory)) Files.createDirectory(courtHistory);
         try (FileWriter writer = new FileWriter(String.format(PATH_TO_COURT_HISTORY.toString(), cc.getId()), true)) {

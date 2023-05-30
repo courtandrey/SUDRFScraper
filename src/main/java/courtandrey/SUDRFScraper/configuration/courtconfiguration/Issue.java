@@ -1,6 +1,7 @@
 package courtandrey.SUDRFScraper.configuration.courtconfiguration;
 
 public enum Issue {
+    CAPTCHA_NOT_CONFIGURABLE("Cannot configure captcha",-1),
     CONNECTION_ERROR("Server error",4),
     NOT_FOUND_CASE("Cases not found",2),
     URL_ERROR("Court is ignoring request. Court is probably using different interface",4),

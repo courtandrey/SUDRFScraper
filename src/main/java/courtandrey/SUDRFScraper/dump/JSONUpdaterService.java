@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,12 +40,17 @@ public class JSONUpdaterService extends UpdaterService {
     private int getCaseId() throws IOException {
         BufferedReader reader = Files.newBufferedReader(Path.of(fileName));
         String stringCase = "";
+        Case _case = null;
         while (reader.ready()) {
             stringCase = reader.readLine();
+            try {
+                mapper.readValue(stringCase, Case.class);
+                _case = mapper.readValue(stringCase, Case.class);
+            } catch (Exception ignored) {
+            }
         }
         reader.close();
-        if (!stringCase.equals("")) {
-            Case _case = mapper.readValue(stringCase, Case.class);
+        if (_case != null) {
             return _case.getId() + 1;
         }
         return 0;
@@ -116,6 +123,8 @@ public class JSONUpdaterService extends UpdaterService {
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
+            Deque<Integer> integers = new ArrayDeque<>();
+            integers.poll();
         }
     }
 }

@@ -37,14 +37,14 @@ public class Cases {
                 "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
                 "region INT,"+
                 "court_name VARCHAR(255),"+
-                "case_number VARCHAR(255)," +
+                "case_number VARCHAR(255) UNIQUE," +
                 "entry_date VARCHAR(255)," +
                 "names_articles VARCHAR(4095)," +
                 "judge VARCHAR(255)," +
                 "result_date VARCHAR(255)," +
                 "decision VARCHAR(255)," +
                 "end_date VARCHAR(255)," +
-                "decision_text MEDIUMBLOB)");
+                "decision_text MEDIUMTEXT)");
     }
 
     public void close() {

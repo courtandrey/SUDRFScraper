@@ -114,11 +114,16 @@ public class ConfigurationHelper {
         }
         else {
             switch (cc.getIssue()) {
-                case URL_ERROR, SUCCESS, NOT_FOUND_CASE, NOT_SUPPORTED_REQUEST, UNDEFINED_ISSUE -> cc.setStrategyName(StrategyName.END_STRATEGY);
+                case SUCCESS, NOT_FOUND_CASE, NOT_SUPPORTED_REQUEST -> cc.setStrategyName(StrategyName.END_STRATEGY);
                 case CAPTCHA -> {
                     cc.setIssue(null);
                     cc.setSearchPattern(SearchPattern.PATTERN_CAPTCHA);
                     cc.setStrategyName(StrategyName.CAPTCHA_STRATEGY);
+                }
+                case UNDEFINED_ISSUE -> {
+                    cc.setSearchPattern(SearchPattern.PRIMARY_PATTERN);
+                    cc.setStrategyName(StrategyName.PRIMARY_STRATEGY);
+                    cc.setConnection(Connection.REQUEST);
                 }
             }
         }
