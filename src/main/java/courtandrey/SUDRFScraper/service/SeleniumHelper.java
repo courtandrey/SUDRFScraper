@@ -76,6 +76,12 @@ public class SeleniumHelper {
         return wd.getCurrentUrl();
     }
 
+    public synchronized String getPageSource() {
+        if (wd == null) reset();
+        if (wd.getCurrentUrl() == null) throw  new UnsupportedOperationException();
+        return wd.getPageSource();
+    }
+
     public synchronized void click(By clickableElement) {
         if (wd == null) reset();
         scrollTo(clickableElement).click();

@@ -24,7 +24,7 @@ It also should be definitely broadened. So the work only begins here.
 
 IMPORTANT THINGS TO KNOW BEFORE USING:
 
-Scraper has been tested only in IntelliJ Idea IDE both on Windows and Linux OS.
+Scraper has been tested only on Windows and Linux OS.
 
 Scraper uses FireFox WebDriver, so you should have firefox browser.
 If you see errors about WebDriver in log file, follow the instruction that may help:
@@ -67,16 +67,7 @@ Don't change this param if you want your File System to be clean.
 It logs court issues, time of execution and search request. It can be of any use only for developer.
 
 MySQL Server Connection Info. Fields "sql.usr", "sql.db_url", "sql.password" for user, jdbc database url, password.
-You don't have to fill in these fields. You can fill this information while in execution. 
-
-PLANS:
-
-1. Broaden search with region field.
-2. Make possible to continue scraping. For example, if scraping was forcibly ended (some scraping requests can last for days) or you need to scrap the second time to get cases from previously inactive courts.
-3. Make simple scraping analyzer tool. For common requests like "cases-per-region" or "get number of texts".
-4. Make simple default test, comparing Pravosudie with Scraper.
-5. Make configuration flexible.
-6. Add more tests.
+You don't have to fill in these fields. You can fill this information while in execution.
 
 UPDATES:
 
@@ -88,6 +79,8 @@ ver.0.1.6 configuration-update. Modified configuration with "use.court.history" 
 Massive refactoring.
 
 ver.0.1.7 configuration-update. Modified configuration with default sql connection parameters. Massive refactoring.
+
+ver.0.1.8 captcha-update. Feat: added regions to configuration. Fixed captcha related bugs. Updated strategies and court configuration for solving new issues 
 
 CONTACT ME:
 

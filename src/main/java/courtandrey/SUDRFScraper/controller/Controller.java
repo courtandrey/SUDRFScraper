@@ -1,5 +1,6 @@
 package courtandrey.SUDRFScraper.controller;
 
+import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.configuration.ConfigurationHolder;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.SearchPattern;
 import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;
@@ -31,6 +32,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
+
+import static courtandrey.SUDRFScraper.configuration.ApplicationConfiguration.getInstance;
 
 public class Controller {
     private Thread mainThread;
@@ -92,9 +95,25 @@ public class Controller {
         view.showFrame(ViewFrame.SET_DUMP);
     }
 
+    private int[] extractSelectedRegions() {
+        String regionString = ApplicationConfiguration.getInstance().getProperty("basic.regions");
+        if (regionString.isEmpty()) return  null;
+        String[] regionsString = regionString.split(",");
+        int[] regions = new int[regionsString.length];
+        try {
+            for (int i = 0; i < regionsString.length; i++) {
+                regions[i] = Integer.parseInt(regionsString[i]);
+            }
+        } catch (Exception e) {
+            SimpleLogger.log(LoggingLevel.WARNING, Message.WRONG_REGIONS_FORMAT);
+            return null;
+        }
+        return regions;
+    }
+
     public void prepareScrapper(String dumpName, Dump dump) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            if (!t.getName().contains("pool")) handler.errorOccurred(new Error(), null);
+            if (!t.getName().contains("pool")) handler.errorOccurred(e, null);
         });
 
         SimpleLogger.initLogger(dumpName);
@@ -102,6 +121,8 @@ public class Controller {
         this.dump = dump;
 
         setSearchConfiguration(SearchRequest.getInstance());
+
+        selectedRegions = extractSelectedRegions();
 
         try {
             configHolder = ConfigurationHolder.getInstance();
@@ -164,8 +185,11 @@ public class Controller {
 
         @Override
         protected void afterExecute(Runnable r, Throwable t) {
-
             SUDRFStrategy strategy = (SUDRFStrategy) r;
+            if (strategy.getCc().getIssue() != null) {
+                SimpleLogger.log(LoggingLevel.INFO, String.format(Message.EXECUTION_STATUS_END.toString(),
+                        strategy.getCc().getName(), strategy.getCc().getIssue()));
+            }
 
             controller.update(strategy.getResultCases());
 
@@ -224,6 +248,8 @@ public class Controller {
             scrap();
         } catch (InterruptedException e) {
             handler.errorOccurred(e, null);
+        } finally {
+            end();
         }
     }
 
@@ -241,14 +267,16 @@ public class Controller {
         updaterService.writeSummery(ConfigurationHelper.wrapIssues(configHolder.getCCs()));
     }
 
+    boolean isEnded = false;
+
     private void end() {
+        if (isEnded) return;
+        updaterService.addMeta();
         try {
             updaterService.joinService();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-        updaterService.addMeta();
 
         sumItUp();
 
@@ -261,6 +289,7 @@ public class Controller {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        isEnded = true;
     }
 
     private void continueScrapping() throws InterruptedException {
@@ -282,7 +311,8 @@ public class Controller {
                 == StrategyName.CAPTCHA_STRATEGY).toList());
 
         singleCCS.addAll(configHolder.getCCs().stream()
-                .filter(x -> x.isSingleStrategy() && x.getStrategyName() != StrategyName.CAPTCHA_STRATEGY).toList());
+                .filter(x -> x.isSingleStrategy() && x.getStrategyName() != StrategyName.CAPTCHA_STRATEGY
+                && x.getStrategyName() != StrategyName.END_STRATEGY).toList());
 
         if (ignoreInactive) {
             mainCCS = mainCCS.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT

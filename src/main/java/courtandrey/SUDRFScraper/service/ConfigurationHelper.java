@@ -22,7 +22,7 @@ import java.util.Set;
 public class ConfigurationHelper {
     public void getStrategy(CourtConfiguration cc) {
         if (configureExceptions(cc)) return;
-        if (cc.getSearchPattern() == SearchPattern.PATTERN_CAPTCHA) {
+        if (cc.isHasCaptcha()) {
             cc.setStrategyName(StrategyName.CAPTCHA_STRATEGY);
         }
         else {
@@ -117,13 +117,16 @@ public class ConfigurationHelper {
                 case SUCCESS, NOT_FOUND_CASE, NOT_SUPPORTED_REQUEST -> cc.setStrategyName(StrategyName.END_STRATEGY);
                 case CAPTCHA -> {
                     cc.setIssue(null);
-                    cc.setSearchPattern(SearchPattern.PATTERN_CAPTCHA);
+                    cc.setHasCaptcha(true);
                     cc.setStrategyName(StrategyName.CAPTCHA_STRATEGY);
                 }
                 case UNDEFINED_ISSUE -> {
                     cc.setSearchPattern(SearchPattern.PRIMARY_PATTERN);
                     cc.setStrategyName(StrategyName.PRIMARY_STRATEGY);
                     cc.setConnection(Connection.REQUEST);
+                }
+                default -> {
+                    getStrategy(cc);
                 }
             }
         }

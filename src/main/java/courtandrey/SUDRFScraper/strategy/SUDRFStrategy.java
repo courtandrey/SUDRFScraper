@@ -52,6 +52,10 @@ public abstract class SUDRFStrategy implements Runnable{
         if (cc.getSearchPattern() != SearchPattern.VNKOD_PATTERN) timeToStopRotatingBuild = true;
     }
 
+    public CourtConfiguration getCc() {
+        return cc;
+    }
+
     private void setPage_num() {
         if (cc.getSearchPattern() == SearchPattern.SECONDARY_PATTERN ||
             cc.getSearchPattern() == SearchPattern.DEPRECATED_SECONDARY_PATTERN) {
@@ -201,7 +205,7 @@ public abstract class SUDRFStrategy implements Runnable{
             issue = Issue.SUCCESS;
         }
 
-        else if (text.contains("Информация временно недоступна") || text.contains("Warning: pg_connect():")) {
+        else if (text.contains("Информация временно недоступна") || text.contains("Warning: pg_connect():") || text.contains("В настоящий момент производится информационное наполнение сайта. Обратитесь к странице позже")) {
             finalIssue = Issue.compareAndSetIssue(Issue.INACTIVE_COURT,finalIssue);
             issue = Issue.INACTIVE_COURT;
             unravel = unravel - 5;
@@ -227,7 +231,7 @@ public abstract class SUDRFStrategy implements Runnable{
         }
 
         else if (cc.getSearchPattern() != SearchPattern.SECONDARY_PATTERN
-                || cc.getSearchPattern() != SearchPattern.DEPRECATED_SECONDARY_PATTERN){
+                && cc.getSearchPattern() != SearchPattern.DEPRECATED_SECONDARY_PATTERN){
             finalIssue = Issue.compareAndSetIssue(Issue.UNDEFINED_ISSUE,finalIssue);
             issue = Issue.UNDEFINED_ISSUE;
         }

@@ -4,6 +4,9 @@ import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfigurat
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.Level;
 import courtandrey.SUDRFScraper.exception.CaptchaException;
 import courtandrey.SUDRFScraper.view.View;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -72,17 +75,28 @@ public class CaptchaPropertiesConfigurator {
         }
 
         String captcha = null;
-
+        Document document = Jsoup.parse(sh.getPageSource());
         try {
             for (WebElement e:sh.findElements(By.tagName("tr"))) {
                 try {
                     e.findElement(By.name("captchaid"));
                     String dataUrl = e.findElement(By.tagName("img")).getAttribute("src");
-                    byte[] dataBytes = Base64.getDecoder().decode(dataUrl.replaceFirst("data:.+,",""));
+                    byte[] dataBytes = Base64.getDecoder().decode(dataUrl.replaceFirst("data:.+,","").trim());
                     BufferedImage image = ImageIO.read(new ByteArrayInputStream(dataBytes));
                     captcha = view.showCaptcha(image);
                     break;
                 } catch (NoSuchElementException ignored) {}
+            }
+            if (captcha == null) {
+                for (Element e:document.getElementsByClass("form-item general-item category-item")) {
+                    if (!e.text().contains("Проверочный код")) continue;
+                    String dataUrl = e.getElementsByTag("img").get(0).attr("src");
+                    String replaced = dataUrl.replaceFirst("data:.+,","").trim();
+                    byte[] dataBytes = Base64.getDecoder().decode(replaced);
+                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(dataBytes));
+                    captcha = view.showCaptcha(image);
+                    break;
+                }
             }
             if (captcha == null) throw new CaptchaException();
         } catch (IOException e) {

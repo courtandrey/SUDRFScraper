@@ -23,6 +23,7 @@ public class CourtConfiguration {
     private String vnkod;
     private String name;
     private Connection connection;
+    private boolean hasCaptcha;
     @JsonIgnore
     public void putWorkingUrl(Field field, String value) {
         workingUrl.put(field,value);

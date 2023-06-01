@@ -58,6 +58,7 @@ public class CaptchaStrategy extends ConnectionSUDRFStrategy {
         for (int i = 0; i< urls.length; i++) {
             urls[i] = urls[i].replace("page="+1,"page="+page_num);
             urls[i] = urls[i].replace("srv_num="+1,"srv_num="+srv_num);
+            urls[i] = urls[i].replace("num_build="+1,"num_build="+(build));
         }
     }
 

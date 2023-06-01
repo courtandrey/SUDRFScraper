@@ -44,7 +44,7 @@ public class URLCreator {
         makeSearchConfiguration();
         replaceVnkod();
 
-        if (pattern==SearchPattern.PATTERN_CAPTCHA)
+        if (cc.isHasCaptcha())
             replaceCaptcha();
 
         getTogether();
@@ -55,8 +55,8 @@ public class URLCreator {
         String captcha = (new CaptchaPropertiesConfigurator(cc)).getCaptcha();
         if (captcha.split("&").length < 2) return;
         for (int i = 0; i < endings.length; i++) {
-            endings[i] = endings[i].replace("captcha=","captcha="+captcha.split("&")[0]);
-            endings[i] = endings[i].replace("captchaid=","captchaid="+captcha.split("&")[1]);
+            endings[i] = endings[i] + "&captcha="+captcha.split("&")[0];
+            endings[i] = endings[i]+"&captchaid="+captcha.split("&")[1];
         }
     }
 
@@ -81,7 +81,7 @@ public class URLCreator {
     private void replaceVnkod() {
         switch (pattern) {
             case SECONDARY_PATTERN, DEPRECATED_SECONDARY_PATTERN -> replaceVnkodForSecondaryPattern();
-            case PRIMARY_PATTERN, VNKOD_PATTERN, PATTERN_CAPTCHA -> replaceVnkodForPrimaryPatterns();
+            case PRIMARY_PATTERN, VNKOD_PATTERN -> replaceVnkodForPrimaryPatterns();
             default -> {}
         }
     }
@@ -107,8 +107,7 @@ public class URLCreator {
     private void makeSearchConfiguration() {
         switch (pattern) {
             case SECONDARY_PATTERN,DEPRECATED_SECONDARY_PATTERN -> makeSearchConfigurationForSecondaryPattern();
-            case VNKOD_PATTERN,PRIMARY_PATTERN,DEPRECATED_PRIMARY_PATTERN,
-                    PATTERN_CAPTCHA-> makeSearchConfigurationForPrimaryPatterns();
+            case VNKOD_PATTERN,PRIMARY_PATTERN,DEPRECATED_PRIMARY_PATTERN -> makeSearchConfigurationForPrimaryPatterns();
             case BRAND_NEW_PATTERN -> makeBrandNewSearchConfiguration();
         }
     }

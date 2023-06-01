@@ -3,6 +3,9 @@ package courtandrey.SUDRFScraper.service;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import courtandrey.SUDRFScraper.exception.InitializationException;
+import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
+import courtandrey.SUDRFScraper.service.logger.Message;
+import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
 import lombok.experimental.UtilityClass;
 
 import java.io.FileWriter;
@@ -17,9 +20,14 @@ import static courtandrey.SUDRFScraper.service.Constant.*;
 @UtilityClass
 public class ConfigurationLoader {
     public ArrayList<CourtConfiguration> getCourtConfigurations() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(Path.of(PATH_TO_CONFIG.toString()).toFile(),
-                mapper.getTypeFactory().constructCollectionType(ArrayList.class, CourtConfiguration.class));
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(Path.of(PATH_TO_CONFIG.toString()).toFile(),
+                    mapper.getTypeFactory().constructCollectionType(ArrayList.class, CourtConfiguration.class));
+        }catch (IOException e) {
+            SimpleLogger.log(LoggingLevel.WARNING, Message.MALFORMED_CONFIG.toString());
+            return getCourtConfigurationsFromBackUp();
+        }
     }
 
     public ArrayList<CourtConfiguration> getCourtConfigurations(boolean needToUseBaseConfig) throws IOException {
@@ -50,6 +58,14 @@ public class ConfigurationLoader {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public ArrayList<CourtConfiguration> getCourtConfigurationsFromBackUp() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayList<CourtConfiguration> ls = mapper.readValue(Path.of(PATH_TO_CONFIG_BACKUP.toString()).toFile(),
+                mapper.getTypeFactory().constructCollectionType(ArrayList.class, CourtConfiguration.class));
+        refresh(ls);
+        return ls;
     }
 
     public synchronized void refresh(List<CourtConfiguration> ccs) {

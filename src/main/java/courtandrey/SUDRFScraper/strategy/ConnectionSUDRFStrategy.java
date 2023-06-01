@@ -45,6 +45,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
        } while (!timeToStopRotatingSrv);
     }
     private void doCircle() {
+        SimpleLogger.log(LoggingLevel.INFO,String.format(Message.EXECUTION_STATUS.toString(),cc.getName(),urls[indexUrl],issue));
         connect();
         if (checkPreventable()) {
             timeToStopRotatingSrv = true;
@@ -83,6 +84,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
         if (cc.getConnection() == Connection.SELENIUM) {
             SeleniumHelper.getInstance().refresh();
         }
+        unravel = unravel - 5;
     }
 
     static class Scrapper {
@@ -172,6 +174,9 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
         }
 
         protected void scrapTexts(Collection<Case> cases) {
+            if (cases.size() == 0) return;
+            SimpleLogger.log(LoggingLevel.INFO, String.format(Message.COLLECTING_TEXTS.toString(),cases.size(),cc.getName()));
+            int i = 1;
             for (Case _case:cases) {
                 String url = _case.getText();
                 if (url != null) {
@@ -184,6 +189,10 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
                         SimpleLogger.log(LoggingLevel.DEBUG, Message.DOCUMENT_NOT_PARSED + url);
                     }
                 }
+                if (i % 25 == 0) {
+                    SimpleLogger.log(LoggingLevel.INFO,String.format(Message.COLLECTED_TEXTS.toString(),i,cases.size(),cc.getName()));
+                }
+                i+= 1;
             }
         }
 
@@ -214,10 +223,6 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
                     } catch (WebDriverException e) {
                         ThreadHelper.sleep(10);
                     }
-                }
-
-                if (text == null) {
-                    SimpleLogger.log(LoggingLevel.ERROR, Message.DOCUMENT_NOT_PARSED + href);
                 }
 
                 return text;
@@ -254,11 +259,13 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
 
                 if (content == null) {
                     content = doc.getElementById("tab_content_Document1");
-                    if (content == null) {
-                        return checkMalformed(doc);
-                    }
                 }
-
+                if (content == null) {
+                    content = doc.getElementById("tab_content_Docs");
+                }
+                if (content == null) {
+                    return checkMalformed(doc);
+                }
                 for (Element el:content.getElementsByTag("p")) {
                     text.append(el.text());
                     text.append("\n");
