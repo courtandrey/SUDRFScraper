@@ -43,7 +43,7 @@ public final class SimpleLogger {
             String string = level.toString() + " " + ldt.format(dt) + " " + message + "\n";
             getLogWriter().write(string);
             getLogWriter().flush();
-            System.out.println(string);
+            System.out.print(string);
         } catch (IOException e) {
             reopen();
             log(level, message);

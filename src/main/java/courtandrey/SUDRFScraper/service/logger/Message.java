@@ -39,7 +39,8 @@ public enum Message {
     WRONG_REGIONS_FORMAT,
     MALFORMED_CONFIG,
     COLLECTING_TEXTS,
-    COLLECTED_TEXTS
+    COLLECTED_TEXTS,
+    COURT_CONFIG_TO_STRING
     ;
 
     @Override

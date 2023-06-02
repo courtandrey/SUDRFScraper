@@ -125,9 +125,7 @@ public class ConfigurationHelper {
                     cc.setStrategyName(StrategyName.PRIMARY_STRATEGY);
                     cc.setConnection(Connection.REQUEST);
                 }
-                default -> {
-                    getStrategy(cc);
-                }
+                default -> getStrategy(cc);
             }
         }
     }
@@ -161,7 +159,7 @@ public class ConfigurationHelper {
         boolean isVnkodPlaced = true;
         for (CourtConfiguration cc:ccs) {
             if (cc.getVnkod() == null) {
-                SimpleLogger.println(Message.VNKOD_MISSING + cc.getVnkod());
+                SimpleLogger.println(Message.VNKOD_MISSING + cc.getName());
                 isVnkodPlaced = false;
             }
         }

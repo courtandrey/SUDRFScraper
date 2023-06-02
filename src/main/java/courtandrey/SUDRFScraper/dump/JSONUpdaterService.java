@@ -48,7 +48,7 @@ public class JSONUpdaterService extends UpdaterService {
         Stack<Integer> stack = new Stack<>();
         stack.peek();
         BufferedReader reader = Files.newBufferedReader(Path.of(fileName));
-        String stringCase = "";
+        String stringCase;
         Case _case = null;
         while (reader.ready()) {
             stringCase = reader.readLine();

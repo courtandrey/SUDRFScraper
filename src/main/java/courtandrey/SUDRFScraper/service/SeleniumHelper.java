@@ -47,7 +47,7 @@ public class SeleniumHelper {
 
             System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, nul);
             FirefoxOptions options = new FirefoxOptions();
-            options.setHeadless(true);
+            options.addArguments("--headless");
             sh = new SeleniumHelper();
             wd = new FirefoxDriver(options);
             wd.manage().timeouts().pageLoadTimeout(Duration.ofMinutes(1));

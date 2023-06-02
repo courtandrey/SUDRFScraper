@@ -1,6 +1,7 @@
 package courtandrey.SUDRFScraper.configuration.courtconfiguration;
 
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
+import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.strategy.Connection;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -41,7 +42,7 @@ public class CourtConfiguration {
 
     @Override
     public String toString() {
-        return "Суд региона " + region +" доступен по ссылке: "+searchString;
+        return String.format(Message.COURT_CONFIG_TO_STRING.toString(),name,searchString);
     }
 
     @Override

@@ -2,7 +2,6 @@ package courtandrey.SUDRFScraper.controller;
 
 import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.configuration.ConfigurationHolder;
-import courtandrey.SUDRFScraper.configuration.courtconfiguration.SearchPattern;
 import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
@@ -32,8 +31,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
-
-import static courtandrey.SUDRFScraper.configuration.ApplicationConfiguration.getInstance;
 
 public class Controller {
     private Thread mainThread;
