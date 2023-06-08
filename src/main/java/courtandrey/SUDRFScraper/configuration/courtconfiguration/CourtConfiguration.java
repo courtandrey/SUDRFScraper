@@ -31,13 +31,8 @@ public class CourtConfiguration {
     }
 
     @JsonIgnore
-    public boolean isVnkodNeeded() {
-        return searchPattern == SearchPattern.VNKOD_PATTERN;
-    }
-
-    @JsonIgnore
     public boolean isSingleStrategy() {
-        return strategyName == StrategyName.CAPTCHA_STRATEGY || connection == Connection.SELENIUM;
+        return connection == Connection.SELENIUM || strategyName == StrategyName.CAPTCHA_STRATEGY || strategyName == StrategyName.MOSGORSUD_STRATEGY;
     }
 
     @Override

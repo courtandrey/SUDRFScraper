@@ -2,6 +2,7 @@ package courtandrey.SUDRFScraper.controller;
 
 import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.configuration.ConfigurationHolder;
+import courtandrey.SUDRFScraper.configuration.courtconfiguration.Level;
 import courtandrey.SUDRFScraper.configuration.dumpconfiguration.ServerConnectionInfo;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.searchrequest.Field;
@@ -12,12 +13,10 @@ import courtandrey.SUDRFScraper.dump.JSONUpdaterService;
 import courtandrey.SUDRFScraper.dump.Updater;
 import courtandrey.SUDRFScraper.dump.model.Case;
 import courtandrey.SUDRFScraper.dump.model.Dump;
+import courtandrey.SUDRFScraper.exception.LevelParsingException;
 import courtandrey.SUDRFScraper.exception.SearchRequestUnsetException;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
-import courtandrey.SUDRFScraper.service.CaptchaPropertiesConfigurator;
-import courtandrey.SUDRFScraper.service.ConfigurationHelper;
-import courtandrey.SUDRFScraper.service.ConfigurationLoader;
-import courtandrey.SUDRFScraper.service.SeleniumHelper;
+import courtandrey.SUDRFScraper.service.*;
 import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
 import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
@@ -45,6 +44,9 @@ public class Controller {
     private final View view;
     private final SUDRFErrorHandler handler;
     private int[] selectedRegions = null;
+    private Level[] levels = null;
+
+    private StrategyName[] strategyNames = null;
     /**
      * Select regions which courts you want to scrap. Ignore for scrapping all regions.
      * @param regions regions to scrap.
@@ -120,6 +122,8 @@ public class Controller {
         setSearchConfiguration(SearchRequest.getInstance());
 
         selectedRegions = extractSelectedRegions();
+        levels = extractSelectedLevels();
+        strategyNames = extractStrategies();
 
         try {
             configHolder = ConfigurationHolder.getInstance();
@@ -139,6 +143,38 @@ public class Controller {
         } catch (IOException | SQLException | ClassNotFoundException e) {
             handler.errorOccurred(e, null);
         }
+    }
+
+    private StrategyName[] extractStrategies() {
+        String regionString = ApplicationConfiguration.getInstance().getProperty("dev.strategies");
+        if (regionString == null || regionString.isEmpty()) return null;
+        String[] regionsString = regionString.split(",");
+        StrategyName[] regions = new StrategyName[regionsString.length];
+        try {
+            for (int i = 0; i < regionsString.length; i++) {
+                regions[i] = StrategyName.parseStrategy(regionsString[i]);
+            }
+        } catch (Exception e) {
+            SimpleLogger.log(LoggingLevel.WARNING, Message.WRONG_STRATEGY_FORMAT);
+            return null;
+        }
+        return regions;
+    }
+
+    private Level[] extractSelectedLevels() {
+        String regionString = ApplicationConfiguration.getInstance().getProperty("basic.levels");
+        if (regionString.isEmpty()) return  null;
+        String[] regionsString = regionString.split(",");
+        Level[] regions = new Level[regionsString.length];
+        try {
+            for (int i = 0; i < regionsString.length; i++) {
+                regions[i] = Level.parseLevel(regionsString[i]);
+            }
+        } catch (LevelParsingException e) {
+            SimpleLogger.log(LoggingLevel.WARNING, Message.WRONG_LEVEL_FORMAT);
+            return null;
+        }
+        return regions;
     }
 
     public void setServerConnectionInfo(String DB_URL, String user, String password) throws SQLException {
@@ -279,6 +315,8 @@ public class Controller {
 
         view.finish();
 
+        ThreadHelper.sleep(5);
+
         SeleniumHelper.endSession();
 
         try {
@@ -307,34 +345,56 @@ public class Controller {
         List<CourtConfiguration> singleCCS = new ArrayList<>(configHolder.getCCs().stream().filter(x -> x.getStrategyName()
                 == StrategyName.CAPTCHA_STRATEGY).toList());
 
+        List<CourtConfiguration> mosgorsud = new ArrayList<>(configHolder.getCCs().stream().filter(x -> x.getStrategyName()
+                == StrategyName.MOSGORSUD_STRATEGY).toList());
+
         singleCCS.addAll(configHolder.getCCs().stream()
                 .filter(x -> x.isSingleStrategy() && x.getStrategyName() != StrategyName.CAPTCHA_STRATEGY
-                && x.getStrategyName() != StrategyName.END_STRATEGY).toList());
+                && x.getStrategyName() != StrategyName.END_STRATEGY && x.getStrategyName() != StrategyName.MOSGORSUD_STRATEGY).toList());
 
         if (ignoreInactive) {
             mainCCS = mainCCS.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
                     && x.getIssue() != Issue.INACTIVE_MODULE).toList();
             singleCCS = singleCCS.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
                     && x.getIssue() != Issue.INACTIVE_MODULE).toList();
+            mosgorsud = mosgorsud.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
+                    && x.getIssue() != Issue.INACTIVE_MODULE).toList();
         }
 
         if (selectedRegions != null) {
             mainCCS = mainCCS.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
             singleCCS = singleCCS.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
+
+            mosgorsud = mosgorsud.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
+        }
+
+        if (levels != null) {
+            mainCCS = mainCCS.stream().filter(x->Arrays.stream(levels).anyMatch(r->r==x.getLevel())).toList();
+            singleCCS = singleCCS.stream().filter(x->Arrays.stream(levels).anyMatch(r->r==x.getLevel())).toList();
+            mosgorsud = mosgorsud.stream().filter(x->Arrays.stream(levels).anyMatch(r->r==x.getLevel())).toList();
+        }
+
+        if (strategyNames != null) {
+            mainCCS = mainCCS.stream().filter(x->Arrays.stream(strategyNames).anyMatch(r->r==x.getStrategyName())).toList();
+            singleCCS = singleCCS.stream().filter(x->Arrays.stream(strategyNames).anyMatch(r->r==x.getStrategyName())).toList();
+            mosgorsud = mosgorsud.stream().filter(x->Arrays.stream(strategyNames).anyMatch(r->r==x.getStrategyName())).toList();
         }
 
         mainCCS = checkIfNothingToExecute(mainCCS);
         singleCCS = checkIfNothingToExecute(singleCCS);
+        mosgorsud = checkIfNothingToExecute(mosgorsud);
 
 
-        countDownLatch = new CountDownLatch(mainCCS.size() + singleCCS.size());
+        countDownLatch = new CountDownLatch(mainCCS.size() + singleCCS.size() + mosgorsud.size());
 
         ThreadPoolExecutor mainExecutor = new StrategyThreadPoolExecutor(4, 10,
                 10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(mainCCS.size()), this);
         ThreadPoolExecutor seleniumExecutor = new StrategyThreadPoolExecutor(1, 1,
                 10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(singleCCS.size()), this);
+        ThreadPoolExecutor mosgorsudExecutor = new StrategyThreadPoolExecutor(1, 1,
+                10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(mosgorsud.size()), this);
 
-        courts = mainCCS.size() + singleCCS.size();
+        courts = mainCCS.size() + singleCCS.size() + mosgorsud.size();
 
         for (CourtConfiguration cc : mainCCS) {
             mainExecutor.execute(this.selectStrategy(cc));
@@ -342,11 +402,15 @@ public class Controller {
         for (CourtConfiguration cc : singleCCS) {
             seleniumExecutor.execute(this.selectStrategy(cc));
         }
+        for (CourtConfiguration cc : mosgorsud) {
+            seleniumExecutor.execute(this.selectStrategy(cc));
+        }
 
         countDownLatch.await();
 
         mainExecutor.shutdown();
         seleniumExecutor.shutdown();
+        mosgorsudExecutor.shutdown();
     }
 
     private synchronized void update(Collection<Case> cases) {
@@ -393,6 +457,9 @@ public class Controller {
 
             case END_STRATEGY -> {
                 return new EndStrategy(cc);
+            }
+            case MOSGORSUD_STRATEGY -> {
+                return new MosGorSudStrategy(cc);
             }
 
             default -> throw new IllegalArgumentException(Message.STRATEGY_NOT_CHOSEN.toString());

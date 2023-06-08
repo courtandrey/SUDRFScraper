@@ -1,3 +1,0 @@
-bsr.sudrf.ru_over_or_equals = %d (%d acts)
-bsr.sudrf.ru_under = %d (%d acts)
-SUDRFScrapper = %d (%d acts)

@@ -3,6 +3,7 @@
 /workspace.xml
 /results/
 /src/main/resources/courts/
+/src/main/resources/temp/*
 /out/
 /target/
 /src/main/resources/config/config_sudrf_backup.json

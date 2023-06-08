@@ -31,7 +31,7 @@ public class DBUpdaterService extends UpdaterService {
             cases = new Cases(name);
         }
 
-        protected void update(Case _case) throws SQLException {
+        protected void update(Case _case) {
             if (_case != null) cases.addCase(_case);
         }
     }

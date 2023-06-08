@@ -7,9 +7,15 @@ import lombok.Getter;
 @SuppressWarnings("all")
 public class CASArticle implements Article{
     private final String partOfCas;
+    private final String mosgorsudCode;
 
-    public CASArticle(String partOfCas) {
+    public String getMosgorsudCode() {
+        return mosgorsudCode;
+    }
+
+    public CASArticle(String partOfCas, String mosgorsudCode) {
         this.partOfCas = partOfCas;
+        this.mosgorsudCode = mosgorsudCode;
     }
 
     @Override

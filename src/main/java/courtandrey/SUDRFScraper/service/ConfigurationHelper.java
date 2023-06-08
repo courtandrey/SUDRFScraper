@@ -1,9 +1,6 @@
 package courtandrey.SUDRFScraper.service;
 
-import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
-import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
-import courtandrey.SUDRFScraper.configuration.courtconfiguration.SearchPattern;
-import courtandrey.SUDRFScraper.configuration.courtconfiguration.StrategyName;
+import courtandrey.SUDRFScraper.configuration.courtconfiguration.*;
 import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
 import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
@@ -21,11 +18,12 @@ import java.util.Set;
 @UtilityClass
 public class ConfigurationHelper {
     public void getStrategy(CourtConfiguration cc) {
-        if (configureExceptions(cc)) return;
+        if (cc.getSearchPattern() == null) cc.setSearchPattern(SearchPattern.PRIMARY_PATTERN);
+        configureExceptions(cc);
         if (cc.isHasCaptcha()) {
             cc.setStrategyName(StrategyName.CAPTCHA_STRATEGY);
         }
-        else {
+        else if (cc.getSearchPattern() != SearchPattern.MOSGORSUD_PATTERN){
             cc.setStrategyName(StrategyName.PRIMARY_STRATEGY);
         }
     }
@@ -76,19 +74,19 @@ public class ConfigurationHelper {
             }
             cc.setVnkod((String) vnkods.toArray()[0]);
         } else {
-            SimpleLogger.log(LoggingLevel.WARNING, Message.VNKOD_MISSING + cc.getSearchString());
+            SimpleLogger.log(LoggingLevel.WARNING, Message.VNKOD_MISSING +" "+ cc.getSearchString());
         }
     }
 
-    public boolean configureExceptions(CourtConfiguration cc) {
-        boolean isException = false;
-        if (cc.getSearchString().equals("http://omutninsky--kir.sudrf.ru")||cc.getRegion()==21
-                ||cc.getRegion() == 31 || cc.getId() == 257 ||cc.getSearchString().equals("http://oblsud--kir.sudrf.ru")
-                ||cc.getSearchString().equals("http://murashinsky--kir.sudrf.ru")||cc.getId() == 131) {
-            cc.setConnection(Connection.SELENIUM);
-            cc.setSearchPattern(SearchPattern.SECONDARY_PATTERN);
-        } if (cc.getRegion() == 36 || cc.getId() == 1081) {
-            if (cc.getId() == 895) return false;
+    public void configureExceptions(CourtConfiguration cc) {
+        if (cc.getSearchPattern() == SearchPattern.MOSGORSUD_PATTERN) {
+            cc.setStrategyName(StrategyName.MOSGORSUD_STRATEGY);
+        }
+        if (cc.getSearchPattern() == SearchPattern.SECONDARY_PATTERN || cc.getSearchPattern() == SearchPattern.DEPRECATED_SECONDARY_PATTERN) {
+            cc.setSearchPattern(SearchPattern.PRIMARY_PATTERN);
+            cc.setConnection(Connection.REQUEST);
+        }
+        if (cc.getRegion() == 36 && cc.getLevel() != Level.REGION) {
             cc.setConnection(Connection.SELENIUM);
         }
         if (cc.getSearchString().equals("http://kraevoi--krd.sudrf.ru")
@@ -96,12 +94,6 @@ public class ConfigurationHelper {
             cc.setConnection(Connection.SELENIUM);
             cc.setSearchPattern(SearchPattern.VNKOD_PATTERN);
         }
-        if (cc.getId() == 151) {
-            cc.setStrategyName(StrategyName.END_STRATEGY);
-            cc.setSearchPattern(SearchPattern.BRAND_NEW_PATTERN);
-            isException = true;
-        }
-        return isException;
     }
 
     public void analyzeIssues(List<CourtConfiguration> ccs) {
@@ -119,11 +111,6 @@ public class ConfigurationHelper {
                     cc.setIssue(null);
                     cc.setHasCaptcha(true);
                     cc.setStrategyName(StrategyName.CAPTCHA_STRATEGY);
-                }
-                case UNDEFINED_ISSUE -> {
-                    cc.setSearchPattern(SearchPattern.PRIMARY_PATTERN);
-                    cc.setStrategyName(StrategyName.PRIMARY_STRATEGY);
-                    cc.setConnection(Connection.REQUEST);
                 }
                 default -> getStrategy(cc);
             }
@@ -159,7 +146,7 @@ public class ConfigurationHelper {
         boolean isVnkodPlaced = true;
         for (CourtConfiguration cc:ccs) {
             if (cc.getVnkod() == null) {
-                SimpleLogger.println(Message.VNKOD_MISSING + cc.getName());
+                SimpleLogger.log(LoggingLevel.WARNING, Message.VNKOD_MISSING +" "+ cc.getSearchString());
                 isVnkodPlaced = false;
             }
         }

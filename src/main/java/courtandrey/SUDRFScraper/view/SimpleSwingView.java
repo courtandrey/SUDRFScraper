@@ -8,6 +8,7 @@ import courtandrey.SUDRFScraper.configuration.searchrequest.article.AdminArticle
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.CASArticle;
 import courtandrey.SUDRFScraper.configuration.searchrequest.article.CriminalArticle;
 import courtandrey.SUDRFScraper.dump.model.Dump;
+import courtandrey.SUDRFScraper.service.LawBookHelper;
 import courtandrey.SUDRFScraper.service.SystemHelper;
 import courtandrey.SUDRFScraper.service.ThreadHelper;
 import courtandrey.SUDRFScraper.service.logger.Message;
@@ -136,7 +137,10 @@ public class SimpleSwingView implements View {
         JPanel panel3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel3.add(new JLabel("Part of article: "));
         JTextField adminArticle = new JTextField(20);
+        JTextField adminArticleMosGorSud = new JTextField(4);
         panel3.add(adminArticle);
+        panel3.add(new JLabel("Mosgorsud code: "));
+        panel3.add(adminArticleMosGorSud);
 
         JMenuItem i2 = new JMenuItem("Administrative offense article");
         JPanel panel4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -274,8 +278,11 @@ public class SimpleSwingView implements View {
                 }
             }
             try {
-                if (adminArticle.getText().strip().length() > 0) {
-                    controller.manageSearchRequest().setArticle(new CASArticle(adminArticle.getText().trim().replaceAll(" +", " ")));
+                if (adminArticle.getText().strip().length() > 0 && adminArticleMosGorSud.getText().trim().length() > 0) {
+                    int mosgorsudCode = Integer.parseInt(adminArticleMosGorSud.getText().trim());
+                    if (LawBookHelper.getMosGorSudCodeCas(String.valueOf(mosgorsudCode)) == null) throw new Exception();
+                    controller.manageSearchRequest().setArticle(new CASArticle(adminArticle.getText().trim().replaceAll(" +", " "),
+                            LawBookHelper.getMosGorSudCodeCas(String.valueOf(mosgorsudCode))));
                     requestPart++;
                 } else if (adminOffenseChapter.getText().strip().length() > 0
                         && adminOffenseArticle.getText().strip().length() > 0) {

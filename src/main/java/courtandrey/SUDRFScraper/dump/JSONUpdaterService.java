@@ -45,8 +45,6 @@ public class JSONUpdaterService extends UpdaterService {
             HashMap<String,String> met = mapper.readValue(new File(meta),HashMap.class);
             return Integer.parseInt(met.get("string_count")) + 1;
         }
-        Stack<Integer> stack = new Stack<>();
-        stack.peek();
         BufferedReader reader = Files.newBufferedReader(Path.of(fileName));
         String stringCase;
         Case _case = null;

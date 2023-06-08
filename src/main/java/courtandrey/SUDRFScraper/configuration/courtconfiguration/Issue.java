@@ -1,9 +1,9 @@
 package courtandrey.SUDRFScraper.configuration.courtconfiguration;
 
 public enum Issue {
-    CAPTCHA_NOT_CONFIGURABLE("Cannot configure captcha",-1),
+    CAPTCHA_NOT_CONFIGURABLE("Cannot configure captcha",0),
     CONNECTION_ERROR("Server error",4),
-    NOT_FOUND_CASE("Cases not found",2),
+    NOT_FOUND_CASE("Cases not found",1),
     URL_ERROR("Court is ignoring request. Court is probably using different interface",4),
     CAPTCHA("CAPTCHA occurred",0),
     SUCCESS("No issues",0),
@@ -12,7 +12,10 @@ public enum Issue {
     INACTIVE_COURT("Inactive court",2),
     INACTIVE_MODULE("One of following: inactive court or different interface",2),
     NOT_SUPPORTED_REQUEST("Court does not support request", 3),
-    UNDEFINED_ISSUE("Issue cannot be defined", 5);
+    UNDEFINED_ISSUE("Issue cannot be defined", 5),
+    NOT_FOUND("Server returns 404",4),
+    BLOCKED("Court is blocking request",-1),
+    LOOPED_CAPTCHA("Captcha is not accepted", 1);
 
     final String description;
     final int issueLevel;

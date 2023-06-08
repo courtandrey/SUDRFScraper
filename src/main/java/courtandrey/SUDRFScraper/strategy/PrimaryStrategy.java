@@ -25,6 +25,7 @@ public class PrimaryStrategy extends ConnectionSUDRFStrategy {
     private boolean checkSuccessAndChangePattern(SearchPattern src, SearchPattern trg) {
         if (finalIssue != Issue.SUCCESS && cc.getSearchPattern()==src) {
             cc.setSearchPattern(trg);
+            indexUrl = 0;
             createUrls();
             return true;
         }

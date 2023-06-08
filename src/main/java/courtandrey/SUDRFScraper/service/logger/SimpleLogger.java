@@ -18,7 +18,7 @@ import static courtandrey.SUDRFScraper.service.Constant.PATH_TO_LOGS;
 
 public final class SimpleLogger {
     private static FileWriter logWriter;
-    private static final DateTimeFormatter  dt = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
+    private static final DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
     private static String name = "default";
     private static Boolean useCourtHistory;
     private static boolean isInited = false;
@@ -27,10 +27,10 @@ public final class SimpleLogger {
 
     public static void initLogger(String name) {
         SimpleLogger.name = name;
-        useCourtHistory = Boolean.parseBoolean(ApplicationConfiguration.getInstance().getProperty("log.court.history"));
+        useCourtHistory = Boolean.parseBoolean(ApplicationConfiguration.getInstance().getProperty("dev.log.court_history"));
     }
 
-    private static void initLogger() {
+    public static void initLogger() {
         if (!isInited) {
             initLogger(name);
             isInited = true;
@@ -46,7 +46,7 @@ public final class SimpleLogger {
             System.out.print(string);
         } catch (IOException e) {
             reopen();
-            log(level, message);
+            System.out.println(message);
         }
     }
 

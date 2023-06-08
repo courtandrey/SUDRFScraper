@@ -32,9 +32,19 @@ public class URLCreator {
 
     public String createUrlForCaptcha() {
         String ending = "";
-        switch (sc.getField()) {
-            case CRIMINAL -> ending = "/modules.php?name=sud_delo&srv_num=1&name_op=sf&delo_id=1540006";
-            case ADMIN, CAS -> ending = "/modules.php?name=sud_delo&srv_num=1&name_op=sf&delo_id=1540005";
+        switch (pattern) {
+            case VNKOD_PATTERN -> {
+                switch (sc.getField()) {
+                    case CRIMINAL -> ending = "/modules.php?name=sud_delo&name_op=sf&srv_num=1&_deloId=1540006&_caseType=0&_new=0";
+                    case ADMIN, CAS -> ending = "/modules.php?name=sud_delo&srv_num=1&name_op=sf&delo_id=1540005&_caseType=0&_new=0";
+                }
+            }
+            case PRIMARY_PATTERN -> {
+                switch (sc.getField()) {
+                    case CRIMINAL -> ending = "/modules.php?name=sud_delo&srv_num=1&name_op=sf&delo_id=1540006";
+                    case ADMIN, CAS -> ending = "/modules.php?name=sud_delo&srv_num=1&name_op=sf&delo_id=1540005";
+                }
+            }
         }
         return cc.getSearchString() + ending;
     }
@@ -58,10 +68,6 @@ public class URLCreator {
             endings[i] = endings[i] + "&captcha="+captcha.split("&")[0];
             endings[i] = endings[i]+"&captchaid="+captcha.split("&")[1];
         }
-    }
-
-    public String[] createUrlForVnkodConfiguration() {
-        return new String[]{"/modules.php?name=sud_delo&name_op=sf&srv_num=1&_deloId=1540006&_caseType=0&_new=0"};
     }
 
     public String returnEnding(int indexUrl) {
@@ -108,15 +114,60 @@ public class URLCreator {
         switch (pattern) {
             case SECONDARY_PATTERN,DEPRECATED_SECONDARY_PATTERN -> makeSearchConfigurationForSecondaryPattern();
             case VNKOD_PATTERN,PRIMARY_PATTERN,DEPRECATED_PRIMARY_PATTERN -> makeSearchConfigurationForPrimaryPatterns();
-            case BRAND_NEW_PATTERN -> makeBrandNewSearchConfiguration();
+            case MOSGORSUD_PATTERN -> makeSearchConfigurationForMosGorSud();
         }
     }
 
+    private void makeSearchConfigurationForMosGorSud() {
+        if (sc.getArticle() != null) {
+            String articlePart = getArticlePartForMosgorsudPattern();
+            if (sc.getArticle() instanceof CASArticle) {
+                endings[0] = endings[0].replace("category=","category="+articlePart);
+            }
+            else {
+                endings[0] = endings[0].replace("codex=","codex="+articlePart);
+            }
+        }
 
-//There is only one court with a "brand new" interface, and it is not working properly right now.
-//Method will be finished later.
-    private void makeBrandNewSearchConfiguration() {
+        if (sc.getText() != null) {
+            endings[0] = endings[0].replace("documentText=","documentText="+sc.getText());
+        }
 
+        if (sc.getResultDateFrom() != null) {
+            endings[0] = endings[0].replace("caseFinalDateFrom=","caseFinalDateFrom="+sc.getResultDateFrom());
+        }
+
+        if (sc.getResultDateTill()!=null) {
+            endings[0] = endings[0].replace("caseFinalDateTo=","caseFinalDateTo="+sc.getResultDateTill());
+        }
+    }
+
+    private String getArticlePartForMosgorsudPattern() {
+        if (sc.getArticle() instanceof CriminalArticle) {
+            return getCriminalArticlePartForMosGorSudPattern();
+        }
+        else if (sc.getArticle() instanceof AdminArticle) {
+            return getAdminArticlePartForMosGorSudPattern();
+        }
+        else if (sc.getArticle() instanceof CASArticle) {
+            return getCASArticleForMosGorSudPatterns();
+        }
+        throw new UnsupportedOperationException(Message.UNKNOWN_ARTICLE.toString());
+    }
+
+    private String getCASArticleForMosGorSudPatterns() {
+        return ((CASArticle) sc.getArticle()).getMosgorsudCode();
+    }
+    private String getAdminArticlePartForMosGorSudPattern() {
+        AdminArticle article = (AdminArticle) sc.getArticle();
+        StringBuilder stringBuilder = new StringBuilder(article.getChapter()+"."+article.getArticle());
+        if (article.getSubArticle()!=0) {
+            stringBuilder.append(".").append(article.getSubArticle());
+        }
+        if (article.getPart()!=0) {
+            stringBuilder.append("+ч.").append(article.getPart());
+        }
+        return stringBuilder.toString();
     }
 
     private String getCriminalArticlePartForPrimaryPatterns() {
@@ -137,8 +188,22 @@ public class URLCreator {
             articlePart.append("+%EF.").append(hex.toUpperCase());
         }
         return articlePart.toString();
-
     }
+    private String getCriminalArticlePartForMosGorSudPattern() {
+        CriminalArticle article = (CriminalArticle) sc.getArticle();
+        StringBuilder articlePart = new StringBuilder(String.valueOf(article.getArticle()));
+        if (article.getSubArticle() != 0) {
+            articlePart.append(".").append(article.getSubArticle());
+        }
+        if (article.getPart() != 0) {
+            articlePart.append("+ч.").append(article.getPart());
+        }
+        if (article.getLetter() != 0) {
+            articlePart.append("%2C+п.+").append(article.getLetter());
+        }
+        return articlePart.toString();
+    }
+
     private String getAdminArticlePartForPrimaryPatterns() {
         AdminArticle article = (AdminArticle) sc.getArticle();
         StringBuilder articlePart = new StringBuilder(article.getChapter() +"."+article.getArticle());

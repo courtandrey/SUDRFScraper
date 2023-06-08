@@ -12,15 +12,15 @@ public enum Constant {
     PATH_TO_CONFIG_BACKUP,
     PATH_TO_CONFIG_BASE,
     PATH_TO_CAPTCHA,
+    PATH_TO_CAS_MOSGORSUD_LAWBOOK,
     PATH_TO_LOGS,
     PATH_TO_COURT_HISTORY,
     PATH_TO_SUMMERY_INFO,
     DB_Driver,
-    PATH_TO_PRECONFIG,
-    PRECONFIG_URL_ENDING,
     PATH_TO_CRIMINAL_PROPERTIES,
     PATH_TO_ADMIN_PROPERTIES,
-    PATH_TO_CAS_PROPERTIES;
+    PATH_TO_CAS_PROPERTIES,
+    PATH_TO_TEMP;
     @Override
     public String toString() {
         return ConstantsGetter.getStringConstant(this);

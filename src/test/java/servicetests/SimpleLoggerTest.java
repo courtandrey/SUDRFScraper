@@ -19,7 +19,7 @@ import static courtandrey.SUDRFScraper.service.Constant.PATH_TO_COURT_HISTORY;
 public class SimpleLoggerTest {
     @Test
     public void successAddToCourtHistoryTest() throws IOException {
-        ApplicationConfiguration.getInstance().setProperty("log.court.history", "true");
+        ApplicationConfiguration.getInstance().setProperty("dev.log.court_history", "true");
         CourtConfiguration cc = new CourtConfiguration();
         cc.setId(-1);
         cc.setIssue(Issue.NOT_FOUND_CASE);

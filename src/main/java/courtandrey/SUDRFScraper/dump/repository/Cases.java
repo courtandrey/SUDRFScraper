@@ -2,6 +2,9 @@ package courtandrey.SUDRFScraper.dump.repository;
 
 import courtandrey.SUDRFScraper.dump.DBUpdaterService;
 import courtandrey.SUDRFScraper.dump.model.Case;
+import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
+import courtandrey.SUDRFScraper.service.logger.Message;
+import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,7 +18,7 @@ public class Cases {
         this.name = name;
     }
 
-    public void addCase(Case _case) throws SQLException {
+    public void addCase(Case _case) {
         String query = "INSERT INTO " +name+"(region,court_name,case_number," +
                 "entry_date,names_articles,judge,result_date,decision,end_date,decision_text) VALUES(";
         query+= _case.getRegion()+",";
@@ -29,7 +32,12 @@ public class Cases {
         query+=_case.getEndDate()==null ? "null, " : "\""+_case.getEndDate()+"\""+", ";
         query+=_case.getText()==null ? "null" : "\""+_case.getText().replace("\"","\\\"")+"\"";
         query+=")";
-        executeSqlStatement(query);
+        try {
+            executeSqlStatement(query);
+        } catch (SQLException e) {
+            SimpleLogger.log(LoggingLevel.WARNING, String.format(Message.SOME_SQL_EXCEPTION.toString(),e));
+        }
+
     }
 
     public void createTable() throws SQLException {

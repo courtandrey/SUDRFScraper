@@ -9,37 +9,63 @@ import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.service.logger.SimpleLogger;
 import org.openqa.selenium.TimeoutException;
 
+import static courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue.*;
+
 public class CaptchaStrategy extends ConnectionSUDRFStrategy {
     private boolean didWellItWorkedOnceUsed = false;
     public CaptchaStrategy(CourtConfiguration cc) {
         super(cc);
     }
 
+    int captchaInLoop = 0;
+
+    int prevNum = 1;
+    int prevSrvNum = 1;
+
     @Override
     public void run() {
         try {
             createUrls();
-            for (; indexUrl < urls.length; indexUrl++) {
+            for (indexUrl = 0; indexUrl < urls.length; indexUrl++) {
                 super.run();
-                if (issue == Issue.CAPTCHA) {
+                if (issue == Issue.CAPTCHA && finalIssue != NOT_FOUND_CASE) {
+                    if (captchaInLoop == 5 && page_num == prevNum && srv_num == prevSrvNum) {
+                        if (indexUrl + 1 == urls.length) {
+                            finalIssue = Issue.compareAndSetIssue(LOOPED_CAPTCHA,finalIssue);
+                            break;
+                        }
+                        else {
+                            continue;
+                        }
+                    } else {
+                        captchaInLoop = 0;
+                    }
+
+                    prevNum = page_num;
+                    prevSrvNum = srv_num;
+                    captchaInLoop += 1;
                     issue = null;
                     timeToStopRotatingSrv = false;
 
-                    CaptchaPropertiesConfigurator.configureCaptcha(cc, didWellItWorkedOnceUsed);
+                    CaptchaPropertiesConfigurator.configureCaptcha(cc, didWellItWorkedOnceUsed,cc.getConnection());
 
                     didWellItWorkedOnceUsed = true;
                     createUrls();
-                    --indexUrl;
+                    indexUrl = indexUrl - 1;
                     refreshUrls();
-                } else if (issue == Issue.SUCCESS) {
-                    indexUrl++;
+                }
+                else if (finalIssue == SUCCESS) {
+                    indexUrl += 1;
                     break;
-                } else {
+                }
+                else {
+                    captchaInLoop = 0;
                     clear();
                 }
             }
-            --indexUrl;
+            indexUrl -= 1;
         }
+
         catch (InterruptedException e) {
             SimpleLogger.log(LoggingLevel.ERROR, String.format(Message.EXCEPTION_OCCURRED.toString(),e));
             finalIssue = Issue.ERROR;

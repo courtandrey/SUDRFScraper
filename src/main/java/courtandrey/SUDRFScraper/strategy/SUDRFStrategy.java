@@ -1,8 +1,10 @@
 package courtandrey.SUDRFScraper.strategy;
 
+import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.SearchPattern;
+import courtandrey.SUDRFScraper.configuration.courtconfiguration.StrategyName;
 import courtandrey.SUDRFScraper.configuration.searchrequest.SearchRequest;
 import courtandrey.SUDRFScraper.dump.model.Case;
 import courtandrey.SUDRFScraper.service.ConfigurationHelper;
@@ -79,6 +81,10 @@ public abstract class SUDRFStrategy implements Runnable{
 
     protected void rotate() {
         if (timeToStopRotatingPage) {
+            if (cc.getStrategyName() == StrategyName.MOSGORSUD_STRATEGY) {
+                timeToStopRotatingSrv = true;
+                return;
+            }
             resetPage();
             timeToStopRotatingPage = false;
             if (timeToStopRotatingBuild && (build > 1)) {
@@ -190,12 +196,14 @@ public abstract class SUDRFStrategy implements Runnable{
             issue = Issue.CAPTCHA;
         }
 
-        else if (text.contains("для получения полной информации по делу или материалу, нажмите на номер")) {
+        else if (text.contains("для получения полной информации по делу или материалу, нажмите на номер") || text.contains("НЕВЕРНЫЙ ФОРМАТ ЗАПРОСА!")) {
             finalIssue = Issue.compareAndSetIssue(Issue.URL_ERROR, finalIssue);
             issue = Issue.URL_ERROR;
         }
 
-        else if (text.contains("Данных по запросу не обнаружено") || text.contains("Данных по запросу не найдено") || text.contains("Ничего не найдено")) {
+        else if (text.contains("Данных по запросу не обнаружено") ||
+                 text.contains("Данных по запросу не найдено") ||
+                 text.contains("Ничего не найдено")) {
             finalIssue = Issue.compareAndSetIssue(Issue.NOT_FOUND_CASE, finalIssue);
             issue = Issue.NOT_FOUND_CASE;
         }
@@ -229,6 +237,14 @@ public abstract class SUDRFStrategy implements Runnable{
             issue = Issue.NOT_SUPPORTED_REQUEST;
             unravel = unravel - 5;
         }
+        else if (text.contains("Этот запрос заблокирован по соображениям безопасности")) {
+            finalIssue = Issue.compareAndSetIssue(Issue.BLOCKED,finalIssue);
+            issue = Issue.BLOCKED;
+        }
+        else if (text.contains("Возможно, она была удалена или перемещена.")) {
+            finalIssue = Issue.compareAndSetIssue(Issue.NOT_FOUND,finalIssue);
+            issue = Issue.NOT_FOUND;
+        }
 
         else if (cc.getSearchPattern() != SearchPattern.SECONDARY_PATTERN
                 && cc.getSearchPattern() != SearchPattern.DEPRECATED_SECONDARY_PATTERN){
@@ -244,7 +260,6 @@ public abstract class SUDRFStrategy implements Runnable{
     }
 
     protected void createUrls() {
-        indexUrl = 0;
         urlCreator = new URLCreator(cc);
         urls = urlCreator.createUrls();
     }
@@ -269,7 +284,14 @@ public abstract class SUDRFStrategy implements Runnable{
             Set<Case> cases = new HashSet<>();
             for (Case _case:resultCases) {
                 String mainPart = request.getArticle().getMainPart();
-                if (_case.getNames() != null && _case.getNames().matches("(.*)" + prepareForRegex(mainPart) + "[^\\d.](.*)")) {
+                String reg2;
+                if (ApplicationConfiguration.getInstance().getProperty("cases.article_filter").equals("strict")) {
+                    reg2 = "[^\\d.](.*)";
+                }
+                else {
+                    reg2 = "[^\\d](.*)";
+                }
+                if (_case.getNames() != null && _case.getNames().matches("(.*)" + prepareForRegex(mainPart) + reg2)) {
                     cases.add(_case);
                 }
                 resultCases = cases;
@@ -321,6 +343,8 @@ public abstract class SUDRFStrategy implements Runnable{
 
     protected void setFinalInfo() {
         cc.setIssue(Objects.requireNonNullElseGet(finalIssue, () -> Objects.requireNonNullElse(issue, Issue.ERROR)));
+
+        if (cc.isHasCaptcha()) return;
 
         checkIfWorkingUrlNotWorking();
 

@@ -15,7 +15,7 @@ public enum SearchPattern {
     VNKOD_PATTERN,
     DEPRECATED_SECONDARY_PATTERN,
     SECONDARY_PATTERN,
-    BRAND_NEW_PATTERN,
+    MOSGORSUD_PATTERN
     ;
 
     private Properties getProps(String path) {

@@ -25,11 +25,11 @@ public class Case {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Case aCase = (Case) o;
-        return region == aCase.region && Objects.equals(name, aCase.name) && Objects.equals(caseNumber, aCase.caseNumber);
+        return region == aCase.region && Objects.equals(name, aCase.name) && Objects.equals(caseNumber, aCase.caseNumber) && Objects.equals(names, aCase.names) && Objects.equals(judge, aCase.judge) && Objects.equals(decision, aCase.decision);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(region, name, caseNumber);
+        return Objects.hash(region, name, caseNumber, names, judge, decision);
     }
 }

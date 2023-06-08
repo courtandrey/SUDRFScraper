@@ -32,7 +32,7 @@ If you see errors about WebDriver in log file, follow the instruction that may h
 2. Replace driver in ./src/main/resources/"name-of-your-OS"/.
 
 Scraped cases are only first-instance considered (no appellations).
-Scraped cases are among courts of general jurisdiction excluding Mosgorsud and garrison courts.
+Scraped cases are among courts of general jurisdiction.
 
 You are highly not recommended to use for a search only text-in-decision field. 
 Most of the courts don't support this field so search will be executed among ALL cases with published decision till this very day.
@@ -48,7 +48,7 @@ EXECUTION INFO:
 As for execution you have these search options: 
 1. Result date starting from and till. "Result" means case is finished though there might not be a published decision. They are only available date params for now. Though I understand how important can be entry date for some cases. Don't use these fields if you want unfinished cases (for some reason).
 2. Text-in-Decision field. Obvious. Just don't forget info introduced in previous chapter.
-3. The main option: article. SUDRFScraper supports Criminal Articles, Administrative Offense Articles and Administrative articles. Just don't forget info introduced in previous chapter (x2).
+3. The main option: article. SUDRFScraper supports Criminal Articles, Administrative Offense Articles and Administrative articles. Just don't forget info introduced in previous chapter (x2). Important to know: for administrative articles you should enter mosgorsud code. You can find this codes cas_mosgorsud.txt in lawbook folder in the root. For other courts you are still able to put part of the category from CAS.
 
 There are only two dump types supported: MySQL-table and line-by-line JSON document.
 
@@ -62,12 +62,21 @@ Things you can configure include:
 
 Directory of dump "basic.result.path": change  value if default way doesn't satisfy you.
 
-Logging of court history "use.court.history".
+Logging of court history "dev.log.court_history".
 Don't change this param if you want your File System to be clean.
 It logs court issues, time of execution and search request. It can be of any use only for developer.
 
 MySQL Server Connection Info. Fields "sql.usr", "sql.db_url", "sql.password" for user, jdbc database url, password.
 You don't have to fill in these fields. You can fill this information while in execution.
+
+Continue of scraping "basic.continue". If set true scraping continues from the place it has been interrupted.
+
+Region sorting "basic.regions". Write region codes separated by comma in here.
+
+Level sorting "basic.levels". Write one or several separated by comma of [DISTRICT, REGION, GARRISON, MOSGORSUD] in here to get only corresponding courts.
+
+Filter by article "cases.article_filter". When "soft" scraper scrapes cases with article containing your search article, when "strict" scraping executes only within article you entered.
+For example for article "20.3": "soft" scrapes "20.3", "20.3.3"; "strict" scrapes only "20.3".
 
 UPDATES:
 
@@ -81,6 +90,8 @@ Massive refactoring.
 ver.0.1.7 configuration-update. Modified configuration with default sql connection parameters. Massive refactoring.
 
 ver.0.1.8 captcha-update. Feat: added regions to configuration. Fixed captcha related bugs. Updated strategies and court configuration for solving new issues 
+
+ver.0.1.9 content-update. Feat: fixed broken courts, removed courts that ceased to exist, replaced renamed courts, added garrison courts and mosgorsud. Configs: added sorting by court level.
 
 CONTACT ME:
 
