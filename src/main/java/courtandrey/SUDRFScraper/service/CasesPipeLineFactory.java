@@ -10,14 +10,14 @@ public class CasesPipeLineFactory {
         this.updater = updater;
     }
 
-    public void init(Updater updater) {
+    public static void init(Updater updater) {
         if (casesPipeLineFactory != null) return;
         casesPipeLineFactory = new CasesPipeLineFactory(updater);
     }
 
     public static synchronized CasesPipeLineFactory getInstance() {
         if (casesPipeLineFactory != null) return casesPipeLineFactory;
-        throw new UnsupportedOperationException("Factory is not initialized");
+        throw new UnsupportedOperationException("CasesPipeLineFactory is not initialized");
     }
 
     public CasesPipeLine getPipeLine() {

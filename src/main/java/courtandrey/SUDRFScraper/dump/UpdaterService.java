@@ -29,7 +29,7 @@ public abstract class UpdaterService extends Thread implements Updater{
 
     @Override
     public void startService() {
-        CasesPipeLineFactory.getInstance().init(this);
+        CasesPipeLineFactory.init(this);
         this.start();
     }
 

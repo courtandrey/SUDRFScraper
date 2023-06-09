@@ -339,78 +339,77 @@ public class Controller {
     }
 
     private void execute(Boolean ignoreInactive) throws InterruptedException {
-        List<CourtConfiguration> mainCCS = new ArrayList<>(configHolder.getCCs().stream().filter(x -> !x.isSingleStrategy() &&
-                x.getStrategyName() != StrategyName.END_STRATEGY).toList());
+            List<CourtConfiguration> mainCCS = new ArrayList<>(configHolder.getCCs().stream().filter(x -> !x.isSingleStrategy() &&
+                    x.getStrategyName() != StrategyName.END_STRATEGY).toList());
 
-        List<CourtConfiguration> singleCCS = new ArrayList<>(configHolder.getCCs().stream().filter(x -> x.getStrategyName()
-                == StrategyName.CAPTCHA_STRATEGY).toList());
+            List<CourtConfiguration> singleCCS = new ArrayList<>(configHolder.getCCs().stream().filter(x -> x.getStrategyName()
+                    == StrategyName.CAPTCHA_STRATEGY).toList());
 
-        List<CourtConfiguration> mosgorsud = new ArrayList<>(configHolder.getCCs().stream().filter(x -> x.getStrategyName()
-                == StrategyName.MOSGORSUD_STRATEGY).toList());
+            List<CourtConfiguration> mosgorsud = new ArrayList<>(configHolder.getCCs().stream().filter(x -> x.getStrategyName()
+                    == StrategyName.MOSGORSUD_STRATEGY).toList());
 
-        singleCCS.addAll(configHolder.getCCs().stream()
-                .filter(x -> x.isSingleStrategy() && x.getStrategyName() != StrategyName.CAPTCHA_STRATEGY
-                && x.getStrategyName() != StrategyName.END_STRATEGY && x.getStrategyName() != StrategyName.MOSGORSUD_STRATEGY).toList());
+            singleCCS.addAll(configHolder.getCCs().stream()
+                    .filter(x -> x.isSingleStrategy() && x.getStrategyName() != StrategyName.CAPTCHA_STRATEGY
+                    && x.getStrategyName() != StrategyName.END_STRATEGY && x.getStrategyName() != StrategyName.MOSGORSUD_STRATEGY).toList());
 
-        if (ignoreInactive) {
-            mainCCS = mainCCS.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
-                    && x.getIssue() != Issue.INACTIVE_MODULE).toList();
-            singleCCS = singleCCS.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
-                    && x.getIssue() != Issue.INACTIVE_MODULE).toList();
-            mosgorsud = mosgorsud.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
-                    && x.getIssue() != Issue.INACTIVE_MODULE).toList();
-        }
+            if (ignoreInactive) {
+                mainCCS = mainCCS.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
+                        && x.getIssue() != Issue.INACTIVE_MODULE).toList();
+                singleCCS = singleCCS.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
+                        && x.getIssue() != Issue.INACTIVE_MODULE).toList();
+                mosgorsud = mosgorsud.stream().filter(x -> x.getIssue() != Issue.INACTIVE_COURT
+                        && x.getIssue() != Issue.INACTIVE_MODULE).toList();
+            }
 
-        if (selectedRegions != null) {
-            mainCCS = mainCCS.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
-            singleCCS = singleCCS.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
+            if (selectedRegions != null) {
+                mainCCS = mainCCS.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
+                singleCCS = singleCCS.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
 
-            mosgorsud = mosgorsud.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
-        }
+                mosgorsud = mosgorsud.stream().filter(x -> Arrays.stream(selectedRegions).anyMatch(r -> r == x.getRegion())).toList();
+            }
 
-        if (levels != null) {
-            mainCCS = mainCCS.stream().filter(x->Arrays.stream(levels).anyMatch(r->r==x.getLevel())).toList();
-            singleCCS = singleCCS.stream().filter(x->Arrays.stream(levels).anyMatch(r->r==x.getLevel())).toList();
-            mosgorsud = mosgorsud.stream().filter(x->Arrays.stream(levels).anyMatch(r->r==x.getLevel())).toList();
-        }
+            if (levels != null) {
+                mainCCS = mainCCS.stream().filter(x->Arrays.stream(levels).anyMatch(r->r==x.getLevel())).toList();
+                singleCCS = singleCCS.stream().filter(x->Arrays.stream(levels).anyMatch(r->r==x.getLevel())).toList();
+                mosgorsud = mosgorsud.stream().filter(x->Arrays.stream(levels).anyMatch(r->r==x.getLevel())).toList();
+            }
 
-        if (strategyNames != null) {
-            mainCCS = mainCCS.stream().filter(x->Arrays.stream(strategyNames).anyMatch(r->r==x.getStrategyName())).toList();
-            singleCCS = singleCCS.stream().filter(x->Arrays.stream(strategyNames).anyMatch(r->r==x.getStrategyName())).toList();
-            mosgorsud = mosgorsud.stream().filter(x->Arrays.stream(strategyNames).anyMatch(r->r==x.getStrategyName())).toList();
-        }
+            if (strategyNames != null) {
+                mainCCS = mainCCS.stream().filter(x->Arrays.stream(strategyNames).anyMatch(r->r==x.getStrategyName())).toList();
+                singleCCS = singleCCS.stream().filter(x->Arrays.stream(strategyNames).anyMatch(r->r==x.getStrategyName())).toList();
+                mosgorsud = mosgorsud.stream().filter(x->Arrays.stream(strategyNames).anyMatch(r->r==x.getStrategyName())).toList();
+            }
 
-        mainCCS = checkIfNothingToExecute(mainCCS);
-        singleCCS = checkIfNothingToExecute(singleCCS);
-        mosgorsud = checkIfNothingToExecute(mosgorsud);
+            mainCCS = checkIfNothingToExecute(mainCCS);
+            singleCCS = checkIfNothingToExecute(singleCCS);
+            mosgorsud = checkIfNothingToExecute(mosgorsud);
 
 
-        countDownLatch = new CountDownLatch(mainCCS.size() + singleCCS.size() + mosgorsud.size());
+            countDownLatch = new CountDownLatch(mainCCS.size() + singleCCS.size() + mosgorsud.size());
 
-        ThreadPoolExecutor mainExecutor = new StrategyThreadPoolExecutor(4, 10,
-                10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(mainCCS.size()), this);
-        ThreadPoolExecutor seleniumExecutor = new StrategyThreadPoolExecutor(1, 1,
-                10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(singleCCS.size()), this);
-        ThreadPoolExecutor mosgorsudExecutor = new StrategyThreadPoolExecutor(1, 1,
+            ThreadPoolExecutor mosgorsudExecutor = new StrategyThreadPoolExecutor(1, 1,
                 10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(mosgorsud.size()), this);
+            ThreadPoolExecutor mainExecutor = new StrategyThreadPoolExecutor(3, 4,
+                    10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(mainCCS.size()), this);
+            ThreadPoolExecutor seleniumExecutor = new StrategyThreadPoolExecutor(1, 1,
+                    10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(singleCCS.size()), this);
 
-        courts = mainCCS.size() + singleCCS.size() + mosgorsud.size();
+            courts = mainCCS.size() + singleCCS.size() + mosgorsud.size();
+            for (CourtConfiguration cc : mosgorsud) {
+                seleniumExecutor.execute(this.selectStrategy(cc));
+            }
+            for (CourtConfiguration cc : singleCCS) {
+                seleniumExecutor.execute(this.selectStrategy(cc));
+            }
+            for (CourtConfiguration cc : mainCCS) {
+                mainExecutor.execute(this.selectStrategy(cc));
+            }
 
-        for (CourtConfiguration cc : mainCCS) {
-            mainExecutor.execute(this.selectStrategy(cc));
-        }
-        for (CourtConfiguration cc : singleCCS) {
-            seleniumExecutor.execute(this.selectStrategy(cc));
-        }
-        for (CourtConfiguration cc : mosgorsud) {
-            seleniumExecutor.execute(this.selectStrategy(cc));
-        }
+            countDownLatch.await();
 
-        countDownLatch.await();
-
-        mainExecutor.shutdown();
-        seleniumExecutor.shutdown();
-        mosgorsudExecutor.shutdown();
+            mainExecutor.shutdown();
+            seleniumExecutor.shutdown();
+            mosgorsudExecutor.shutdown();
     }
 
     private synchronized void update(Collection<Case> cases) {
