@@ -160,7 +160,7 @@ public class URLCreator {
     }
     private String getAdminArticlePartForMosGorSudPattern() {
         AdminArticle article = (AdminArticle) sc.getArticle();
-        StringBuilder stringBuilder = new StringBuilder(article.getChapter()+"."+article.getArticle());
+        StringBuilder stringBuilder = new StringBuilder("ст. "+article.getChapter()+"."+article.getArticle());
         if (article.getSubArticle()!=0) {
             stringBuilder.append(".").append(article.getSubArticle());
         }

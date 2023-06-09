@@ -199,6 +199,8 @@ public class GeneralParser extends ConnectorParser{
         }
     }
 
+
+
     private String checkMalformed(Document doc) {
         Elements malformedElements = doc.getElementsByClass("grayColor empty-field one-value");
         if (malformedElements.size()>0 && malformedElements.get(0).text()

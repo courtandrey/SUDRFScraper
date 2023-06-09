@@ -5,6 +5,7 @@ import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.SearchPattern;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.StrategyName;
 import courtandrey.SUDRFScraper.dump.model.Case;
+import courtandrey.SUDRFScraper.service.CasesPipeLineFactory;
 import courtandrey.SUDRFScraper.service.logger.Message;
 import courtandrey.SUDRFScraper.service.logger.LoggingLevel;
 import courtandrey.SUDRFScraper.service.SeleniumHelper;
@@ -158,6 +159,10 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
 
     @Override
     protected void finish() {
+        if (resultCases.size() > 150_000) {
+            parser.scrapTextsAndFlush(resultCases, CasesPipeLineFactory.getInstance().getPipeLine());
+            resultCases.clear();
+        }
         resultCases = parser.scrapTexts(resultCases);
         super.finish();
     }

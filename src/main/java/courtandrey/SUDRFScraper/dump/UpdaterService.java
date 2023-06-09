@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Queue;
 
 import courtandrey.SUDRFScraper.dump.model.Case;
+import courtandrey.SUDRFScraper.service.CasesPipeLineFactory;
+
 import static courtandrey.SUDRFScraper.service.Constant.*;
 
 public abstract class UpdaterService extends Thread implements Updater{
@@ -27,6 +29,7 @@ public abstract class UpdaterService extends Thread implements Updater{
 
     @Override
     public void startService() {
+        CasesPipeLineFactory.getInstance().init(this);
         this.start();
     }
 

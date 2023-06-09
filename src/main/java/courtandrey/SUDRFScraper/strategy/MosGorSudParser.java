@@ -67,8 +67,10 @@ public class MosGorSudParser extends ConnectorParser{
                     if (text != null) {
                         isTextFound = true;
                         String[] splits = text.split("\\$DELIMITER");
-                        if (splits.length == 1)
-                            _case.setText(text);
+                        if (splits.length == 1) {
+                            if (!text.equals("MALFORMED"))
+                                _case.setText(null);
+                        }
                         else {
                             _case.setText(splits[0]);
                             for (int j = 1; j < splits.length; j++) {
@@ -85,8 +87,6 @@ public class MosGorSudParser extends ConnectorParser{
 
                             _case.setCaseNumber(_case.getCaseNumber() + " ("+0+")");
                         }
-                    } else {
-                        SimpleLogger.log(LoggingLevel.DEBUG, Message.DOCUMENT_NOT_PARSED + url);
                     }
                 }catch (IOException e) {
                     SimpleLogger.log(LoggingLevel.DEBUG, Message.DOCUMENT_NOT_PARSED + url);
@@ -103,10 +103,10 @@ public class MosGorSudParser extends ConnectorParser{
 
     @Override
     public String parseText(Document decision) {
-        Element table = decision.getElementsByAttributeValue("id","tabs-3").get(0);
+        Element table = decision.getElementsByAttributeValue("id", "tabs-3").get(0);
         StringBuilder stringBuilder = new StringBuilder();
-        for (Element e:table.getElementsByTag("tr")) {
-            if (e.getElementsByTag("th").size() !=0) continue;
+        for (Element e : table.getElementsByTag("tr")) {
+            if (e.getElementsByTag("th").size() != 0) continue;
             Element textElement = e.getElementsByTag("td").get(2);
             if (textElement.getElementsByTag("a").attr("href").equals("")) continue;
             String url = cc.getSearchString() + textElement.getElementsByTag("a").attr("href");
@@ -117,8 +117,7 @@ public class MosGorSudParser extends ConnectorParser{
             }
             String text = converter.getTxtFromFile(downloader.download(url));
             if (text == null) continue;
-            text = text.replaceAll("\\s{2,}","");
-            text = text.replaceAll("\n+","\n");
+            text = cleanUp(text);
             if (stringBuilder.length() > 0) {
                 if (stringBuilder.toString().equals("MALFORMED")) {
                     stringBuilder = new StringBuilder();
@@ -133,4 +132,6 @@ public class MosGorSudParser extends ConnectorParser{
         if (stringBuilder.length() == 0) return null;
         return stringBuilder.toString();
     }
+
+
 }

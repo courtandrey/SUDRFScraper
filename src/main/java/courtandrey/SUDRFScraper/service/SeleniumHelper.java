@@ -62,14 +62,6 @@ public class SeleniumHelper {
         wd.manage().timeouts().scriptTimeout(Duration.ofMinutes(1));
     }
 
-    public synchronized String clickAndGetUrl(String sourceUrl, By clickableElement) {
-        if (wd == null) reset();
-        wd.manage().timeouts().pageLoadTimeout(Duration.ofMinutes(10));
-        wd.get(sourceUrl);
-        click(clickableElement);
-        return wd.getCurrentUrl();
-    }
-
     public synchronized String getCurrentUrl() {
         if (wd == null) reset();
         if (wd.getCurrentUrl() == null) throw new UnsupportedOperationException();
@@ -80,20 +72,6 @@ public class SeleniumHelper {
         if (wd == null) reset();
         if (wd.getCurrentUrl() == null) throw  new UnsupportedOperationException();
         return wd.getPageSource();
-    }
-
-    public synchronized void click(By clickableElement) {
-        if (wd == null) reset();
-        scrollTo(clickableElement).click();
-    }
-
-    public synchronized WebElement scrollTo(By element) {
-        if (wd == null) reset();
-        if (wd.getCurrentUrl() == null) throw new UnsupportedOperationException();
-        JavascriptExecutor ex = (JavascriptExecutor) wd;
-        WebElement el = wd.findElement(element);
-        ex.executeScript("arguments[0].scrollIntoView();",el);
-        return el;
     }
 
     public synchronized String getPage(String sourceUrl, Integer waitTime) {

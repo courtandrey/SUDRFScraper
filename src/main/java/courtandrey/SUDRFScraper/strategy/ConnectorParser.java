@@ -1,12 +1,17 @@
 package courtandrey.SUDRFScraper.strategy;
 
+import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.SearchPattern;
+import courtandrey.SUDRFScraper.dump.model.Case;
+import courtandrey.SUDRFScraper.service.CasesPipeLine;
 import courtandrey.SUDRFScraper.service.SeleniumHelper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import static courtandrey.SUDRFScraper.service.Constant.UA;
 
@@ -37,5 +42,35 @@ public abstract class ConnectorParser implements Parser{
         } else {
             return 10;
         }
+    }
+
+    @Override
+    public void scrapTextsAndFlush(Set<Case> resultCases, CasesPipeLine casesPipeLine) {
+        Set<Case> chunk = new HashSet<>();
+        String chunkSizeString = ApplicationConfiguration.getInstance().getProperty("dev.pipeline.chunk_size");
+        int chunkSize = 10000;
+        if (chunkSizeString != null) {
+            try {
+                chunkSize = Integer.parseInt(chunkSizeString);
+            } catch (Exception ignored) {}
+        }
+        while (!resultCases.isEmpty()) {
+            for (Case _case:resultCases) {
+                chunk.add(_case);
+                if (chunk.size() == chunkSize) {
+                    break;
+                }
+            }
+            chunk = scrapTexts(chunk);
+            casesPipeLine.offer(chunk);
+            resultCases.removeAll(chunk);
+        }
+    }
+
+    protected String cleanUp(String dirtyString) {
+        dirtyString = dirtyString.replaceAll("\\s{2,}", "");
+        dirtyString = dirtyString.replaceAll("\n+", "\n");
+        dirtyString = dirtyString.replaceAll(" ","");
+        return dirtyString.replaceAll("\u200B","");
     }
 }

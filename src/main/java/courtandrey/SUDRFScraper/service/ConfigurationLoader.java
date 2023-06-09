@@ -49,17 +49,6 @@ public class ConfigurationLoader {
         }
     }
 
-    public ArrayList<CourtConfiguration> getCourtConfigurationsFromBase() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(Path.of(PATH_TO_CONFIG_BASE.toString()).toFile(),
-                    mapper.getTypeFactory().constructCollectionType(ArrayList.class, CourtConfiguration.class));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public ArrayList<CourtConfiguration> getCourtConfigurationsFromBackUp() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<CourtConfiguration> ls = mapper.readValue(Path.of(PATH_TO_CONFIG_BACKUP.toString()).toFile(),

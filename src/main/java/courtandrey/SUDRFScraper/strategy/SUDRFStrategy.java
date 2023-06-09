@@ -291,7 +291,7 @@ public abstract class SUDRFStrategy implements Runnable{
                 else {
                     reg2 = "[^\\d](.*)";
                 }
-                if (_case.getNames() != null && _case.getNames().matches("(.*)" + prepareForRegex(mainPart) + reg2)) {
+                if (_case.getNames() != null && _case.getNames().matches("(.*)" +"[^\\d]"+ prepareForRegex(mainPart) + reg2)) {
                     cases.add(_case);
                 }
                 resultCases = cases;
