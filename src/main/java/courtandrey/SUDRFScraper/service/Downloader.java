@@ -43,6 +43,8 @@ public class Downloader {
                 String fileName = file + "." + extension;
                 Path pathOfFile = Path.of(fileName);
                 if (Files.exists(pathOfFile)) return new File(fileName);
+                Path ptt = Path.of(Constant.PATH_TO_TEMP.toString());
+                if (Files.notExists(ptt)) Files.createDirectory(ptt);
                 Files.createFile(pathOfFile);
                 HttpEntity entity = response.getEntity();
 
