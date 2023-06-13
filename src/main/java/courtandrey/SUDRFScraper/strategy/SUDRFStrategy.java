@@ -264,7 +264,7 @@ public abstract class SUDRFStrategy implements Runnable{
         urls = urlCreator.createUrls();
     }
 
-    private void filterCases() {
+    protected void filterCases() {
         String textToFind = request.getText();
         if (textToFind != null) {
             Set<Case> cases = new HashSet<>();
@@ -294,11 +294,11 @@ public abstract class SUDRFStrategy implements Runnable{
                 if (_case.getNames() != null && _case.getNames().matches("(.*)" +"[^\\d]"+ prepareForRegex(mainPart) + reg2)) {
                     cases.add(_case);
                 }
-                resultCases = cases;
-                if (cases.size() == 0) {
-                    issue = Issue.NOT_FOUND_CASE;
-                    finalIssue = Issue.NOT_FOUND_CASE;
-                }
+            }
+            resultCases = cases;
+            if (cases.size() == 0) {
+                issue = Issue.NOT_FOUND_CASE;
+                finalIssue = Issue.NOT_FOUND_CASE;
             }
         }
     }
@@ -311,9 +311,6 @@ public abstract class SUDRFStrategy implements Runnable{
     }
 
     protected void finish() {
-        if (finalIssue == Issue.SUCCESS) {
-            filterCases();
-        }
         setFinalInfo();
         logFinalInfo();
     }

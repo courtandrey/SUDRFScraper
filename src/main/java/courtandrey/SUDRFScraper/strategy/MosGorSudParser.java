@@ -69,6 +69,8 @@ public class MosGorSudParser extends ConnectorParser{
                         String[] splits = text.split("\\$DELIMITER");
                         if (splits.length == 1) {
                             if (!text.equals("MALFORMED"))
+                                _case.setText(text);
+                            else
                                 _case.setText(null);
                         }
                         else {
@@ -88,7 +90,7 @@ public class MosGorSudParser extends ConnectorParser{
                             _case.setCaseNumber(_case.getCaseNumber() + " ("+0+")");
                         }
                     }
-                }catch (IOException e) {
+                }catch (Exception e) {
                     SimpleLogger.log(LoggingLevel.DEBUG, Message.DOCUMENT_NOT_PARSED + url);
                 }
             }
@@ -103,6 +105,7 @@ public class MosGorSudParser extends ConnectorParser{
 
     @Override
     public String parseText(Document decision) {
+        if (decision.getElementsByAttributeValue("id","tabs-3").size() == 0) return null;
         Element table = decision.getElementsByAttributeValue("id", "tabs-3").get(0);
         StringBuilder stringBuilder = new StringBuilder();
         for (Element e : table.getElementsByTag("tr")) {
