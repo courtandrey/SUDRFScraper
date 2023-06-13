@@ -6,7 +6,7 @@
 
     <groupId>SUDRFScraper</groupId>
     <artifactId>SUDRFScraper</artifactId>
-    <version>0.1.9</version>
+    <version>0.1.10</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

@@ -246,8 +246,7 @@ public abstract class SUDRFStrategy implements Runnable{
             issue = Issue.NOT_FOUND;
         }
 
-        else if (cc.getSearchPattern() != SearchPattern.SECONDARY_PATTERN
-                && cc.getSearchPattern() != SearchPattern.DEPRECATED_SECONDARY_PATTERN){
+        else if (cc.getConnection() != Connection.SELENIUM){
             finalIssue = Issue.compareAndSetIssue(Issue.UNDEFINED_ISSUE,finalIssue);
             issue = Issue.UNDEFINED_ISSUE;
         }
@@ -264,7 +263,7 @@ public abstract class SUDRFStrategy implements Runnable{
         urls = urlCreator.createUrls();
     }
 
-    protected void filterCases() {
+    protected Set<Case> filterCases() {
         String textToFind = request.getText();
         if (textToFind != null) {
             Set<Case> cases = new HashSet<>();
@@ -289,9 +288,9 @@ public abstract class SUDRFStrategy implements Runnable{
                     reg2 = "[^\\d.](.*)";
                 }
                 else {
-                    reg2 = "[^\\d](.*)";
+                    reg2 = "\\D(.*)";
                 }
-                if (_case.getNames() != null && _case.getNames().matches("(.*)" +"[^\\d]"+ prepareForRegex(mainPart) + reg2)) {
+                if (_case.getNames() != null && _case.getNames().matches("(.*)" +"\\D"+ prepareForRegex(mainPart) + reg2)) {
                     cases.add(_case);
                 }
             }
@@ -301,6 +300,7 @@ public abstract class SUDRFStrategy implements Runnable{
                 finalIssue = Issue.NOT_FOUND_CASE;
             }
         }
+        return resultCases;
     }
 
     private String prepareForRegex(String src) {
@@ -316,7 +316,7 @@ public abstract class SUDRFStrategy implements Runnable{
     }
 
     protected void logFinalInfo() {
-        if (Issue.isGoodIssue(cc.getIssue()) && Issue.isBadIssue(cc.getIssue())) {
+        if (!Issue.isGoodIssue(cc.getIssue()) && !Issue.isBadIssue(cc.getIssue())) {
             SimpleLogger.log(LoggingLevel.DEBUG,cc.getIssue() + " " + urls[indexUrl]);
         }
         else if (Issue.isBadIssue(cc.getIssue())) {

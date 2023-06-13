@@ -21,7 +21,7 @@ public enum Issue {
     final int issueLevel;
 
     public static boolean isBadIssue(Issue issue) {
-        return issue == UNDEFINED_ISSUE || issue == ERROR || issue == CONFIGURATION_ERROR;
+        return issue == ERROR || issue == CONFIGURATION_ERROR || issue == UNDEFINED_ISSUE;
     }
 
     public static boolean isGoodIssue(Issue issue) {

@@ -97,7 +97,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
 
     private void connectSelenium() {
         try {
-            int waitTime = 14;
+            int waitTime = 14 + (10-unravel);
             if (page_num > 1 && (cc.getSearchPattern() == SearchPattern.SECONDARY_PATTERN ||
                     cc.getSearchPattern() == SearchPattern.DEPRECATED_SECONDARY_PATTERN)) {
                 waitTime = 5;
@@ -160,7 +160,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
     @Override
     protected void finish() {
         if (issue == Issue.SUCCESS)
-            filterCases();
+            resultCases = filterCases();
         if (resultCases.size() > 150_000) {
             parser.scrapTextsAndFlush(resultCases, CasesPipeLineFactory.getInstance().getPipeLine());
             resultCases.clear();

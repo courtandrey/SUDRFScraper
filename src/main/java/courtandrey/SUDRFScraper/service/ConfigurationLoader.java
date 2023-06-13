@@ -1,5 +1,6 @@
 package courtandrey.SUDRFScraper.service;
 
+import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import courtandrey.SUDRFScraper.exception.InitializationException;
@@ -19,10 +20,24 @@ import static courtandrey.SUDRFScraper.service.Constant.*;
 
 @UtilityClass
 public class ConfigurationLoader {
+    private String dumpName;
+
+    public static void setDumpName(String dumpName) {
+        ConfigurationLoader.dumpName = dumpName;
+    }
+
     public ArrayList<CourtConfiguration> getCourtConfigurations() throws IOException {
+        String path = PATH_TO_CONFIG.toString();
+        if (ApplicationConfiguration.getInstance().getProperty("basic.continue") != null &&
+            ApplicationConfiguration.getInstance().getProperty("basic.continue").equals("true")) {
+            String altPath = String.format(PATH_TO_RESULT_DIRECTORY.toString(), dumpName) + "config_sudrf.json";
+            if (Files.exists(Path.of(altPath))) {
+                path = altPath;
+            }
+        }
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(Path.of(PATH_TO_CONFIG.toString()).toFile(),
+            return mapper.readValue(Path.of(path).toFile(),
                     mapper.getTypeFactory().constructCollectionType(ArrayList.class, CourtConfiguration.class));
         }catch (IOException e) {
             SimpleLogger.log(LoggingLevel.WARNING, Message.MALFORMED_CONFIG.toString());
@@ -60,6 +75,16 @@ public class ConfigurationLoader {
     public synchronized void refresh(List<CourtConfiguration> ccs) {
         try {
             FileWriter writer = new FileWriter(PATH_TO_CONFIG.toString());
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(writer,ccs);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void storeConfiguration(List<CourtConfiguration> ccs) {
+        try {
+            FileWriter writer = new FileWriter(String.format(PATH_TO_RESULT_DIRECTORY.toString(),dumpName) + "result_config.json");
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(writer,ccs);
         } catch (IOException e) {

@@ -114,6 +114,7 @@ public class Controller {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             if (!t.getName().contains("pool")) handler.errorOccurred(e, null);
         });
+        ConfigurationLoader.setDumpName(dumpName);
 
         SimpleLogger.initLogger(dumpName);
 
@@ -310,7 +311,7 @@ public class Controller {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
+        ConfigurationLoader.storeConfiguration(configHolder.getCCs());
         sumItUp();
 
         view.finish();
