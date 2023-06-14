@@ -30,7 +30,7 @@ public class ConfigurationLoader {
         String path = PATH_TO_CONFIG.toString();
         if (ApplicationConfiguration.getInstance().getProperty("basic.continue") != null &&
             ApplicationConfiguration.getInstance().getProperty("basic.continue").equals("true")) {
-            String altPath = String.format(PATH_TO_RESULT_DIRECTORY.toString(), dumpName) + "config_sudrf.json";
+            String altPath = String.format(PATH_TO_RESULT_DIRECTORY.toString(), dumpName) + "result_config.json";
             if (Files.exists(Path.of(altPath))) {
                 path = altPath;
             }
