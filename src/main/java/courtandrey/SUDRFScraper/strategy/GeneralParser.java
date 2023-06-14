@@ -190,7 +190,10 @@ public class GeneralParser extends ConnectorParser{
             }
 
             if (content == null) {
-                content = doc.getElementsByClass("Section1").get(0);
+                Elements elements = doc.getElementsByClass("Section1");
+                if (elements.size() > 0) {
+                    content = elements.get(0);
+                }
             }
 
             if (content == null) {
