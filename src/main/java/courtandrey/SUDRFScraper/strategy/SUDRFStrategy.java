@@ -324,7 +324,7 @@ public abstract class SUDRFStrategy implements Runnable{
         }
 
         try {
-            SimpleLogger.addToCourtHistory(cc);
+            SimpleLogger.addToCourtHistory(cc, resultCases.size());
         } catch (IOException e) {
             SimpleLogger.log(LoggingLevel.ERROR, String.format(Message.IOEXCEPTION_OCCURRED.toString(), e));
         }

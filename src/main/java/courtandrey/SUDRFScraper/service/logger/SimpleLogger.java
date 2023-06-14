@@ -50,7 +50,7 @@ public final class SimpleLogger {
         }
     }
 
-    public synchronized static void addToCourtHistory(CourtConfiguration cc) throws IOException {
+    public synchronized static void addToCourtHistory(CourtConfiguration cc, int numberOfCases) throws IOException {
         if (!useCourtHistory) return;
         initLogger();
         Path courtHistory = Path.of("./src/main/resources/courts/");
@@ -59,7 +59,7 @@ public final class SimpleLogger {
             if (cc.getIssue() == null)  {
                 cc.setIssue(Issue.ERROR);
             }
-            writer.write(cc.getIssue().toString() + " " + LocalDate.now() + " " + SearchRequest.getInstance().toString());
+            writer.write(cc.getIssue().toString() + " " + numberOfCases + " " + LocalDate.now() + " " + SearchRequest.getInstance().toString());
             writer.write("\n");
         } catch (IOException e) {
             log(LoggingLevel.ERROR, String.format(Message.IOEXCEPTION_OCCURRED.toString(),e));

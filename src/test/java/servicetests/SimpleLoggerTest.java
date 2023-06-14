@@ -26,7 +26,7 @@ public class SimpleLoggerTest {
         SearchRequest.getInstance().setArticle(new CriminalArticle(228));
 
         SimpleLogger.initLogger("test");
-        SimpleLogger.addToCourtHistory(cc);
+        SimpleLogger.addToCourtHistory(cc, 0);
 
         Path courtPath = Path.of(String.format(PATH_TO_COURT_HISTORY.toString(), cc.getId()));
 
