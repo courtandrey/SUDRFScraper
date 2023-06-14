@@ -188,6 +188,11 @@ public class GeneralParser extends ConnectorParser{
             if (content == null) {
                 content = doc.getElementById("tab_content_Docs");
             }
+
+            if (content == null) {
+                content = doc.getElementsByClass("Section1").get(0);
+            }
+
             if (content == null) {
                 return checkMalformed(doc);
             }
