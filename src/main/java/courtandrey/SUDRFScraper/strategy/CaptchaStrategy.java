@@ -35,9 +35,10 @@ public class CaptchaStrategy extends ConnectionSUDRFStrategy {
                             break;
                         }
                         else {
+                            captchaInLoop = 0;
                             continue;
                         }
-                    } else {
+                    } else if (captchaInLoop == 5){
                         captchaInLoop = 0;
                     }
 

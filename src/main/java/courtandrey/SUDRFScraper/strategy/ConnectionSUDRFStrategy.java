@@ -1,5 +1,6 @@
 package courtandrey.SUDRFScraper.strategy;
 
+import courtandrey.SUDRFScraper.configuration.ApplicationConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.CourtConfiguration;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.Issue;
 import courtandrey.SUDRFScraper.configuration.courtconfiguration.SearchPattern;
@@ -45,6 +46,12 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
        } while (!timeToStopRotatingSrv);
     }
     private void doCircle() {
+        if (ApplicationConfiguration.getInstance().getProperty("dev.test") != null
+                && ApplicationConfiguration.getInstance().getProperty("dev.test").equals("true")
+                && issue == Issue.SUCCESS) {
+            timeToStopRotatingSrv = true;
+            return;
+        }
         SimpleLogger.log(LoggingLevel.INFO,String.format(Message.EXECUTION_STATUS.toString(),cc.getName(),urls[indexUrl],issue));
         connect();
         if (checkPreventable()) {
