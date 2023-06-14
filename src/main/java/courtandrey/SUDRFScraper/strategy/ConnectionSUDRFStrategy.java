@@ -26,6 +26,7 @@ import java.util.Set;
 import static courtandrey.SUDRFScraper.service.Constant.UA;
 
 public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
+    boolean isInTestingMode = false;
 
     protected Parser parser;
 
@@ -36,7 +37,11 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
         } else {
             parser = new MosGorSudParser(cc);
         }
-
+        if (ApplicationConfiguration.getInstance().getProperty("dev.test") != null
+                && ApplicationConfiguration.getInstance().getProperty("dev.test").equals("true")
+                && finalIssue == Issue.SUCCESS) {
+            isInTestingMode = true;
+        }
     }
 
     @Override
@@ -46,9 +51,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
        } while (!timeToStopRotatingSrv);
     }
     private void doCircle() {
-        if (ApplicationConfiguration.getInstance().getProperty("dev.test") != null
-                && ApplicationConfiguration.getInstance().getProperty("dev.test").equals("true")
-                && finalIssue == Issue.SUCCESS) {
+        if (isInTestingMode) {
             timeToStopRotatingSrv = true;
             return;
         }
@@ -181,7 +184,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
         if (!parser.isTextFound() && resultCases.size() != 0 && resultCases.size() >= 25) {
             SimpleLogger.log(LoggingLevel.DEBUG, Message.NO_TEXT_FOUND + urls[indexUrl]);
         }
-        if ((resultCases.size() % 25 == 0 || resultCases.size() % 20 == 0) && resultCases.size() != 0) {
+        if ((resultCases.size() % 25 == 0 || resultCases.size() % 20 == 0) && resultCases.size() != 0 && !isInTestingMode) {
             SimpleLogger.log(LoggingLevel.DEBUG, Message.SUSPICIOUS_NUMBER_OF_CASES + urls[indexUrl]);
         }
         super.logFinalInfo();
