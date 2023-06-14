@@ -38,8 +38,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
             parser = new MosGorSudParser(cc);
         }
         if (ApplicationConfiguration.getInstance().getProperty("dev.test") != null
-                && ApplicationConfiguration.getInstance().getProperty("dev.test").equals("true")
-                && finalIssue == Issue.SUCCESS) {
+                && ApplicationConfiguration.getInstance().getProperty("dev.test").equals("true")) {
             isInTestingMode = true;
         }
     }
@@ -52,7 +51,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
        } while (!timeToStopRotatingSrv);
     }
     private void doCircle() {
-        if (isInTestingMode) {
+        if (isInTestingMode && finalIssue == Issue.SUCCESS) {
             timeToStopRotatingSrv = true;
             return;
         }
