@@ -46,8 +46,9 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
     @Override
     public void run() {
        do {
+           String message = String.format(Message.EXECUTION_STATUS_BEGINNING.toString(),cc.getName(),urls[indexUrl]);
            doCircle();
-           SimpleLogger.log(LoggingLevel.INFO,String.format(Message.EXECUTION_STATUS.toString(),cc.getName(),urls[indexUrl],issue));
+           SimpleLogger.log(LoggingLevel.INFO,message + " " + String.format(Message.EXECUTION_STATUS_MID.toString(),issue));
        } while (!timeToStopRotatingSrv);
     }
     private void doCircle() {
