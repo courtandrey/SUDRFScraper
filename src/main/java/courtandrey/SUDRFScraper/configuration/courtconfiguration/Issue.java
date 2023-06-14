@@ -15,7 +15,7 @@ public enum Issue {
     UNDEFINED_ISSUE("Issue cannot be defined", 5),
     NOT_FOUND("Server returns 404",4),
     BLOCKED("Court is blocking request",-1),
-    LOOPED_CAPTCHA("Captcha is not accepted", 1);
+    LOOPED_CAPTCHA("Captcha is not accepted", 5);
 
     final String description;
     final int issueLevel;
