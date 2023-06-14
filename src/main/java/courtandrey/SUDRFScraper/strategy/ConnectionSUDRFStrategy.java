@@ -48,7 +48,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
     private void doCircle() {
         if (ApplicationConfiguration.getInstance().getProperty("dev.test") != null
                 && ApplicationConfiguration.getInstance().getProperty("dev.test").equals("true")
-                && issue == Issue.SUCCESS) {
+                && finalIssue == Issue.SUCCESS) {
             timeToStopRotatingSrv = true;
             return;
         }
@@ -179,10 +179,10 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
     @Override
     protected void logFinalInfo() {
         if (!parser.isTextFound() && resultCases.size() != 0 && resultCases.size() >= 25) {
-            SimpleLogger.log(LoggingLevel.WARNING, Message.NO_TEXT_FOUND + urls[indexUrl]);
+            SimpleLogger.log(LoggingLevel.DEBUG, Message.NO_TEXT_FOUND + urls[indexUrl]);
         }
         if ((resultCases.size() % 25 == 0 || resultCases.size() % 20 == 0) && resultCases.size() != 0) {
-            SimpleLogger.log(LoggingLevel.WARNING, Message.SUSPICIOUS_NUMBER_OF_CASES + urls[indexUrl]);
+            SimpleLogger.log(LoggingLevel.DEBUG, Message.SUSPICIOUS_NUMBER_OF_CASES + urls[indexUrl]);
         }
         super.logFinalInfo();
     }
