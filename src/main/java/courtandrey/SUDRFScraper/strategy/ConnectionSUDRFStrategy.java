@@ -48,6 +48,7 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
     public void run() {
        do {
            doCircle();
+           SimpleLogger.log(LoggingLevel.INFO,String.format(Message.EXECUTION_STATUS.toString(),cc.getName(),urls[indexUrl],issue));
        } while (!timeToStopRotatingSrv);
     }
     private void doCircle() {
@@ -55,7 +56,6 @@ public abstract class ConnectionSUDRFStrategy extends SUDRFStrategy {
             timeToStopRotatingSrv = true;
             return;
         }
-        SimpleLogger.log(LoggingLevel.INFO,String.format(Message.EXECUTION_STATUS.toString(),cc.getName(),urls[indexUrl],issue));
         connect();
         if (checkPreventable()) {
             timeToStopRotatingSrv = true;
