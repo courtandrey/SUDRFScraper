@@ -21,16 +21,16 @@ import static courtandrey.SUDRFScraper.service.Constant.*;
 @UtilityClass
 public class ConfigurationLoader {
     private String dumpName;
+    private String path = PATH_TO_CONFIG.toString();
 
     public static void setDumpName(String dumpName) {
         ConfigurationLoader.dumpName = dumpName;
     }
 
     public ArrayList<CourtConfiguration> getCourtConfigurations() throws IOException {
-        String path = PATH_TO_CONFIG.toString();
         if (ApplicationConfiguration.getInstance().getProperty("basic.continue") != null &&
             ApplicationConfiguration.getInstance().getProperty("basic.continue").equals("true")) {
-            String altPath = String.format(PATH_TO_RESULT_DIRECTORY.toString(), dumpName) + "result_config.json";
+            String altPath = String.format(PATH_TO_RESULT_DIRECTORY.toString(), dumpName) + dumpName + "_result_config.json";
             if (Files.exists(Path.of(altPath))) {
                 path = altPath;
             }
@@ -74,7 +74,7 @@ public class ConfigurationLoader {
 
     public synchronized void refresh(List<CourtConfiguration> ccs) {
         try {
-            FileWriter writer = new FileWriter(PATH_TO_CONFIG.toString());
+            FileWriter writer = new FileWriter(path);
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(writer,ccs);
         } catch (IOException e) {
@@ -84,7 +84,7 @@ public class ConfigurationLoader {
 
     public static void storeConfiguration(List<CourtConfiguration> ccs) {
         try {
-            FileWriter writer = new FileWriter(String.format(PATH_TO_RESULT_DIRECTORY.toString(),dumpName) + "result_config.json");
+            FileWriter writer = new FileWriter(String.format(PATH_TO_RESULT_DIRECTORY.toString(),dumpName) + dumpName + "_result_config.json");
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(writer,ccs);
         } catch (IOException e) {

@@ -64,6 +64,7 @@ public abstract class ConnectorParser implements Parser{
             chunk = scrapTexts(chunk);
             casesPipeLine.offer(chunk);
             resultCases.removeAll(chunk);
+            chunk.clear();
         }
     }
 
