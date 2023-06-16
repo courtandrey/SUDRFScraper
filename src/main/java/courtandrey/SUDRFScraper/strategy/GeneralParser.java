@@ -56,7 +56,10 @@ public class GeneralParser extends ConnectorParser{
 
         for (Element row : rows) {
             Elements caseParams = row.getElementsByTag("td");
-
+            if (caseParams.size() < 7) {
+                SimpleLogger.log(LoggingLevel.DEBUG, Message.COULD_NOT_PARSE_ROW + " : " + caseParams.text());
+                continue;
+            }
             Case _case = new Case();
 
             _case.setRegion(cc.getRegion());
